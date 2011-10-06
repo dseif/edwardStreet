@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
-<title>Main Page</title>
+<title>Edward Street</title>
 </head>
 
 <body>
@@ -24,14 +24,16 @@
 			
 			<div id="page">
 				<p>
-				Supplier Name <input type="text" value=""/><br/>
-				Legal Name <input type="text" value=""/><br/>
-				Address <input type="text" value=""/><br/>
-				Contact Name <input type="text" value=""/><br/>
-				Phone Number <input type="text" value=""/><br/>
-				Comments <textarea rows="4" cols="20"></textarea>
-				<input value="save" type="submit"/>
-				<input value="cancel" type="reset"/>				
+				Supplier Name <input type="text" value="" name="SupplierName" id="suppName"/><br/>
+				Legal Name <input type="text" value="" name="LegalName" id="legName"/><br/>
+				Address <input type="text" value="" name="Address" id="addrs"/><br />
+				Contact Number <input type="text" value="" name="ContactNumber" id="cntctNumber"/><br/>
+				Lead Time <input type="text" value="" name="LeadTime" id="leadTime"/><br/>
+				Delivery Dates <textarea id="delivDates" rows="3" cols="20" name="DeliveryDates"></textarea><br/>
+				Supplier Comments <textarea id="suppComm" rows="3" cols="20" name="SupplierComments"></textarea><br/>
+				Other Comments <textarea id="otherComm" rows="3" cols="20" name="SpecialComments"></textarea><br/>
+				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
+				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>				
 				<br/>
 				
 				</p><br/>

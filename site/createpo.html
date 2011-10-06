@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
-<title>Main Page</title>
+<title>Edward Street</title>
 </head>
 
 <body>
@@ -25,7 +25,7 @@
 			<div id="page">
 				
 				 <p>
-				Select Supplier:<select>
+				Select Supplier:<select name="SupplierBox" id="suppBox">
   							<option value="1">Supplier A</option>
   							<option value="2">Supplier B</option>
   							<option value="3">Supplier C</option>
@@ -36,7 +36,8 @@
 				<div id="content">
 				
 					Select Item:<br/>
-					<table border="1">
+					<a href="createitem.html">Create New Item</a><br/>
+					<table border="1" id="poTable">
   					<tr>
     						<th>Item Name</th>
     						<th>Item Category</th>
@@ -59,17 +60,17 @@
   					</tr>
 					</table><br/>
 						
-				Grand Total : <input type="text" value=""/>
-				Hold Order <input type="checkbox" value="Conflict"/>
+				Grand Total : <input type="text" value="" name="GrandTotal" id="grndTotal"/>
+				Hold Order <input type="checkbox" value="hold" name="HoldOrder" id="holdOrdr"/>
 				<br/>
 				
-				Comment: <textarea rows="4" cols="20"></textarea><br/>
+				Comment: <textarea rows="4" cols="20" name="Comment" id="comment"></textarea><br/>
 
-				Delivery Date: <input type="text" value=""/><br/>
+				Delivery Date: <input type="text" value="" name="DeliveryDate" id="delivDate"/><br/>
 
-				<input value="Queue" type="submit"/>
-				<input value="Confirm" type="submit"/>
-				<input value="Cancel" type="reset"/>
+				<input value="Queue" type="submit" name="QueueButton" id="queueBtn"/>
+				<input value="Confirm" type="submit" name="ConfirmButton" id="confBtn"/>
+				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
 				<br/>
 				</div>
 			</div>

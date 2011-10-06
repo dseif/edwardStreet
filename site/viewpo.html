@@ -20,17 +20,29 @@
 	<h2 class="bigfont">Purchase Orders</h2><br />
 		
 	<div id="wrapper-bgtop">
-		<h3>Modify Purchase Orders</h3><br/>
+		<h3>View Purchase Orders</h3><br/>
 			
 			<div id="page">
-				
-				Search <input value="" type="text" name="SearchText" id="srchText"/>
-				<input value="Search" type="submit" name="SubmitButton" id="sbmtBtn"/><br/>
+				<p>Search: <input type="text" value="" name="SearchText" id="srchText"/>
+				 
+				Show <select name="DayBox" id="dayBox">
+  					<option value="1">Today</option>
+  					<option value="2">All Day</option>
+  					<option value="3">Weekly</option>
+				    </select>
+
+				Filter <select name="SpecificType" id="specType">
+  					<option value="1">filter specific type</option>
+  					<option value="2"></option>
+  					<option value="3"></option>
+				    </select>
+				<br/>
+				<input value="search" type="submit" name="SearchButton" id="srchBtn"/>
+				<input value="view all" type="submit" name="ViewallButton" id="viewAllBtn"/>
+				</p><br/>
 
 				<div id="content">
-
-
-					<table border="1" id="modPoTable">
+					<table border="1" id="poTable">
   					<tr>
     						<th>OrderNumber</th>
     						<th>Status</th>
@@ -46,8 +58,8 @@
     						<th>price</th>
     						<th>price/unit comment</th>
     						<th>Subtotal</th>
-    						<th>Grand Total</th>
-    						<th>Selected</th>
+    						<th>Ordered Grand Total</th>
+						<th>Received Grand Total</th>
   					</tr>
   					<tr>
     						<td></td>
@@ -60,19 +72,14 @@
     						<td></td>
     						<td></td>
     						<td></td>
-    						<td><input value="" type="text" name="QTYBox" id="qtyBox"/></td>
     						<td></td>
     						<td></td>
-                            <td></td>
-                            <td></td>
-    						<td><input value="selectedItem" type="checkbox" name="SelectedItemBox" id="selectedBox"/></td>
+    						<td></td>
+    						<td></td>
+						<td></td>
+    						<td></td>
   					</tr>
-					</table>
-
-				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
-				<input value="Cancel" type="reset" name="SancelButton" id="cancelBtn"/>
-				<br/>
-	
+					</table>	
 				</div>
 			</div>
 	</div>

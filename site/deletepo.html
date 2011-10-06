@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
-<title>Main Page</title>
+<title>Edward Street</title>
 </head>
 
 <body>
@@ -24,13 +24,13 @@
 			
 			<div id="page">
 				
-				Search <input value="" type="text"/>
-				<input value="Search" type="submit"/><br/>
+				Search <input value="" type="text" name="SearchText" id="srchText"/>
+				<input value="Search" type="submit" name="SearchButton" id="srchBtn"/><br/>
 
 				<div id="content">
 
 
-					<table border="1">
+					<table border="1" id="poTable">
   					<tr>
     						<th>OrderNumber</th>
     						<th>Status</th>
@@ -60,17 +60,17 @@
     						<td></td>
     						<td></td>
     						<td></td>
-    						<td><input value="" type="text"/></td>
+    						<td><input value="" type="text" name="QTYText" id="qtyText"/></td>
     						<td></td>
     						<td></td>
 						<td></td>
 						<td></td>
-    						<td><input value="selectedItem" type="checkbox"/></td>
+    						<td><input value="selectedItem" type="checkbox" name="SelectItem" id="selItem"/></td>
   					</tr>
 					</table>
 
-				<input value="confirm" type="submit"/>
-				<input value="cancel" type="reset"/>
+				<input value="Delete" type="submit" name="DeleteButton" id="delBtn"/>
+				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
 				<br/>
 	
 				</div>

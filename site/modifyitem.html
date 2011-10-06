@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
-<title>Main Page</title>
+<title>Edward Street</title>
 </head>
 
 <body>
@@ -24,14 +24,17 @@
 			
 			<div id="page">
 				
-				Search <input value="" type="text"/>
-				<input value="Search" type="submit"/><br/>
+				Search <input value="" type="text" name="SearchText" id="srchText"/>
+				<input value="Search" type="submit" name="SubmitButton" id="submitBtn"/><br/>
 
 				<div id="content">
 
 
-					<table border="1">
+					<table border="1" id="itemTable">
   					<tr>
+						<th>PLU</th>
+						<th>Distributor Code</th>
+						<th>Receipt Name</th>
     						<th>Item Name</th>
     						<th>Item Category</th>
     						<th>Item Type</th>
@@ -42,6 +45,8 @@
     						<th>Selected</th>
   					</tr>
   					<tr>
+						<td></td>
+						<td></td>
     						<td></td>
     						<td></td>
     						<td></td>
@@ -49,12 +54,12 @@
     						<td></td>
     						<td></td>
 						<td></td>
-    						<td><input value="selectedItem" type="checkbox"/></td>
+    						<td><input value="selectedItem" type="checkbox" name="SelectItem" id="selItem"/></td>
   					</tr>
 					</table>
 
-				<input value="confirm" type="submit"/>
-				<input value="cancel" type="reset"/>
+				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
+				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
 				<br/>
 	
 				</div>

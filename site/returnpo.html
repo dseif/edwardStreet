@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
-<title>Main Page</title>
+<title>Edward Street</title>
 </head>
 
 <body>
@@ -25,7 +25,7 @@
 			<div id="page">
 				
 
-					<table border="1">
+					<table border="1" id="poTbl">
   					<tr>
     						<th>OrderNumber</th>
     						<th>Status</th>
@@ -44,7 +44,7 @@
     						<th>Grand Total</th>
     						<th>QTY returned</th>
     						<th>Fully received</th>
-						<th>Reason</th>
+                            <th>Reason</th>
   					</tr>
   					<tr>
     						<td></td>
@@ -62,16 +62,16 @@
     						<td></td>
 						<td></td>
 						<td></td>
-    						<td><input type="text" value="" size="5"/></td>
-    						<td><input value="fullyrec" type="checkbox"/></td>
-    						<td><input type="text" value="" size="5"/></td>
+    						<td><input type="text" value="" name="QTYTotal" id="qtyTotal"/></td>
+    						<td><input value="fullyrec" type="checkbox" name="FullyReceived" id="fullyRec"/></td>
+    						<td><input type="text" value="" name="Reason" id="reason"/></td>
   					</tr>
 					</table>
 
 				<div id="content">
 
-				<input value="confirm" type="submit"/>
-				<input value="cancel" type="reset"/>
+				<input value="confirm" type="submit" name="SubmitButton" id="submitBtn"/>
+				<input value="cancel" type="reset" name="ResetButton" id="resetBtn"/>
 				<br/>
 	
 				</div>

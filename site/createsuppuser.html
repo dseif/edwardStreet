@@ -20,27 +20,21 @@
 	<h2 class="bigfont">User</h2><br />
 		
 	<div id="wrapper-bgtop">
-		<h3>Create User</h3><br/>
+		<h3>Create Supplier User Profile</h3><br/>
 			
 			<div id="page">
 				<p>
-				User Name <input type="text" value="" name="UserName" id="usrName"/><br/>
-				Temporary Password <input type="password" value="" name="TempPass" id="tempPwd"/><br/>
-				Email Address <input type="text" value="" name="EmailAddress" id="emailAddrs"/><br/>
-				Role
-					<select name="RoleBox" id="roleBox">
-  						<option value="buyer">Buyer</option>
-  						<option value="receiver">Receiver</option>
-  						<option value="supplier">Supplier</option>
-  						<option value="admin">Admin</option>
-					</select><br/>
-				Supplier
-					<select name="SupplierBox" id="suppBox">
-  						<option value="1">Supplier1</option>
-  						<option value="2">Supplier2</option>
-  						<option value="3">Supplier3</option>
-  						<option value="4">Supplier4</option>
-					</select><br/>
+				Supplier Name <input type="text" value="" name="SupplierName" id="srchText"/><br/>
+				Legal Name <input type="text" value="" name="legalName" id="leglName"/><br/>
+				Address <input type="text" value="" name="Address" id="addrs"/><br/>
+				Contact Number <input type="text" value="" name="ContactNumber" id="contctNumber"/><br/>
+				Lead Time <input id="leadTime" type="text" value="" name="LeadTime"/><br/>
+				Delivery Dates <textarea id="delivDates" rows="3" cols="20" name="DeliveryDates"></textarea><br/>
+				Supplier Comments <textarea id="suppComm" rows="3" cols="20" name="SupplierComments"></textarea><br/>
+				Other Comments <textarea id="otherComm" rows="3" cols="20" name="SpecialComments"></textarea><br/>
+				Login ID <input type="text" value="" name="LoginID" id="loginID"/><br/>
+				Password <input type="password" value="" name="Pass" id="pwd"/><br/>
+				Email address <input type="text" value="" name="EmailAddress" id="emailAddr"/><br/>
 				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
 				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>				
 				<br/>

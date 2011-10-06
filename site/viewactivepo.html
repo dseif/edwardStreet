@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
-<title>Main Page</title>
+<title>Edward Street</title>
 </head>
 
 <body>
@@ -23,26 +23,9 @@
 		<h3>View Active Purchase Orders</h3><br/>
 			
 			<div id="page">
-				<p>Search: <input type="text" value=""/>
-				 
-				Show <select>
-  					<option value="1">Today</option>
-  					<option value="2">All Day</option>
-  					<option value="3">Weekly</option>
-				    </select>
-
-				Filter <select>
-  					<option value="1">filter specific type</option>
-  					<option value="2"></option>
-  					<option value="3"></option>
-				    </select>
-				<br/>
-				<input value="search" type="submit"/>
-				<input value="view all" type="submit"/>
-				</p><br/>
 
 				<div id="content">
-					<table border="1">
+					<table border="1" id="actvPoTable">
   					<tr>
     						<th>OrderNumber</th>
     						<th>Status</th>
@@ -58,7 +41,8 @@
     						<th>price</th>
     						<th>price/unit comment</th>
     						<th>Subtotal</th>
-    						<th>Grand Total</th>
+    						<th>Ordered Grand Total</th>
+						<th>Received Grand Total</th>
   					</tr>
   					<tr>
     						<td></td>
@@ -75,6 +59,7 @@
     						<td></td>
     						<td></td>
     						<td></td>
+						<td></td>
     						<td></td>
   					</tr>
 					</table>	

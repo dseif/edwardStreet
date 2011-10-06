@@ -4,7 +4,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
-<title>Main Page</title>
+<title>Edward Street</title>
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript">
+$(document).ready(function () {	
+	
+	$('#nav li').hover(
+		function () {
+			//show its submenu
+			$('ul', this).slideDown(100);
+
+		}, 
+		function () {
+			//hide its submenu
+			$('ul', this).slideUp(100);			
+		}
+	);
+	
+});
+	</script>
 </head>
 
 <body>
@@ -16,30 +34,61 @@
 	</div>
 </div>
 
+	<div id="menu">
+
+	<ul id="nav">
+	
+	<li><a href="#"> Item > </a>
+		<ul>
+			<li><a href="createitem.html">Create Item</a></li>
+			<li><a href="modifyitem.html">Modify Item</a></li>
+			<li><a href="deleteitem.html">Delete Item</a></li>
+		</ul>
+		<div class="clear"></div>
+	</li>
+
+	<li><a href="#"> User > </a>
+		<ul>
+			<li><a href="edituserbr.html">Change User Info</a></li>
+			<li><a href="changepassword">Change Password</a></li>
+		</ul>
+		<div class="clear"></div>
+	</li>
+	
+	<li><a href="#"> Supplier > </a>
+		<ul>
+			<li><a href="createsupp.html">Create Supplier</a></li>
+			<li><a href="modifysuppinfo.html">Modify Supplier Info</a></li>
+			<li><a href="deletesupp.html">Delete Supplier</a></li>
+		</ul>
+		<div class="clear"></div>
+	</li>
+	
+	<li><a href="#"> Purchase Order > </a>
+		<ul>
+			<li><a href="createpo.html">Create Purchase Order</a></li>
+			<li><a href="modifypo.html">Modify Purchase Order</a></li>
+			<li><a href="deletepo.html">Delete Purchase Order</a></li>
+			<li><a href="receivepo.html">Receive Purchase Order</a></li>
+			<li><a href="returnpo.html">Return Purchase Order</a></li>
+			<li><a href="viewactivepo.html">View Active Purchase Order</a></li>
+			<li><a href="viewpo.html">View Purchase Order</a></li>
+		</ul>			
+		<div class="clear"></div>
+	</li>
+	
+	<li><a href="search.html">Search</a></li>
+	<li><a href="shoppingcart.html">Shopping Cart</a></li>
+	
+	</ul>
+
+	</div>
+
 <div id="wrapper">
 
 	<div id="page">
 		<h2 class="bigfont">Welcome!</h2><br />
 		<h3>Buyer</h3>
-
-		<a href="createitem.html">Create Item</a><br/>
-		<a href="createpo.html">Create Purchase Order</a><br/>
-		<a href="createsupp.html">Create Supplier</a><br/>
-
-		<a href="modifyitem.html">Modify Item</a><br/>
-		<a href="modifypo.html">Modify Purchase Order</a><br/>
-		<a href="modifysuppinfo.html">Modify Supplier Info</a><br/><br/>
-
-		<a href="deleteitem.html">Delete Item</a><br/>
-		<a href="deletepo.html">Delete Purchase Order</a><br/>
-		<a href="deletesupp.html">Delete Supplier</a><br/><br/>
-
-		<a href="receivepo.html">Receive Purchase Order</a><br/>
-		<a href="returnpo.html">Return Purchase Order</a><br/><br/>
-		
-		<a href="search.html">Search</a><br/>
-		<a href="shoppingcart.html">Shopping Cart</a><br/>
-		<a href="viewactivepo.html">View Active Purchase Order</a><br/>
 	</div>
 </div>
 

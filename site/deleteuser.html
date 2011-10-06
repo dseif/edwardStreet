@@ -17,31 +17,40 @@
 </div>
 
 <div id="wrapper">
-	<h2 class="bigfont">User</h2><br />
+	<h2 class="bigfont">Maintain User Profile</h2><br />
 		
 	<div id="wrapper-bgtop">
-		<h3>Modify User</h3><br/>
+		<h3>Delete User</h3><br/>
 			
 			<div id="page">
-				<p>
-				User Name <input type="text" value="" name="UserName" id="usrName"/><br/>
-				Employee ID <input type="text" value="" name="EmployeeID" id="empID"/><br/>
-				Email Address <input type="text" value="" name="Address" id="addrs"/><br/>
-				Role
-					<select name="RoleBox" id="roleBox">
-  						<option value="buyer">Buyer</option>
-  						<option value="receiver">Receiver</option>
-  						<option value="shipper">Shipper</option>
-  						<option value="admin">Admin</option>
-					</select><br/>
-				<input value="Update" type="submit" name="UpdateButton" id="updBtn"/>
-				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>				
-				<br/>
 				
-				</p><br/>
+				Search <input value="" type="text" name="SearchText" id="srchText"/>
+				<input value="Search" type="submit" name="SubmitButton" id="submitBtn"/><br/>
 
 				<div id="content">
-						
+
+
+					<table border="1" id="userTable">
+  					<tr>
+    						<th>Login Name</th>
+    						<th>Role</th>
+    						<th>Email Address</th>
+    						<th>Employee ID</th>
+    						<th>Selected</th>
+  					</tr>
+  					<tr>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td><input value="selectedItem" type="checkbox" name="selectItem" id="selItem"/></td>
+  					</tr>
+					</table>
+
+				<input value="Delete" type="submit" name="DeleteButton" id="delBtn"/>
+				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
+				<br/>
+	
 				</div>
 			</div>
 	</div>

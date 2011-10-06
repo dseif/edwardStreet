@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
-<title>Main Page</title>
+<title>Edward Street</title>
 </head>
 
 <body>
@@ -23,44 +23,50 @@
 		<h3>Manage Shopping Cart</h3><br/>
 			
 			<div id="page">
-				
-				 
-				<table border="1">
-  					<tr>
-    						<th>PLU</th>
-    						<th>Supplier</th>
-						<th>Item</th>
-    						<th>QTY Ordered</th>
-    						<th>price</th>
-    						<th>price/unit comment</th>
-    						<th>Subtotal</th>
-  						<th>Grand Total</th>
-  					</tr>
-  					<tr>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td><input value="" type="text"/></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-  					</tr>
-					</table>
-				
-
-				<div id="content">
-						
-				<p>Search : <input type="text" value=""/>
-				for:	<select>
+					
+				<p>Search : <input type="text" value="" name="SearchText" id="srchText"/>
+				for:	<select name="SearchDetails" id="srchDetail">
   						<option value="1">SupplierID</option>
   						<option value="2">PLU</option>
   						<option value="3">Item</option>
 					</select><br/>
 
-				<input value="Confirm" type="submit"/>
-				<input value="Cancel" type="reset"/>
+				<input name="SearchDataBase" id="searchDB" value="Search" type="submit"/>
 				</p><br/>
+
+				<div id="content">
+				
+				<table border="1">
+  					<tr>
+                            <th>PLU</th>
+                            <th>Distributor Code</th>
+                            <th>Item Name</th>
+                            <th>Receipt Name</th>
+                            <th>Category</th>
+                            <th>Supplier</th>
+                            <th>Price</th>
+                            <th>Unit</th>
+                            <th>Item Type</th>
+                            <th>QTY</th>
+                            <th>Selected</th>
+  					</tr>
+  					<tr>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+						<td></td>
+						<td><input id="qty" name="Quantity" value="" type="text"/></td>
+						<td><input id="selectedItem" name="Selected" value="" type="checkbox"/></td>
+  					</tr>
+					</table><br/>
+				<input id="conf" name="Confirm" value="Confirm" type="submit"/>
+				<input id="cancel" name="Cancel" value="Cancel" type="reset"/>
+				
 				</div>
 			</div>
 	</div>
