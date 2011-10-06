@@ -2,15 +2,17 @@
 //  used to route traffic to the appropriate requestHandler
 
 //  route function to do our work
-function route( handle, pathname ) {
-console.log(typeof handle[ pathname ]);
+function route( handle, pathname, response, cb ) {
+
   //  Call requestHandler function stored in our object if its there
   if ( typeof handle[ pathname ] === "function" ) {
-    return handle[ pathname ]();
+    handle[ pathname ]( response, cb );
 
   //  else return not found
   } else {
-    return "404 Not found";
+    response.writeHead( 200, { "Content-Type": "text/plain" } );
+    response.write( "404 Error" );
+    response.end();
   }
 }
 

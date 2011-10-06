@@ -11,6 +11,7 @@ var handle = {};
 //  Default navigation pages
 handle[ "/" ] = requestHandlers.index;
 handle[ "/login" ] = requestHandlers.login;
+handle[ "/logout" ] = requestHandlers.logout;
 
 //  Admin pages
 handle[ "/admin/createuser" ] = requestHandlers.createUser;

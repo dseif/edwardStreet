@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" ></script>
+    <script>
+      function getCookie(c_name)
+      {
+        var i,x,y,ARRcookies=document.cookie.split(";");
+        for (i=0;i<ARRcookies.length;i++)
+        {
+          x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+          y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+          x=x.replace(/^\s+|\s+$/g,"");
+          if (x==c_name ) {
+            return unescape(y);
+          }
+        }
+      }
+
+      function setCookie(c_name,value,exdays) {
+        var exdate=new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+        document.cookie=c_name + "=" + c_value;
+      }
+
+      document.addEventListener( "DOMContentLoaded", function( event ) {
+        document.getElementById( "response" ).innerHTML = getCookie("EDST_H");
+
+        var button = document.getElementById( "submit" );
+        button.addEventListener( "click", function( event ) {
+          $.ajax({
+            cache: false,
+            url: "http://localhost:8080/login",
+            data: {
+              user: document.getElementById( "user" ).value,
+              pass: document.getElementById( "pass" ).value,
+              hash: document.getElementById( "response" ).innerHTML
+            },
+            success: function( response, code, xhr ) {
+              document.getElementById( "response" ).innerHTML = response;
+              console.log("ASDASD", response);
+              if( response !== "Logged Out"  && response !== "Invalid user/pass" ) {
+                console.log("MOTHERFUCKING SHIT" );
+                                setCookie( "EDST_H",response , 365);
+                               }
+                          }
+          });
+        }, false );
+        button2.addEventListener( "click", function( event ) {
+          $.ajax({
+            cache: false,
+            url: "http://localhost:8080/logout",
+            data: {},
+            success: function( response, code, xhr ) {
+              document.cookie = "EDST_H= "; 
+              document.getElementById( "response" ).innerHTML = response;
+            }
+          });
+        }, false );
+      }, false );
+    </script>
+  </head>
+  <body>
+    User: <input type="text" id="user" /></br>
+    Pass: <input type="password" id="pass" /></br>
+    <button id="submit">Login</button><button id="button2">Logout</button><button id="next" onClick="parent.location='nextpage.html'">Next Page</button></br>
+    <div id="response"></div>
+  </body>
+</html>
