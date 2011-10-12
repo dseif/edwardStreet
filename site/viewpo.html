@@ -12,12 +12,11 @@
         $('#nav li').hover(
 		function () {
 		    //show its submenu
-		    $('ul', this).stop().slideDown(100);
-
+		    $('ul', this).show();
 		},
 		function () {
 		    //hide its submenu
-		    $('ul', this).stop().slideUp(100);
+		    $('ul', this).hide();
 		}
 	);
 
