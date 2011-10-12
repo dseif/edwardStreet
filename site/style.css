@@ -16,6 +16,19 @@ body {
 	color: #757575;
 }
 
+ul li ul {
+	width: 200px;
+}
+
+ul {
+	width: 1100px;
+}
+
+li {
+	width: 200px;
+	/*white-space: nowrap;*/
+}
+
 h1, h2, h3 {
 	margin: 0;
 	font-family: "Calibri", "Times New Roman";
@@ -113,7 +126,8 @@ margin: 0 auto;
 /* Menu */
 
 #menu {
-	margin-left: 150px;
+	margin: 0 auto;
+	/*margin-left: 150px;*/
 	/*margin: auto;
 	float: right;
 	width: 640px;
@@ -136,6 +150,9 @@ margin: 0 auto;
 
 #nav {
 	list-style:none;
+	/*height: 200px;
+	width: 100px;
+	overflow:scroll;*/
 }
 
 #nav li {

@@ -7,21 +7,20 @@
 <title>Edward Street</title>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
-
-        $('#nav li').hover(
+$(document).ready(function () {	
+	
+	$('#nav li').hover(
 		function () {
-		    //show its submenu
-		    $('ul', this).stop().slideDown(100);
-
-		},
+			//show its submenu
+			$('ul', this).show();
+		}, 
 		function () {
-		    //hide its submenu
-		    $('ul', this).stop().slideUp(100);
+			//hide its submenu
+			$('ul', this).hide();
 		}
 	);
-
-    });
+	
+});
 	</script>
 </head>
 
@@ -33,7 +32,7 @@
 		<p><em> template design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></em></p>
 	</div>
 </div>
-
+	
 	<div id="menu">
 
 	<ul id="nav">
@@ -94,52 +93,12 @@
 	</div>
 
 <div id="wrapper">
-	<h2 class="bigfont">Maintain User Profile</h2><br />
-		
-	<div id="wrapper-bgtop">
-		<h3>Delete User</h3><br/>
-			
-			<div id="page">
-				
-				Search <input value="" type="text" name="SearchText" id="srchText"/>
-				<input value="Search" type="submit" name="SubmitButton" id="submitBtn"/><br/>
 
-				<div id="content">
-
-
-					<table border="1" id="userTable">
-  					<tr>
-    						<th>Login Name</th>
-    						<th>Role</th>
-    						<th>Email Address</th>
-    						<th>Employee ID</th>
-    						<th>Selected</th>
-  					</tr>
-  					<tr>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td><input value="selectedItem" type="checkbox" name="selectItem" id="selItem"/></td>
-  					</tr>
-					</table>
-
-				<input value="Delete" type="submit" name="DeleteButton" id="delBtn"/>
-				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
-				<br/>
-	
-				</div>
-			</div>
+	<div id="page">
+		<h2 class="bigfont">Welcome!</h2><br />
 	</div>
-<div>
+</div>
 
-
-</div>
-<br />
-<div id="footer-bgcontent">
-<br />
-</div>
-</div>
 
 <p>
   <a href="http://validator.w3.org/check?uri=referer"><img
