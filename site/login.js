@@ -27,29 +27,30 @@ function setCookie( c_name, value, exdays ) {
 
 document.addEventListener( "DOMContentLoaded", function( event ) {
 
-  var cookie = !getCookie( "EDST_H" ); 
+  window.cookie = getCookie( "EDST_H" ); 
+  if ( window.location.href !== "http://localhost/~dseif/edwardStreet/site/login.html" ) {
+    if ( !cookie ) { 
+      window.location = "http://localhost/~dseif/edwardStreet/site/login.html";
+    } else {
 
-  if ( !cookie ) {
-    window.location = "http://localhost/~dseif/edwardStreet/site/login.html";
-  } else {
-
-    ookie = cookie.substring( 0, 2 );
+      var tmpCookie = cookie.substring( 0, 2 ).toLowerCase();
     
-    if ( cookie === "Ad" ) {
-      //  Early return so we dont check other ifs
-      return;
-    }
+      if ( tmpCookie === "ad" ) {
+        //  Early return so we dont check other ifs
+        return;
+      }
 
-    if ( cookie === "Bu" ) {
-      //  Hide stuff buyers cant access
-    }
+      if ( tmpCookie === "bu" ) {
+        //  Hide stuff buyers cant access
+      }
     
-    if ( cookie === "Su" ) {
-      //  Hide stuff suppliers cant access
-    }
+      if ( tmpCookie === "su" ) {
+        //  Hide stuff suppliers cant access
+      }
 
-    if ( cookie === "Re" ) {
-      //  Hide stuff receivers cant access
-    } 
+      if ( tmpCookie === "re" ) {
+        //  Hide stuff receivers cant access
+      } 
+    }
   }
 }, false );

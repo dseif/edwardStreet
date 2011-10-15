@@ -5,20 +5,63 @@
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street</title>
+<script src="login.js"></script>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
+    document.addEventListener( "DOMContentLoaded", function( event ) {
+
+      var cookie = window.cookie;
+      if ( cookie.substring( 0, 2 ).toLowerCase() !== "ad" ) {
+
+        window.location = "http://localhost/~dseif/edwardStreet/site/login.html";
+
+      }
+
+      document.getElementById( "saveBtn" ).addEventListener( "click", function( event ) { 
+        $.ajax({
+
+          cache: false,
+
+          url: "http://localhost:8080/createuser",
+
+          data: {
+
+            user: document.getElementById( "usrName" ).value,
+
+            pass: document.getElementById( "tempPwd" ).value,
+
+            hash: cookie,
+
+            email: document.getElementById( "emailAddrs" ).value,
+
+            role: document.getElementById( "roleBox" ).value
+
+          },
+
+          success: function( response, code, xhr ) {
+
+            console.log( response );
+
+          }
+
+        });
+
+      }, false );
+
+    }, false );
+
+  $(document).ready(function () {
 
         $('#nav li').hover(
-		function () {
-		    //show its submenu
-		    $('ul', this).show();
-		},
-		function () {
-		    //hide its submenu
-		    $('ul', this).hide();
-		}
-	);
+			function () {
+		    	//show its submenu
+		    	$('ul', this).show();
+			},
+			function () {
+		    	//hide its submenu
+		    	$('ul', this).hide();
+			}
+		);
 
     });
 	</script>

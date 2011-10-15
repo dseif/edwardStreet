@@ -14,7 +14,7 @@ handle[ "/login" ] = requestHandlers.login;
 handle[ "/logout" ] = requestHandlers.logout;
 
 //  Admin pages
-handle[ "/admin/createuser" ] = requestHandlers.createUser;
+handle[ "/createuser" ] = requestHandlers.createUser;
 handle[ "/admin/logs" ] = requestHandlers.logs;
 
 //  All logged in user pages

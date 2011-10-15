@@ -4,14 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" ></script>
+<script src="login.js"></script>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street</title>
 <script>
 
       document.addEventListener( "DOMContentLoaded", function( event ) {
-
-
-
         var button = document.getElementById( "loginBtn" );
 
         button.addEventListener( "click", function( event ) {
@@ -33,16 +31,9 @@
             },
 
             success: function( response, code, xhr ) {
-
-
-
               document.getElementById( "response" ).innerHTML = response;
 
-
-
               if( response !== "Logged Out"  && response !== "Invalid user/pass" ) {
-
-
 
                 setCookie( "EDST_H", response, 365 );
 
@@ -60,12 +51,7 @@
 
 </head>
 
-
-
 <body>
-
-
-
 <div id="header">
 
 	<div id="logo">
@@ -78,38 +64,17 @@
 
 </div>
 
-
-
 <div id="wrapper">
 
-
-
 	<h1>Log in</h1><br/>
-
-
-
 	<p>username <input type="text" value="" name="userName" id="user"/></p><br/>
-
-
-
 	<p>password <input type="password" value="" name="password" id="pass"/></p><br/>
-
-
-
 	<input type="submit" value="Login" name="LoginButton" id="loginBtn" />
-
-
-
 	<div id="response" style="color:red">
 
 	</div>
 
 </div>
-
-
-
-
-
 <p>
 
   <a href="http://validator.w3.org/check?uri=referer"><img
@@ -118,11 +83,5 @@
 
 </p>
 
-
-
 </body>
-
-
-
 </html> 
-

@@ -37,7 +37,8 @@ function start( route, handle ) {
 
         //  Update our time as we are still doing stuff
         userHashs[ values.hash ].time = new Date( Date.now() + 1800000 );
-        response.userID = userHashs[ values.hash ].id;
+        values.userID = userHashs[ values.hash ].id;
+        values.userName = userHashs[ values.hash ].userName;
         response.values = values;
         
         next();
@@ -66,6 +67,7 @@ function start( route, handle ) {
             userHashs[ values.hash ] = {};
             userHashs[ values.hash ].time = new Date( Date.now() + 1800000 );
             userHashs[ values.hash ].id = response.values.id;
+            userHashs[ values.hash ].userName = response.values.userName;
 
             next();
             return;
@@ -89,7 +91,7 @@ function start( route, handle ) {
 
     //  Parse pathname out of url
     var pathname = url.parse( request.url ).pathname;
-    console.log( pathname );
+
     //  Get our content from the router
     route( handle, pathname, response );
   }
