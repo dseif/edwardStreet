@@ -26,8 +26,8 @@ handle[ "/purchaseorder/returnorderline" ] = requestHandlers.returnOrderLine;
 handle[ "/purchaseorder/maintainpurchaseorder" ] = requestHandlers.maintainPurchaseOrder;
 handle[ "/purchaseorder/createpurchaseorder" ] = requestHandlers.createPurchaseOrder;
 handle[ "/purchaseorder/receivepurchaseorder" ] = requestHandlers.receivePurchaseOrder;
-handle[ "/purchaseorder/viewpurchaseorder" ] = requestHandlers.viewPurchaseOrder;
-handle[ "/purchaseorder/viewactivepurchaseorders" ] = requestHandlers.viewActivePurchaseOrders;
+handle[ "/viewpurchaseorder" ] = requestHandlers.viewPurchaseOrder;
+handle[ "/viewactivepurchaseorders" ] = requestHandlers.viewActivePurchaseOrders;
 
 //  Item pages
 handle[ "/items/createitem" ] = requestHandlers.createItem;

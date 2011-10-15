@@ -180,12 +180,80 @@ function receivePurchaseOrder() {
   return "Receive Purchase Order";
 }
 
-function viewPurchaseOrder() {
-  return "View Purchase Order";
+function viewPurchaseOrder( response) {
+
+  var vals = response.values;
+
+  new mysql.Database({
+    hostname: "localhost",
+    user: "dave",
+    password: "asdfa",
+    database: "edwardst_inv"
+  }).on( "error", function( error ) {
+    console.log( "ERROR: " + error );
+  }).on( "ready", function( server ) {
+   console.log( "Connected to " + server.hostname + " (" + server.version + ")" );
+  }).connect( function( error ) {
+
+    if ( error ) {
+      console.log( "Error on connect: " + error );
+    }
+
+    var that = this;
+    this.query( "SELECT * FROM PURCHASE_ORDER" ).
+    execute( function( error, rows, cols ) {
+       
+      if ( error ) {
+        console.log( "Error in select statement: " + error );
+        return;
+      }
+
+      response.writeHead( 200, {
+       "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+      response.write( rows );
+      response.end();
+    });
+  });
 }
 
-function viewActivePurchaseOrders() {
-  return "View Active Purchase Orders";
+function viewActivePurchaseOrders( response ) {
+
+  var vals = response.values;
+
+  new mysql.Database({
+    hostname: "localhost",
+    user: "dave",
+    password: "asdfa",
+    database: "edwardst_inv"
+  }).on( "error", function( error ) {
+    console.log( "ERROR: " + error );
+  }).on( "ready", function( server ) {
+   console.log( "Connected to " + server.hostname + " (" + server.version + ")" );
+  }).connect( function( error ) {
+
+     if ( error ) {
+       console.log( "Error on connect: " + error );
+     }
+
+     var that = this;
+     this.query( "SELECT * FROM PURCHASE_ORDER WHERE STATUS = 'open'" ).
+     execute( function( error, rows, cols ) {
+     
+       if ( error ) {
+         console.log( "error: " + error );
+         return;
+       }
+
+      response.writeHead( 200, {
+       "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+      response.write( rows );
+      response.end();
+     });
+   });
 }
 
 function createItem() {
