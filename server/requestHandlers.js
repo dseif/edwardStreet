@@ -2,9 +2,10 @@
 //  Used to do all of the heavy lifting on our server
 //  each function returns content for a different page
 
+var mysql = require( "db-mysql" );
+
 function index( response, cb ) {
 
-  var mysql = require( "db-mysql" );
   new mysql.Database({
     hostname: "localhost",
     user: "dave",
@@ -28,7 +29,10 @@ function index( response, cb ) {
        return;
      }
 
-     cb && cb( !!rows.length );
+     response.values.id = rows[ 0 ] && rows[ 0 ].EMPLOYEE_ID;
+     response.values.role = rows[ 0 ] && rows[ 0 ].ROLE;
+
+     cb && cb( !!rows.length ); 
    });
   });
 }
@@ -38,7 +42,7 @@ function login( response ) {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
      });
-     response.write( response.guid );
+     response.write( response.values.hash );
      response.end();
 }
 
@@ -49,6 +53,41 @@ function logout( response ) {
      });
      response.write( "Logged Out" );
      response.end();
+}
+
+function changePassword( response ) {
+
+  new mysql.Database({
+    hostname: "localhost",
+    user: "dave",
+    password: "asdfa",
+    database: "edwardst_inv"
+  }).on( "error", function( error ) {
+    console.log( "ERROR: " + error );
+  }).on( "ready", function( server ) {
+   console.log( "Connected to " + server.hostname + " (" + server.version + ")" );
+  }).connect( function( error ) {
+
+     if ( error ) {
+       console.log( "Error on connect: " + error );
+     }
+console.log( response.values, response.userID );
+     this.query( "UPDATE USER SET PASSWORD = '" + response.values.pass + "' WHERE EMPLOYEE_ID = '" + response.userID + "'" ).
+     execute( function( error, rows, cols ) {
+console.log( "AFTER STATEMENT" );
+      if ( error ) {
+        console.log( "Error on select: " + error );
+        return;
+      }
+
+      response.writeHead(200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+      });
+      response.write( "Password Successfully Changed" );
+      response.end();
+    });
+  });
 }
 
 function createUser() {
@@ -118,3 +157,4 @@ exports.createItem = createItem;
 exports.maintainItem = maintainItem;
 exports.createSupplierProfile = createSupplierProfile;
 exports.maintainSupplierProfile = maintainSupplierProfile;
+exports.changePassword = changePassword;

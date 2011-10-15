@@ -23,7 +23,7 @@ function start( route, handle ) {
 
     if ( pathname !== "/favicon.ico" ) {
 
-      if ( pathname === "/logout" || ( userHashs[ values.hash ] && userHashs[ values.hash ] < new Date( Date.now() ) ) ) {
+      if ( pathname === "/logout" || ( userHashs[ values.hash ] && userHashs[ values.hash ].time < new Date( Date.now() ) ) ) {
         console.log( "LOGGING OUT" );
         userHashs[ values.hash ] = null;
         route( handle, "/logout", response );
@@ -36,8 +36,10 @@ function start( route, handle ) {
         console.log( "User already validated" );
 
         //  Update our time as we are still doing stuff
-        userHashs[ values.hash ] = new Date( Date.now() + 1800000 );
-        response.guid = values.hash;
+        userHashs[ values.hash ].time = new Date( Date.now() + 1800000 );
+        response.userID = userHashs[ values.hash ].id;
+        response.values = values;
+        
         next();
         return;
       }
@@ -57,10 +59,14 @@ function start( route, handle ) {
               tempGuid = guidGenerator();
             }
 
+            tempGuid = response.values.role.substring( 0, 2 ) + tempGuid;
             values.hash = response.guid = tempGuid;
-
+            
             //  Set our time to 30mins from now, auto log out if not renewed by then
-            userHashs[ values.hash ] = new Date( Date.now() + 1800000 );
+            userHashs[ values.hash ] = {};
+            userHashs[ values.hash ].time = new Date( Date.now() + 1800000 );
+            userHashs[ values.hash ].id = response.values.id;
+
             next();
             return;
           } else {
@@ -83,7 +89,7 @@ function start( route, handle ) {
 
     //  Parse pathname out of url
     var pathname = url.parse( request.url ).pathname;
-
+    console.log( pathname );
     //  Get our content from the router
     route( handle, pathname, response );
   }

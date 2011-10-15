@@ -19,6 +19,7 @@ handle[ "/admin/logs" ] = requestHandlers.logs;
 
 //  All logged in user pages
 handle[ "/profile" ] = requestHandlers.profile;
+handle[ "/changePassword" ] = requestHandlers.changePassword;
 
 //  Purchase Order pages
 handle[ "/purchaseorder/returnorderline" ] = requestHandlers.returnOrderLine;
