@@ -50,6 +50,13 @@ p, ol {
 	text-align: justify;
 }
 
+.textright
+{
+	color: #FFFFFF;
+	text-align: center;
+	font-weight: bold;	
+}
+
 ol { }
 
 blockquote { }
@@ -94,7 +101,8 @@ margin: 0 auto;
 }
 
 #wrapper {
-	width: 1024px;
+	width: 1380px;
+	height: auto;
 	margin: 60px auto;
 	background: #FFD9A3;
 	border-style:solid;
@@ -118,9 +126,9 @@ margin: 0 auto;
 /* Header */
 
 #header {
-	width: 980px;
 	height: 150px;
 	margin: 0 auto;
+	width: 980px;
 }
 
 /* Menu */
@@ -150,6 +158,7 @@ margin: 0 auto;
 
 #nav {
 	list-style:none;
+	margin: 0 auto;
 	/*height: 200px;
 	width: 100px;
 	overflow:scroll;*/
@@ -250,14 +259,13 @@ margin: 0 auto;
 	color: #FFFFFF;
 }
 
+
 /* Page */
 
 #page {
-	width: 940px;
-	margin: 0 auto;
-	padding: 50px 10px 240px 40px;
+	width: auto;
+	padding: auto auto auto auto;
 }
-
 
 /* LOGO */
 
@@ -302,120 +310,9 @@ margin: 0 auto;
 	padding-bottom: 20px;
 }
 
-/* Content */
 
-#content {
-	float: left;
-	width: 630px;
-}
 
-.center
-{
-	text-align:center;
-}
 
-.textleft
-{
-	text-align:left;
-}
-
-.bold
-{
-	text-align:left;
-	font-weight:bold;
-}
-
-.boldtable
-{
-	text-align:left;
-	font-weight:bold;
-	border-color:inherit;
-	border-width:thick;
-	background-color:Orange;
-}
-
-.bigfont
-{
-	font-size:x-large;
-	font-weight:bold;
-}
-
-.justifytext .center
-{
-	text-align:justify;
-}
-
-/* Post */
-
-.post {
-	margin-bottom: 45px;
-}
-
-.post .title {
-	height: 44px;
-	padding-left: 15px;
-	color: #A15E00;
-}
-
-.post .title a {
-	text-decoration: none;
-	text-transform: capitalize;
-	font-size: 30px;
-	color: #A15E00;
-}
-
-.post .date {
-}
-
-.post .meta {
-	height: 32px;
-	margin-left: 2px;
-	padding: 4px 30px 2px 15px;
-	font-family: Arial, Helvetica, sans-serif;
-	font-weight: normal;
-	font-size: 10px;
-}
-
-.post .meta span {
-	display: block;
-	margin-top: -10px;
-}
-
-.post .meta a { }
-
-.post .entry {
-	padding: 10px 15px;
-}
-
-.post .links {
-	display: block;
-	width: 120px;
-	height: 18px;
-	margin: 30px 0px 0px 0px; 
-	padding: 3px 0px 0px 40px;
-	background: #CF8F36;
-	text-decoration: none;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 11px;
-	text-decoration: none;
-	font-weight: bold;
-	color: #FFFFFF;
-}
-
-.post .comments {
-	display: block;
-	width: 120px;
-	height: 18px;
-	margin: 0px; 
-	padding: 3px 0px 0px 40px;
-	/*background: url(images/img07.gif) no-repeat left top;*/
-	text-decoration: none;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 11px;
-	text-decoration: none;
-	font-weight: bold;
-	color: #961A06;
-}
 
 /* Sidebar */
 
