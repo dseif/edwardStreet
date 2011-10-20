@@ -9,7 +9,7 @@
 <script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript">
 
-var demoForm = $("#demo");
+/*var demoForm = $("#demo");
         demoForm.validation();
         demoForm.submit(function(e) {
 
@@ -18,11 +18,26 @@ var demoForm = $("#demo");
                 demoForm.append("<strong id='valid-form'>Form valid</strong>");
             }
             e.preventDefault();
-        }
+        }*/
 
 
-$(document).ready(function () {	
-	
+        document.addEventListener( "DOMContentLoaded", function( event ) {
+
+  document.getElementById( "sub" ).addEventListener( "click", function( event ) {
+
+    console.log( window.edwardValidation );
+
+    var emailAddr = document.getElementById( "email" ).value,
+        validation = window.edwardValidation;
+
+    if ( !validation.validateEmail( emailAddr ) ) {
+    document.getElementById( "emailValid" ).innerHTML = "NOT VALID EMAIL ADDRESS";
+    } else {
+
+    document.getElementById( "emailValid" ).innerHTML = "EMAIL IS SASHA";
+    } 
+  }, false );
+
 	$('#nav li').hover(
 		function () {
 			//show its submenu
@@ -34,8 +49,7 @@ $(document).ready(function () {
 		}
 	);
 
-	
-});
+  }, false );	
 	</script>
 </head>
 
@@ -110,32 +124,13 @@ $(document).ready(function () {
 
 	<div id="page">
 		<h2 class="bigfont">Welcome!</h2><br />
-        
-        <form action="#demo" id="demo">
-
-        <div>
-        <label for="field1">required</label>
-        <input id="field1" validation="required" name="field1" type="text" />
-        </div>
-
-        <div class="error">
-        <label for="field2">email</label>
-        <input id="field2" validation="required" name="field2" type="text" /><ul class="myulli"><li>Enter a valid e-mail address.</li></ul>
-        </div>
-
-        <div class="error">
-        <label for="field3">url</label>
-        <input id="field3" validation="required" name="field3" type="text" /><ul class="myulli"><li>Enter a valid url address.</li></ul>
-        </div>
-
-        <div class="submit-area">
-        
-        <input value="check" type="submit"/>
-
-        </div>
-
-        </form>
-
+    Required: <input id="req"></input> 
+    <div id="reqValid" ></div>
+    Email: <input id="email"></input>
+    <div id="emailValid"></div>
+    URL: <input id="url"></input>
+    <div id="urlValid"></div>
+    <button id="sub"> SUBMIT </button>
 	</div>
 </div>
 
