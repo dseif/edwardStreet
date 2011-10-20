@@ -8,47 +8,33 @@
 <script src="login.js"></script>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript">
-    document.addEventListener( "DOMContentLoaded", function( event ) {
+  document.addEventListener( "DOMContentLoaded", function( event ) {
 
-      var cookie = window.cookie;
-      if ( cookie.substring( 0, 2 ).toLowerCase() !== "ad" ) {
+    var cookie = window.cookie;
+    if ( cookie.substring( 0, 2 ).toLowerCase() !== "ad" ) {
 
-        window.location = "http://localhost/~dseif/edwardStreet/site/login.html";
+      window.location = "http://localhost/~dseif/edwardStreet/site/login.html";
+    }
 
-      }
+    document.getElementById( "saveBtn" ).addEventListener( "click", function( event ) { 
 
-      document.getElementById( "saveBtn" ).addEventListener( "click", function( event ) { 
-        $.ajax({
+      $.ajax({
+        cache: false,
+        url: "http://localhost:8080/createuser",
+        data: {
+          user: document.getElementById( "usrName" ).value,
+          pass: document.getElementById( "tempPwd" ).value,
+          hash: cookie,
+          email: document.getElementById( "emailAddrs" ).value,
+          role: document.getElementById( "roleBox" ).value
+        },
+        success: function( response, code, xhr ) {
 
-          cache: false,
-
-          url: "http://localhost:8080/createuser",
-
-          data: {
-
-            user: document.getElementById( "usrName" ).value,
-
-            pass: document.getElementById( "tempPwd" ).value,
-
-            hash: cookie,
-
-            email: document.getElementById( "emailAddrs" ).value,
-
-            role: document.getElementById( "roleBox" ).value
-
-          },
-
-          success: function( response, code, xhr ) {
-
-            console.log( response );
-
-          }
-
-        });
-
-      }, false );
-
+          console.log( response );
+        }
+      });
     }, false );
+  }, false );
 
   $(document).ready(function () {
 
@@ -72,7 +58,7 @@
 <div id="header">
 	<div id="logo">
 		<h1><a href="index.html">Edward Street</a></h1>
-		<p><em> template design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></em></p>
+  <p class="textright"><a class="textright" href="login.html">Log in</a></p>
 	</div>
 </div>
 
@@ -153,15 +139,7 @@
   						<option value="supplier">Supplier</option>
   						<option value="admin">Admin</option>
 					</select><br/>
-				Supplier
-					<select name="SupplierBox" id="suppBox">
-  						<option value="1">Supplier1</option>
-  						<option value="2">Supplier2</option>
-  						<option value="3">Supplier3</option>
-  						<option value="4">Supplier4</option>
-					</select><br/>
-				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
-				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>				
+				<input value="Save" type="submit" id="saveBtn"/>
 				<br/>
 				
 				</p><br/>

@@ -5,7 +5,64 @@
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street</title>
+<script src="login.js"></script>
 <script type="text/javascript" src="js/jquery.js"></script>
+<script>
+  document.addEventListener( "DOMContentLoaded", function( event ) {
+
+    $.ajax({
+      cache: false,
+      url: "http://localhost:8080/viewsupplier",
+      data: {
+        hash: getCookie( "EDST_H" )
+      },
+      success: function( response, code, xhr ) {
+
+        response = JSON.parse( response );
+        var dropDown = document.getElementById( "suppBox" );
+
+        var addOption = function( text ) {
+          var opt = document.createElement( "option" );
+          opt.text = text; 
+          opt.value = text; 
+          dropDown.options.add( opt );
+        }
+
+        for ( var i = 0, len = response.length; i < len; i++ ) {  
+          var temp = response[ i ].NAME;
+          addOption( temp ); 
+        }
+      }
+    });
+    $.ajax({
+      cache: false,
+      url: "http://localhost:8080/viewitems",
+      data: {
+        hash: getCookie( "EDST_H" )
+      },
+      success: function( response, code, xhr ) {
+
+        var table = document.getElementById( "poTable" );
+
+        response = JSON.parse( response );
+
+        var addRow = function( count ) {
+          var row = table.insertRow( count + 1 ),
+          data = response[ count ],
+          count = 0;
+
+          for( var item in data ) {
+            row.insertCell( count ).innerHTML = data[ item ];
+          }
+        }
+
+        for( var i = 0, len = response.length; i < len; i ++ ) {
+          addRow( i );
+        }
+      }
+    });
+  }, false );
+</script>
 <script type="text/javascript">
     $(document).ready(function () {
 
@@ -29,7 +86,7 @@
 <div id="header">
 	<div id="logo">
 		<h1><a href="index.html">Edward Street</a></h1>
-		<p><em> template design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></em></p>
+  <p class="textright"><a class="textright" href="login.html">Log in</a></p>
 	</div>
 </div>
 
@@ -102,10 +159,6 @@
 				
 				 <p>
 				Select Supplier:<select name="SupplierBox" id="suppBox">
-  							<option value="1">Supplier A</option>
-  							<option value="2">Supplier B</option>
-  							<option value="3">Supplier C</option>
-							<option value="4">[Create New]</option>
 				    		</select>
 				</p>
 
@@ -117,22 +170,12 @@
   					<tr>
     						<th>Item Name</th>
     						<th>Item Category</th>
-						<th>Item Type</th>
+					    	<th>Item Type</th>
     						<th>price</th>
     						<th>unit</th>
     						<th>comments</th>
     						<th>Quantity</th>
     						<th>Subtotal</th>
-  					</tr>
-  					<tr>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
   					</tr>
 					</table><br/>
 						

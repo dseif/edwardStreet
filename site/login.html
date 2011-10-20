@@ -9,45 +9,34 @@
 <title>Edward Street</title>
 <script>
 
-      document.addEventListener( "DOMContentLoaded", function( event ) {
-        var button = document.getElementById( "loginBtn" );
+  document.addEventListener( "DOMContentLoaded", function( event ) {
 
-        button.addEventListener( "click", function( event ) {
+    var button = document.getElementById( "loginBtn" );
 
-          $.ajax({
+    button.addEventListener( "click", function( event ) {
 
-            cache: false,
+      $.ajax({
+        cache: false,
+        url: "http://localhost:8080/",
+        data: {
+          user: document.getElementById( "user" ).value,
+          pass: document.getElementById( "pass" ).value,
+          hash: document.getElementById( "response" ).innerHTML
+        },
+        success: function( response, code, xhr ) {
+console.log( response );
+          if ( response !== "Logged Out"  && response !== "Invalid user/pass" ) {
 
-            url: "http://localhost:8080/login",
-
-            data: {
-
-              user: document.getElementById( "user" ).value,
-
-              pass: document.getElementById( "pass" ).value,
-
-              hash: document.getElementById( "response" ).innerHTML
-
-            },
-
-            success: function( response, code, xhr ) {
-              document.getElementById( "response" ).innerHTML = response;
-
-              if( response !== "Logged Out"  && response !== "Invalid user/pass" ) {
-
-                setCookie( "EDST_H", response, 365 );
-
-              }
-
-            }
-
-          });
-
-        }, false );
-
-      }, false );
-
-    </script>
+            setCookie( "EDST_H", response, 365 );
+            window.location = "http://localhost/~dseif/edwardStreet/site/";
+          } else {
+            document.getElementById( "response" ).innerHTML = response;
+          }
+        }
+      });
+    }, false );
+  }, false );
+</script>
 
 </head>
 
