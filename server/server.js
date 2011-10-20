@@ -53,6 +53,7 @@ function start( route, handle ) {
         route( handle, "/", response, function( ok ) {
 
           if ( ok ) {
+
             var tempGuid = guidGenerator();
 
             //  Make sure we get no duplicates, it has to be unique after all
@@ -69,7 +70,13 @@ function start( route, handle ) {
             userHashs[ values.hash ].id = response.values.id;
             userHashs[ values.hash ].userName = response.values.userName;
 
-            next();
+
+            response.writeHead( 200, {
+              "Content-Type": "text/plain",
+              "Access-Control-Allow-Origin": "*"
+            });
+            response.write( values.hash );
+            response.end();
             return;
           } else {
 

@@ -24,7 +24,7 @@ handle[ "/changePassword" ] = requestHandlers.changePassword;
 //  Purchase Order pages
 handle[ "/purchaseorder/returnorderline" ] = requestHandlers.returnOrderLine;
 handle[ "/purchaseorder/maintainpurchaseorder" ] = requestHandlers.maintainPurchaseOrder;
-handle[ "/purchaseorder/createpurchaseorder" ] = requestHandlers.createPurchaseOrder;
+handle[ "/createpurchaseorder" ] = requestHandlers.createPurchaseOrder;
 handle[ "/purchaseorder/receivepurchaseorder" ] = requestHandlers.receivePurchaseOrder;
 handle[ "/viewpurchaseorder" ] = requestHandlers.viewPurchaseOrder;
 handle[ "/viewactivepurchaseorders" ] = requestHandlers.viewActivePurchaseOrders;
@@ -32,9 +32,11 @@ handle[ "/viewactivepurchaseorders" ] = requestHandlers.viewActivePurchaseOrders
 //  Item pages
 handle[ "/items/createitem" ] = requestHandlers.createItem;
 handle[ "/items/maintainitem" ] = requestHandlers.maintainItem;
+handle[ "/viewitems" ] = requestHandlers.viewItems;
 
 //  Supplier Pages
 handle[ "/supplier/createsupplierprofile" ] = requestHandlers.createSupplierProfile;
 handle[ "/supplier/maintainsupplierprofile" ] = requestHandlers.maintainSupplierProfile;
+handle[ "/viewsupplier" ] = requestHandlers.viewSupplier;
 
-server.start(router.route, handle);
+server.start( router.route, handle );
