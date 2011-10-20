@@ -2,7 +2,9 @@
 //  Used to do all of the heavy lifting on our server
 //  each function returns content for a different page
 
-//  Helper function to store utility functions
+var mysql = require( "db-mysql" );
+
+//  Helper object to store utility functions
 var helper = {
 
   //  Helper function to return the proper date string to be inserted into the database
@@ -11,45 +13,48 @@ var helper = {
     var cur = new Date();
     return cur.getFullYear() + "-" + cur.getMonth() + "-" + cur.getDate() + " " +
            cur.getHours() + ":" + cur.getMinutes() + ":00";
+  },
+  //  function to make database calls for us
+  query: function( queryString, callback ) {
+    
+    new mysql.Database({
+      hostname: "localhost",
+      user: "dave",
+      password: "asdfa",
+      database: "edwardst_inv"
+    }).on( "error", function( error ) {
+      console.log( "ERROR: " + error );
+    }).on( "ready", function( server ) {
+     console.log( "Connected to " + server.hostname + " (" + server.version + ")" );
+    }).connect( function( error ) {
+
+      if ( error ) {
+        console.log( "Error on connect: " + error );
+      }
+
+      this.query( queryString ).
+      execute( function( error, rows, cols ) {callback( error, rows, cols ) });
+    });
   }
 }
-
-var mysql = require( "db-mysql" );
 
 function index( response, cb ) {
 
   var vals = response.values;
 
-  new mysql.Database({
-    hostname: "localhost",
-    user: "dave",
-    password: "asdfa",
-    database: "edwardst_inv"
-  }).on( "error", function( error ) {
-    console.log( "ERROR: " + error );
-  }).on( "ready", function( server ) {
-   console.log( "Connected to " + server.hostname + " (" + server.version + ")" );
-  }).connect( function( error ) {
+  helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.user + "' AND PASSWORD = '" + vals.pass + "'", function( error, rows, cols ) {
 
-   if ( error ) {
-     console.log( "Error on connect: " + error );
-   }
+    if ( error ) {
+      console.log( "Error on select: " + error );
+      return;
+    }
 
-   this.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.user + "' AND PASSWORD = '" + vals.pass + "'"  ).
-   execute( function( error, rows, cols ) {
+    vals.id = rows[ 0 ] && rows[ 0 ].EMPLOYEE_ID;
+    vals.userName = rows[ 0 ] && rows[ 0 ].USER_ID;
+    vals.role = rows[ 0 ] && rows[ 0 ].ROLE;
 
-     if ( error ) {
-       console.log( "Error on select: " + error );
-       return;
-     }
-
-     vals.id = rows[ 0 ] && rows[ 0 ].EMPLOYEE_ID;
-     vals.userName = rows[ 0 ] && rows[ 0 ].USER_ID;
-     vals.role = rows[ 0 ] && rows[ 0 ].ROLE;
-
-     cb && cb( !!rows.length );
-   });
-  });
+    cb && cb( !!rows.length );
+  });   
 }
 
 function login( response ) {
@@ -74,46 +79,29 @@ function changePassword( response ) {
 
   var vals = response.values;
 
-  new mysql.Database({
-    hostname: "localhost",
-    user: "dave",
-    password: "asdfa",
-    database: "edwardst_inv"
-  }).on( "error", function( error ) {
-    console.log( "ERROR: " + error );
-  }).on( "ready", function( server ) {
-   console.log( "Connected to " + server.hostname + " (" + server.version + ")" );
-  }).connect( function( error ) {
+  var that = this;
+  helper.query( "UPDATE USER SET PASSWORD = '" + vals.pass + "' WHERE EMPLOYEE_ID = '" + vals.userID + "'", function( error, rows, cols ) {
 
-     if ( error ) {
-       console.log( "Error on connect: " + error );
-     }
+    if ( error ) {
+      console.log( "Error on select: " + error );
+      return;
+    }
 
-     var that = this;
-     this.query( "UPDATE USER SET PASSWORD = '" + vals.pass + "' WHERE EMPLOYEE_ID = '" + vals.userID + "'" ).
-     execute( function( error, rows, cols ) {
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( "Password Successfully Changed" );
+    response.end();
+
+    helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) VALUES( '" +
+                  vals.userName + "', 'Change', 'Changed Password', '" + vals.userName + "', '" + helper.date() + "')",
+                  function( error, rows, cols ) {
 
       if ( error ) {
-        console.log( "Error on select: " + error );
+        console.log( "Error in inserting into history: " + error );
         return;
       }
-
-      response.writeHead( 200, {
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*"
-      });
-      response.write( "Password Successfully Changed" );
-      response.end();
-
-      that.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) VALUES( '" +
-                  vals.userName + "', 'Change', 'Changed Password', '" + vals.userName + "', '" + helper.date() + "')" ).
-      execute( function( error, rows, cols ) {
-
-        if ( error ) {
-          console.log( "Error in inserting into history: " + error );
-          return;
-        }
-      });
     });
   });
 }
@@ -122,37 +110,20 @@ function createUser( response ) {
 
   var vals = response.values;
 
-  new mysql.Database({
-    hostname: "localhost",
-    user: "dave",
-    password: "asdfa",
-    database: "edwardst_inv"
-  }).on( "error", function( error ) {
-    console.log( "ERROR: " + error );
-  }).on( "ready", function( server ) {
-   console.log( "Connected to " + server.hostname + " (" + server.version + ")" );
-  }).connect( function( error ) {
+  helper.query( "INSERT INTO USER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE ) VALUES('" + vals.user + "', '" + vals.pass +
+                 "', '" + vals.email + "', '" + " " + "', '" + vals.role + "')", function( error, rows, cols ) {
 
-     if ( error ) {
-       console.log( "Error on connect: " + error );
-     }
-console.log( vals );
-     this.query( "INSERT INTO USER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE ) VALUES('" + vals.user + "', '" + vals.pass +
-                 "', '" + vals.email + "', '" + " " + "', '" + vals.role + "')" ).
-     execute( function( error, rows, cols ) {
+    if ( error ) {
+      console.log( "Error on select: " + error );
+      return;
+    }
 
-      if ( error ) {
-        console.log( "Error on select: " + error );
-        return;
-      }
-
-      response.writeHead(200, {
+    response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
-      });
-      response.write( "User successfully added" );
-      response.end();
     });
+    response.write( "User successfully added" );
+    response.end();
   });
 }
 
@@ -182,78 +153,38 @@ function receivePurchaseOrder() {
 
 function viewPurchaseOrder( response) {
 
-  var vals = response.values;
-
-  new mysql.Database({
-    hostname: "localhost",
-    user: "dave",
-    password: "asdfa",
-    database: "edwardst_inv"
-  }).on( "error", function( error ) {
-    console.log( "ERROR: " + error );
-  }).on( "ready", function( server ) {
-   console.log( "Connected to " + server.hostname + " (" + server.version + ")" );
-  }).connect( function( error ) {
-
+  helper.query( "SELECT * FROM PURCHASE_ORDER", function( error, rows, cols ) {
+       
     if ( error ) {
-      console.log( "Error on connect: " + error );
+      console.log( "Error in select statement: " + error );
+      return;
     }
 
-    var that = this;
-    this.query( "SELECT * FROM PURCHASE_ORDER" ).
-    execute( function( error, rows, cols ) {
-       
-      if ( error ) {
-        console.log( "Error in select statement: " + error );
-        return;
-      }
-
-      response.writeHead( 200, {
-       "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*"
-      });
-      response.write( rows );
-      response.end();
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
     });
+    response.write( JSON.stringify( rows ) );
+    response.end();
   });
 }
 
 function viewActivePurchaseOrders( response ) {
 
-  var vals = response.values;
-
-  new mysql.Database({
-    hostname: "localhost",
-    user: "dave",
-    password: "asdfa",
-    database: "edwardst_inv"
-  }).on( "error", function( error ) {
-    console.log( "ERROR: " + error );
-  }).on( "ready", function( server ) {
-   console.log( "Connected to " + server.hostname + " (" + server.version + ")" );
-  }).connect( function( error ) {
-
-     if ( error ) {
-       console.log( "Error on connect: " + error );
-     }
-
-     var that = this;
-     this.query( "SELECT * FROM PURCHASE_ORDER WHERE STATUS = 'open'" ).
-     execute( function( error, rows, cols ) {
+  helper.query( "SELECT * FROM PURCHASE_ORDER WHERE STATUS = 'open'", function( error, rows, cols ) {
      
-       if ( error ) {
-         console.log( "error: " + error );
-         return;
-       }
+    if ( error ) {
+      console.log( "error: " + error );
+      return;
+    }
 
-      response.writeHead( 200, {
-       "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*"
-      });
-      response.write( rows );
-      response.end();
-     });
-   });
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
 }
 
 function createItem() {
@@ -268,8 +199,42 @@ function createSupplierProfile() {
   return "Create Supplier Profile";
 }
 
+function viewItems( response ) {
+  
+  helper.query( "SELECT * FROM ITEM", function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( error );
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
+}
+
 function maintainSupplierProfile() {
   return "Maintain Supplier Profile";
+}
+
+function viewSupplier( response ) {
+  
+  helper.query( "SELECT * FROM SUPPLIER", function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( error );
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
 }
 
 exports.index = index;
@@ -284,8 +249,10 @@ exports.createPurchaseOrder = createPurchaseOrder;
 exports.receivePurchaseOrder = receivePurchaseOrder;
 exports.viewPurchaseOrder = viewPurchaseOrder;
 exports.viewActivePurchaseOrders = viewActivePurchaseOrders;
+exports.viewSupplier = viewSupplier;
 exports.createItem = createItem;
 exports.maintainItem = maintainItem;
+exports.viewItems = viewItems;
 exports.createSupplierProfile = createSupplierProfile;
 exports.maintainSupplierProfile = maintainSupplierProfile;
 exports.changePassword = changePassword;
