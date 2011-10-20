@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<title>Edward Street</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/validation.js"></script>
+<script type="text/javascript">
+
+var demoForm = $("#demo");
+        demoForm.validation();
+        demoForm.submit(function(e) {
+
+            $("#valid-form").remove();
+            if(demoForm.validate()) {
+                demoForm.append("<strong id='valid-form'>Form valid</strong>");
+            }
+            e.preventDefault();
+        }
+
+
+$(document).ready(function () {	
+	
+	$('#nav li').hover(
+		function () {
+			//show its submenu
+			$('ul', this).show();
+		}, 
+		function () {
+			//hide its submenu
+			$('ul', this).hide();
+		}
+	);
+
+	
+});
+	</script>
+</head>
+
+<body>
+
+<div id="header">
+	<div id="logo">
+		<h1><a href="index.html">Edward Street</a></h1>
+	</div>
+</div>
+	
+	<div id="menu">
+
+	<ul id="nav">
+	
+	<li id="itemMenu"><a href="#"> Item > </a>
+		<ul>
+			<li><a href="createitem.html">Create Item</a></li>
+			<li><a href="modifyitem.html">Modify Item</a></li>
+				<li><a href="edititem.html">Edit Item</a></li>
+			<li><a href="deleteitem.html">Delete Item</a></li>
+		</ul>
+		<div class="clear"></div>
+	</li>
+
+	<li id="userMenu"><a href="#"> User > </a>
+		<ul>
+			<li><a href="createuser.html">Create User</a></li>
+			<li><a href="changepassword.html">Change Password</a></li>
+			<li><a href="edituserall.html">Edit Users</a></li>
+			<li><a href="edituserbr.html">Edit Buyers and Receivers</a></li>
+			<li><a href="modifyadmin.html">Modify Admin Info</a></li>
+			<li><a href="deleteuser.html">Delete User</a></li>
+		</ul>
+		<div class="clear"></div>
+	</li>
+	
+	<li id="supplierMenu"><a href="#"> Supplier > </a>
+		<ul>
+			<li><a href="createsupp.html">Create Supplier</a></li>
+				<li><a href="createsuppuser.html">Create Supplier as User</a></li>
+			<li><a href="modifysuppinfo.html">Modify Supplier Info</a></li>
+				<li><a href="editsupplier.html">Edit Supplier</a></li>
+				<li><a href="editsupplierall.html">Edit All Suppliers</a></li>
+			<li><a href="deletesupp.html">Delete Supplier</a></li>
+		</ul>
+		<div class="clear"></div>
+	</li>
+	
+	<li id="poMenu"><a href="#"> Purchase Order > </a>
+		<ul>
+			<li><a href="createpo.html">Create Purchase Order</a></li>
+			<li><a href="modifypo.html">Modify Purchase Order</a></li>
+			<li><a href="deletepo.html">Delete Purchase Order</a></li>
+			<li><a href="receivepo.html">Receive Purchase Order</a></li>
+			<li><a href="returnpo.html">Return Purchase Order</a></li>
+			<li><a href="viewactivepo.html">View Active Purchase Order</a></li>
+			<li><a href="viewpo.html">View Purchase Order</a></li>
+		</ul>			
+		<div class="clear"></div>
+	</li>
+	
+	<li id="searchMenu"><a href="search.html">Search</a></li>
+	<li id="shoppingCartMenu"><a href="shoppingcart.html">Shopping Cart</a></li>
+	<li id="viewLogMenu"><a href="viewlog.html">View Log</a></li>
+	
+	</ul>
+
+	</div>
+
+<div id="wrapper">
+
+	<div id="page">
+		<h2 class="bigfont">Welcome!</h2><br />
+        
+        <form action="#demo" id="demo">
+
+        <div>
+        <label for="field1">required</label>
+        <input id="field1" validation="required" name="field1" type="text" />
+        </div>
+
+        <div class="error">
+        <label for="field2">email</label>
+        <input id="field2" validation="required" name="field2" type="text" /><ul class="myulli"><li>Enter a valid e-mail address.</li></ul>
+        </div>
+
+        <div class="error">
+        <label for="field3">url</label>
+        <input id="field3" validation="required" name="field3" type="text" /><ul class="myulli"><li>Enter a valid url address.</li></ul>
+        </div>
+
+        <div class="submit-area">
+        
+        <input value="check" type="submit"/>
+
+        </div>
+
+        </form>
+
+	</div>
+</div>
+
+
+
+</body>
+
+</html> 
