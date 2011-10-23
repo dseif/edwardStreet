@@ -29,13 +29,22 @@
 
     var emailAddr = document.getElementById( "email" ).value,
         validation = window.edwardValidation;
+		
+	var reqField = document.getElementById( "req" ).value;
 
-    if ( !validation.validateEmail( emailAddr ) ) {
+    if ( !validation.validateGeneral( emailAddr ) ) {
     document.getElementById( "emailValid" ).innerHTML = "NOT VALID EMAIL ADDRESS";
     } else {
 
-    document.getElementById( "emailValid" ).innerHTML = "EMAIL IS SASHA";
+    document.getElementById( "emailValid" ).innerHTML = "EMAIL IS VALID";
     } 
+	
+	if ( !validation.validateGeneral( reqField ) ) {
+    document.getElementById( "reqValid" ).innerHTML = "Required Field";
+    } else {
+
+    document.getElementById( "reqValid" ).innerHTML = "Field is populated";
+    }
   }, false );
 
 	$('#nav li').hover(
@@ -59,6 +68,7 @@
 	<div id="logo">
 		<h1><a href="index.html">Edward Street</a></h1>
 	</div>
+    <p class="textright"><a class="textright" href="login.html">Log in</a></p>
 </div>
 	
 	<div id="menu">
