@@ -8,7 +8,7 @@
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript">
-
+/*$(document).ready(function () {*/
 /*var demoForm = $("#demo");
         demoForm.validation();
         demoForm.submit(function(e) {
@@ -20,8 +20,8 @@
             e.preventDefault();
         }*/
 
-
-        document.addEventListener( "DOMContentLoaded", function( event ) {
+        
+  document.addEventListener( "DOMContentLoaded", function( event ) {
 
   document.getElementById( "sub" ).addEventListener( "click", function( event ) {
 
@@ -46,7 +46,7 @@
     document.getElementById( "reqValid" ).innerHTML = "Field is populated";
     }
   }, false );
-
+  
 	$('#nav li').hover(
 		function () {
 			//show its submenu
@@ -58,7 +58,7 @@
 		}
 	);
 
-  }, false );	
+  }, false );
 	</script>
 </head>
 
@@ -134,12 +134,28 @@
 
 	<div id="page">
 		<h2 class="bigfont">Welcome!</h2><br />
-    Required: <input id="req"></input> 
+
+    Required: <input id="req" />
     <div id="reqValid" ></div>
-    Email: <input id="email"></input>
+
+    Email: <input id="email" />
     <div id="emailValid"></div>
-    URL: <input id="url"></input>
+
+    URL: <input id="url" />
     <div id="urlValid"></div>
+
+    Password: <input id="pass" />
+    <div id="passValid"></div>
+
+    Confirm Password: <input id="pass2" />
+    <div id="passValid2"></div>
+
+    Number: <input id="num1" />
+    <div id="numValid"></div>
+
+    User Name: <input id="usrnam" />
+    <div id="usrValid"></div>
+
     <button id="sub"> SUBMIT </button>
 	</div>
 </div>

@@ -7,34 +7,40 @@
 *
 */
 
-(function() {
+(function () {
 
-  window.edwardValidation = {
+    window.edwardValidation = {
 
-    validateGeneral: function( whatIsValidated ) {
+        validateGeneral: function (whatIsValidated) {
+            if (validateRequired(whatIsValidated)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    };
 
+    // testing regex
+    var testPattern = function (value, pattern) {
+
+        var regExp = new RegExp(pattern, "");
+        return regExp.test(value);
     }
-  };
-  
-  	var testPattern = function(value, pattern) { //Private method
 
-	var regExp = new RegExp(pattern,"");
-	return regExp.test(value);
-	}
-	
-    var validateEmail = function( emailAddress ) {
-      if (testPattern(emailAddress,"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])")) {
-        return true;
-      } else {
-        return false;
-      }
+    var validateEmail = function (emailAddress) {
+        if (testPattern(emailAddress, "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])")) {
+            return true;
+        } else {
+            return false;
+        }
     }
-	
-	var validateRequired = function( required ) {
-      if (required == "") {
-        return false;
-      } else {
-        return true;
-      }
+
+    var validateRequired = function (required) {
+        if (required == "") {
+            return false;
+        } else {
+            return true;
+        }
     }
 })();
