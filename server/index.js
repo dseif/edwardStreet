@@ -38,5 +38,6 @@ handle[ "/viewitems" ] = requestHandlers.viewItems;
 handle[ "/supplier/createsupplierprofile" ] = requestHandlers.createSupplierProfile;
 handle[ "/supplier/maintainsupplierprofile" ] = requestHandlers.maintainSupplierProfile;
 handle[ "/viewsupplier" ] = requestHandlers.viewSupplier;
+handle[ "/deletesupplier" ] = requestHandlers.deleteSupplier;
 
 server.start( router.route, handle );
