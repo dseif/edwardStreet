@@ -6,6 +6,39 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street</title>
 <script type="text/javascript" src="js/jquery.js"></script>
+
+<script>
+// Add a listenter for the submit button
+document.addEventListener( "DOMContentLoaded", function( event ) {
+
+    var button = document.getElementById( "savBtn" );
+    button.addEventListener( "click", function( event ) {
+
+    $.ajax({
+      cache: false,
+      url: "http://localhost:8080/addsupplier",
+      data: {
+        suppName: document.getElementById( "suppName" ).value,
+        leglName: document.getElementById( "leglName" ).value,
+        addrs: document.getElementById( "addrs" ).value,
+        contctNumber: document.getElementById( "contctNumber" ).value,
+        leadTime: document.getElementById( "leadTime" ).value,
+        
+        // Is this valid? getElementByName
+        DeliveryDates: document.getElementByName( "DeliveryDates" ).value,
+        SupplierComments: document.getElementByName( "SupplierComments" ).value,
+        SpecialComments: document.getElementByName( "SpecialComments" ).value,
+
+      },
+      success: function( response, code, xhr ) {
+
+        // The supplier has been added successfully
+      }
+    });
+   }, false );
+  }, false );
+</script>
+
 <script type="text/javascript">
     $(document).ready(function () {
 
@@ -101,7 +134,7 @@
 			<div id="page">
 				<p>
 				Supplier Name <input type="text" value="" name="SupplierName" id="suppName"/><br/>
-				Legal Name <input type="text" value="" name="LegalName" id="legName"/><br/>
+				Legal Name <input type="text" value="" name="LegalName" id="leglName"/><br/>
 				Address <input type="text" value="" name="Address" id="addrs"/><br />
 				Contact Number <input type="text" value="" name="ContactNumber" id="cntctNumber"/><br/>
 				Lead Time <input type="text" value="" name="LeadTime" id="leadTime"/><br/>

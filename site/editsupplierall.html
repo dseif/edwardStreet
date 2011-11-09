@@ -6,6 +6,72 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street</title>
 <script type="text/javascript" src="js/jquery.js"></script>
+
+<script>
+// Show all suppliers, also modify selected supplier
+// Selection is not implemented yet
+
+  document.addEventListener( "DOMContentLoaded", function( event ) {
+
+    $.ajax({
+      cache: false,
+      url: "http://localhost:8080/viewsupplier",
+      data: {
+        hash: getCookie( "EDST_H" )
+      },
+      success: function( response, code, xhr ) {
+
+        var table = document.getElementById( "suppTable" );
+
+        response = JSON.parse( response );
+
+        var addRow = function( count ) {
+          var row = table.insertRow( count + 1 ),
+          data = response[ count ],
+          count = 0;
+
+          for( var item in data ) {
+            row.insertCell( count ).innerHTML = data[ item ];
+          }
+        }
+
+        for( var i = 0, len = response.length; i < len; i ++ ) {
+          addRow( i );
+        }
+      }
+    });
+    
+    // Edit the selected supplier
+    var button = document.getElementById( "savBtn" );
+    button.addEventListener( "click", function( event ) {
+
+    $.ajax({
+      cache: false,
+      url: "http://localhost:8080/addsupplier",
+      data: {
+        usrName: document.getElementById( "usrName" ).value,
+        roleBox: document.getElementById( "roleBox" ).value,
+        suppName: document.getElementById( "suppName" ).value,
+        leglName: document.getElementById( "leglName" ).value,
+        addrs: document.getElementById( "addrs" ).value,
+        contact: document.getElementById( "contact" ).value,
+        leadTime: document.getElementById( "leadTime" ).value,
+        datesofdelivery: document.getElementById( "datesofdelivery" ).value,
+        
+        // Is this valid? getElementByName
+        suppComment: document.getElementByName( "suppComment" ).value,
+        otherComments: document.getElementByName( "otherComment" ).value,
+        
+      },
+      success: function( response, code, xhr ) {
+
+        // The supplier has been added successfully
+      }
+    });
+    
+  }, false );
+</script>
+
 <script type="text/javascript">
     $(document).ready(function () {
 
@@ -29,7 +95,7 @@
 <div id="header">
 	<div id="logo">
 		<h1><a href="index.html">Edward Street</a></h1>
-		<p><em> template design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a></em></p>
+		<p class="textright"><a class="textright" href="login.html">Log in</a></p>
 	</div>
 </div>
 
@@ -143,7 +209,7 @@
 				Address <input type="text" value="" name="Address" id="addrs"/><br/>
 				Contact <input type="text" value="" name="Contact" id="contact"/><br/>
 				Delivery Dates <textarea name="DeliveryDateText" id="datesofdelivery" rows="3" cols="10"></textarea><br/>
-				Lead Time <input type="text" value="" name="LeadTime" id="leadTm"/><br/>
+				Lead Time <input type="text" value="" name="LeadTime" id="leadTime"/><br/>
 				Supplier Comment <textarea name="SupplierComment" id="suppComment" rows="3" cols="10"></textarea><br/>
 				Other Comment <textarea name="OtherComment" id="otherComment" rows="3" cols="10"></textarea><br/>
 				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
