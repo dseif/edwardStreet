@@ -57,6 +57,28 @@ p, ol {
 	font-weight: bold;	
 }
 
+.sctext
+{
+	z-index:300;
+	color: #FFFFFF;
+	text-align: right;
+	font-weight: bold;
+	position: relative;
+	top: -35px;
+
+}
+
+.shoppingcart
+{
+	background: #FFFFFF;
+	text-align: right;
+	width: 400px;
+	height: 90px;
+	position:relative;
+ 	top:-55px;
+ 	left:850px;
+}
+
 ol { }
 
 blockquote { }
