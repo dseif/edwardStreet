@@ -7,7 +7,15 @@
 <title>Edward Street</title>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function (event) {
+
+        document.getElementById("submitBtn").addEventListener("click", function (event) {
+
+            if ($("#srchText").val() == "") {
+                alert("Field must not be empty");
+            }
+
+        }, false);
 
         $('#nav li').hover(
 		function () {
@@ -20,7 +28,7 @@
 		}
 	);
 
-    });
+    }, false);
 </script>
 </head>
 
@@ -105,7 +113,7 @@
 			<div id="page">
 				
 				Search <input value="" type="text" name="SearchText" id="srchText"/>
-				<input value="Search" type="submit" name="SubmitButton" id="sbmtBtn"/><br/>
+				<input value="Search" type="submit" name="SubmitButton" id="submitBtn"/><br/>
 
 				<div id="content">
 

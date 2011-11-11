@@ -6,8 +6,92 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street</title>
 <script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function (event) {
+
+        document.getElementById("savBtn").addEventListener("click", function (event) {
+
+            // input elements
+            var $inputs = $('#page :input');
+            // div space for message
+            var $msgs = $('#page').children("div");
+            // array holding $inputs 
+            var values = [];
+            // array holding $msgs
+            var displays = [];
+            // initializing string for use in .each for $msgs and $inputs
+            var string1, string2;
+            // int variables used to iterate in .each for $msgs and $inputs 
+            var i = 0;
+            var j = 0;
+
+            // gets each $msg element and pushes to array called displays
+            $msgs.each(function () {
+
+                string2 = $msgs.get(j).tagName;
+                j = j + 1;
+                var text2 = $(this).attr('id');
+                displays.push(text2);
+            });
+            
+            // gets each $inputs element and pushes to array called values
+            $inputs.each(function () {
+                string1 = $inputs.get(i).tagName;
+                i = i + 1;
+                var text = $(this).attr('id');
+                values.push(text);
+            });
+
+            // each validation to validate certain rules
+            validation = window.edwardValidationRequired;
+            validation2 = window.edwardValidationUser;
+            validation3 = window.edwardValidationEmail;
+
+            // used for individual validation
+            var loginName = $("#usrName").val();
+            var emailAddress = $("#emailAddr").val();
+
+            // array for storing fields that are empty
+            var getBadArray = [];
+            
+            // Adds each input element that is empty
+            // to an array that stores inputs that are empty
+            $inputs.each(function () {
+                if ($(this).val().length == 0) {
+                    txt = $(this).attr('id');
+                    getBadArray.push(txt);
+                    
+                }
+            });
+// For loop to determine each input box by calling validateGeneral
+// and checking each input box whether it is part of the array that
+// holds empty textboxes 
+    for (var i = 0; i < displays.length; i++) {
+      if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
+                      $('#' + displays[i]).html("RIGHT");}
+      else {
+                      $('#' + displays[i]).html("Missing required field");
+      }
+                
+    }            
+                // Validate the user name
+                if (validation2.validateUserName(loginName)) {
+                    $('#userValid').html("User name is valid");
+                }
+                else {
+                    $('#userValid').html("Invalid user name!");
+                }
+                
+                // Validate the email address
+                if (validation3.validateEmail(emailAddress)) {
+                    $('#emailValid').html("Email is valid");
+                }
+                else {
+                    $('#emailValid').html("Email not valid!");
+                }
+
+        }, false);
 
         $('#nav li').hover(
 		function () {
@@ -20,7 +104,7 @@
 		}
 	);
 
-    });
+    }, false);
 	</script>
 </head>
 
@@ -101,11 +185,8 @@
 		
 	<div id="wrapper-bgtop">
 		<h3>Edit User Profiles</h3><br/>
-			
-			<div id="page">
-				
-
-				Select user to edit:
+		
+			Select user to edit:
 				<table border="1" id="userTable">
   					<tr>
     						<th>Login Name</th>
@@ -121,24 +202,36 @@
   					</tr>
 					</table>
 				<br/>
-				<p>
+				
+			<div id="page">
+				
+			  
 				User Name <input type="text" value="" name="UserName" id="usrName"/><br/>
-				Role
+				<div id="userValid"></div>
+				
+        Role
 					<select name="RoleBox" id="roleBox">
   						<option value="buyer">Buyer</option>
   						<option value="receiver">Receiver</option>
   						<option value="shipper">Shipper</option>
   						<option value="admin">Admin</option>
 					</select><br/>
-				Email address <input type="text" value="" name="EmailAddress" id="emailAddr"/><br/>
-				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
-				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>				
-				</p><br/>
+				<div id="roleValid"></div>
 
-				<div id="content">
-						
-				</div>
+        Email address <input type="text" value="" name="EmailAddress" id="emailAddr"/><br/>
+			  <div id="emailValid"></div>					
+
+        <br/>
+
+				
 			</div>
+					<div id="content">
+						
+				</div>		
+        <input value="Save" type="submit" name="SaveButton" id="savBtn"/>
+				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>				
+				
+			
 	</div>
 <div>
 
