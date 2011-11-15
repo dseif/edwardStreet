@@ -4,11 +4,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui.css" />
 <title>Edward Street</title>
 <script src="login.js"></script>
-<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
 <script>
   document.addEventListener( "DOMContentLoaded", function( event ) {
+
+    // get our helper object
+    var helper = edstHelper();
+    helper.setupSortable();
 
     $.ajax({
       cache: false,
@@ -23,14 +30,14 @@
 
         var addOption = function( text ) {
           var opt = document.createElement( "option" );
-          opt.text = text; 
-          opt.value = text; 
+          opt.text = text;
+          opt.value = text;
           dropDown.options.add( opt );
         }
 
-        for ( var i = 0, len = response.length; i < len; i++ ) {  
+        for ( var i = 0, len = response.length; i < len; i++ ) {
           var temp = response[ i ].NAME;
-          addOption( temp ); 
+          addOption( temp );
         }
       }
     });
@@ -42,23 +49,106 @@
       },
       success: function( response, code, xhr ) {
 
-        var table = document.getElementById( "poTable" );
-
         response = JSON.parse( response );
 
-        var addRow = function( count ) {
-          var row = table.insertRow( count + 1 ),
-          data = response[ count ],
-          count = 0;
+        var container = document.getElementById( "container" ),
+            ul = document.createElement( "ul" ),
+            responseItems = response.length,
+            tabs = responseItems/100,
+            counter = 1;
 
-          for( var item in data ) {
-            row.insertCell( count ).innerHTML = data[ item ];
+            container.appendChild( ul );
+
+        for ( var i = 1; i < tabs + 1; i++ ) {
+
+          var item = document.createElement( "div" ),
+              li = document.createElement( "li" ),
+              div = document.createElement( "div" ),
+              innerItem = document.createElement( "a" );
+
+          ul.appendChild( li );
+          li.appendChild( item );
+          item.appendChild( innerItem );
+          innerItem.href = "#tabs" + i;
+          innerItem.innerHTML = i;
+          div.id = "tabs" + i;
+          container.appendChild( div );
+        }
+
+        var addRow = function( count, target ) {
+
+          // create a new item
+          var item = document.createElement( "div" ),
+              innerDiv = document.createElement( "div" ),
+              header = document.createElement( "h3" ),
+              innerHeader = document.createElement( "a" ),
+              qtyBox = document.createElement( "input" ),
+              submitBtn = document.createElement( "button" ),
+              qtySpan = document.createElement( "a" ),
+              data = response[ count ];
+
+          $( submitBtn ).click(function( event ) {
+
+            console.log( $( "#scBox" ).width() );
+            var item = document.createElement( "div" );
+            $( "#scBox" ).append( "<div edst-data=" + $( this ).parent().attr( "id" ) + " style='width:" + $( "#scBox" ).width() + "px;'>" +
+              "" + $( this ).parent().attr( "id" ) +
+              " Qty: " + $( this ).parent().children( ".edst-val" )[ 0 ].value +
+            "</div>");
+            event.stopPropagation();
+          });
+
+          $( qtyBox ).click(function( event ) {
+
+            event.stopPropagation();
+          });
+
+          innerHeader.href = "#";
+          innerDiv.style.position = "absolute";
+          innerDiv.style.right = "0";
+          qtyBox.style.width = "30px";
+          qtyBox.value = 1;
+          $( qtyBox ).addClass( "edst-val" );
+
+          innerHeader.style.display = "inline-block";
+          innerDiv.style.display = "inline-block";
+          qtySpan.style.display = "inline-block";
+
+          qtySpan.innerHTML = "Quantity: ";
+          submitBtn.innerHTML = "Add to Cart";
+          innerDiv.id = data[ "ITEM_NAME" ];
+          innerHeader.innerHTML = data[ "ITEM_NAME" ];
+
+          header.appendChild( innerHeader );
+          innerDiv.appendChild( qtySpan );
+          innerDiv.appendChild( qtyBox );
+          innerDiv.appendChild( submitBtn );
+          header.appendChild( innerDiv );
+          target.appendChild( header );
+
+          for( var prop in data ) {
+            if ( data[ prop ]  ) {
+              item.innerHTML += "<b>" + prop + ": </b>" + data[ prop ] + "</br>";
+            }
           }
+
+          item.id = data[ "ITEM_ID" ];
+          target.appendChild( item );
         }
 
-        for( var i = 0, len = response.length; i < len; i ++ ) {
-          addRow( i );
+        for( var i = 0, k = 0, len = response.length; i < len; i++, k++ ) {
+
+          if ( k >= 100 ) {
+            helper.setupAccordion( document.getElementById( "tabs" + counter ) );
+            counter++;
+            k = 0;
+          }
+          addRow( i, document.getElementById( "tabs" + counter ) );
         }
+        helper.setupAccordion( document.getElementById( "tabs" + counter ) );
+
+        $( "#container" ).tabs();
+
       }
     });
   }, false );
@@ -170,18 +260,8 @@
 				
 					Select Item:<br/>
 					<a href="createitem.html">Create New Item</a><br/>
-					<table border="1" id="poTable">
-  					<tr>
-    						<th>Item Name</th>
-    						<th>Item Category</th>
-					    	<th>Item Type</th>
-    						<th>price</th>
-    						<th>unit</th>
-    						<th>comments</th>
-    						<th>Quantity</th>
-    						<th>Subtotal</th>
-  					</tr>
-					</table><br/>
+					<div border="1" id="container">
+					</div><br/>
 						
 				Grand Total : <input type="text" value="" name="GrandTotal" id="grndTotal"/>
 				Hold Order <input type="checkbox" value="hold" name="HoldOrder" id="holdOrdr"/>

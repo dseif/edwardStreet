@@ -33,7 +33,7 @@ var helper = {
       }
 
       this.query( queryString ).
-      execute( function( error, rows, cols ) {callback( error, rows, cols ) });
+      execute( function( error, rows, cols ) { callback( error, rows, cols ) });
     });
   }
 }
@@ -222,6 +222,7 @@ function viewItems( response ) {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
+
     response.write( JSON.stringify( rows ) );
     response.end();
   });
