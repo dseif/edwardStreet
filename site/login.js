@@ -5,7 +5,6 @@ function getCookie( c_name ) {
       y,
       ARRcookies = document.cookie.split( ";" );
 
-  console.log( ARRcookies );
   for ( i = 0; i < ARRcookies.length; i++ ) {
 
     x = ARRcookies[ i ].substr( 0,ARRcookies[ i ].indexOf( "=" ) );

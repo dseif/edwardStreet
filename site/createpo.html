@@ -93,7 +93,6 @@
 
           $( submitBtn ).click(function( event ) {
 
-            console.log( $( "#scBox" ).width() );
             var item = document.createElement( "div" );
             $( "#scBox" ).append( "<div edst-data=" + $( this ).parent().attr( "id" ) + " style='width:" + $( "#scBox" ).width() + "px;'>" +
               "" + $( this ).parent().attr( "id" ) +
@@ -175,11 +174,13 @@
 
 $(window).scroll(function () {
     if ($(window).scrollTop() > $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+    console.log( "in first if" );
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
     }
 
     if ($(window).scrollTop() <= $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+    console.log( "in second if" );
         $("#header").css("position", "relative");
         $("#header").css("top", $(".smartBannerIdentifier").offset);
     }
