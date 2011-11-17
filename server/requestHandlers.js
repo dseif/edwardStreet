@@ -40,7 +40,9 @@ var helper = {
 
 function index( response, cb ) {
 
+  console.log( "INDINEDED" );
   var vals = response.values;
+  console.log( vals.user );
 
   helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.user + "' AND PASSWORD = '" + vals.pass + "'", function( error, rows, cols ) {
 
@@ -53,11 +55,13 @@ function index( response, cb ) {
     vals.userName = rows[ 0 ] && rows[ 0 ].USER_ID;
     vals.role = rows[ 0 ] && rows[ 0 ].ROLE;
 
+    console.log( !!rows.length );
     cb && cb( !!rows.length );
   });   
 }
 
 function login( response ) {
+
      response.writeHead(200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
