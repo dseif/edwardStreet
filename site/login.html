@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" ></script>
+<script type="text/javascript" src="js/jquery-1.2.6.min.js"></script>
 <script src="login.js"></script>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street</title>
@@ -35,7 +36,19 @@ console.log( response );
         }
       });
     }, false );
-  }, false );
+}, false);
+
+$(window).scroll(function () {
+    if ($(window).scrollTop() > $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+        $("#header").css("position", "fixed");
+        $("#header").css("top", "0");
+    }
+
+    if ($(window).scrollTop() <= $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+        $("#header").css("position", "relative");
+        $("#header").css("top", $(".smartBannerIdentifier").offset);
+    }
+});
 </script>
 
 </head>
@@ -51,7 +64,7 @@ console.log( response );
 	</div>
     <p class="textright"><a class="textright" href="login.html">Log in</a></p>
 </div>
-
+<div class="smartBannerIdentifier"></div>
 <div id="wrapper">
 
 	<h1>Log in</h1><br/>
