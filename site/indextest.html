@@ -206,11 +206,18 @@ $(window).scroll(function () {
     if ($(window).scrollTop() > $(".smartBannerIdentifier").offset({ scroll: false }).top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
+        $("#menu").css("position", "fixed");
+        $("#menu").css("left", "379px");
+        $("#menu").css("bottom", "440px");
     }
 
     if ($(window).scrollTop() <= $(".smartBannerIdentifier").offset({ scroll: false }).top) {
         $("#header").css("position", "relative");
         $("#header").css("top", $(".smartBannerIdentifier").offset);
+        $("#menu").css("position", "relative");
+        $("#menu").css("top", $(".smartBannerIdentifier").offset);
+        $("#menu").css("left", "0px");
+        $("#menu").css("bottom", "0px");
     }
 });
 
@@ -229,7 +236,7 @@ $(window).scroll(function () {
 
     </div>
 </div>
-<div class="smartBannerIdentifier"></div>
+
 
 	<div id="menu">
 
@@ -289,7 +296,7 @@ $(window).scroll(function () {
 	</ul>
 
 	</div>
-
+    <div class="smartBannerIdentifier"></div>
 <div id="wrapper">
 
 	<div id="page">
