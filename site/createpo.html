@@ -25,6 +25,10 @@
       },
       success: function( response, code, xhr ) {
 
+        if ( response === "Invalid user/pass" ) {
+          window.location = "http://localhost/~dseif/edwardStreet/site/login.html";
+        }
+
         response = JSON.parse( response );
         var dropDown = document.getElementById( "suppBox" );
 
@@ -145,10 +149,10 @@
           }
           addRow( i, document.getElementById( "tabs" + counter ) );
         }
+
         helper.setupAccordion( document.getElementById( "tabs" + counter ) );
 
         $( "#container" ).tabs();
-
       }
     });
   }, false );
@@ -191,8 +195,8 @@
 	<li id="itemMenu"><a href="#"> Item > </a>
 		<ul>
 			<li><a href="createitem.html">Create Item</a></li>
-			<li><a href="modifyitem.html">Modify Item</a></li>
-				<li><a href="edititem.html">Edit Item</a></li>
+      <li><a href="modifyitem.html">Modify Item</a></li>
+      <li><a href="edititem.html">Edit Item</a></li>
 			<li><a href="deleteitem.html">Delete Item</a></li>
 		</ul>
 		<div class="clear"></div>
