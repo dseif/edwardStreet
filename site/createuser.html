@@ -7,6 +7,7 @@
 <title>Edward Street</title>
 <script src="login.js"></script>
 <script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-1.2.6.min.js"></script>
 <script type="text/javascript">
   document.addEventListener( "DOMContentLoaded", function( event ) {
 
@@ -49,7 +50,19 @@
 			}
 		);
 
-    });
+});
+
+$(window).scroll(function () {
+    if ($(window).scrollTop() > $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+        $("#header").css("position", "fixed");
+        $("#header").css("top", "0");
+    }
+
+    if ($(window).scrollTop() <= $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+        $("#header").css("position", "relative");
+        $("#header").css("top", $(".smartBannerIdentifier").offset);
+    }
+});
 	</script>
 </head>
 
@@ -65,7 +78,7 @@
     
     </div>
 </div>
-
+<div class="smartBannerIdentifier"></div>
 	<div id="menu">
 
 	<ul id="nav">

@@ -6,59 +6,214 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street</title>
 <script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-1.2.6.min.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript">
-/*$(document).ready(function () {*/
-/*var demoForm = $("#demo");
-        demoForm.validation();
-        demoForm.submit(function(e) {
+    document.addEventListener("DOMContentLoaded", function (event) {
 
-            $("#valid-form").remove();
-            if(demoForm.validate()) {
-                demoForm.append("<strong id='valid-form'>Form valid</strong>");
+        document.getElementById("sub").addEventListener("click", function (event) {
+
+            // input elements
+            var $inputs = $('#page :input');
+            // div space for message
+            var $msgs = $('#page').children("div");
+            // array holding $inputs 
+            var values = [];
+            // array holding $msgs
+            var displays = [];
+            // initializing string for use in .each for $msgs and $inputs
+            var string1, string2;
+            // int variables used to iterate in .each for $msgs and $inputs 
+            var i = 0;
+            var j = 0;
+
+            // gets each $msg element and pushes to array called displays
+            $msgs.each(function () {
+
+                string2 = $msgs.get(j).tagName;
+                j = j + 1;
+                var text2 = $(this).attr('id');
+                displays.push(text2);
+            });
+            
+            // gets each $inputs element and pushes to array called values
+            $inputs.each(function () {
+                string1 = $inputs.get(i).tagName;
+                i = i + 1;
+                var text = $(this).attr('id');
+                values.push(text);
+            });
+
+            // each validation to validate certain rules
+            validation = window.edwardValidationRequired;
+            validation2 = window.edwardValidationEmail;
+            validation3 = window.edwardValidationNumber;
+            validation4 = window.edwardValidationUser;
+            validation5 = window.edwardValidationPass;
+            validation6 = window.edwardValidationPass2;
+
+            // used for individual validation
+            var emailAddr = $("#email").val();
+            var numField = $("#num1").val();
+            var usrField = $("#usrnam").val();
+            var pwField = $("#pass").val();
+            var pwField2 = $("#pass2").val();
+
+            // array for storing fields that are empty
+            var getBadArray = [];
+            var getGoodArray = [];
+            // Adds each input element that is empty
+            // to an array that stores inputs that are empty
+            $inputs.each(function () {
+                if ($(this).val().length == 0) {
+                    txt = $(this).attr('id');
+                    getBadArray.push(txt);
+                    
+                }
+                else {
+                  txt = $(this).attr('id');
+                  getGoodArray.push(txt);
+                }
+            });
+            
+            /*
+            for(var i = 0; i < values.length; i++) {
+            if(i < getGoodArray.length) {
+            
+            alert("filled " + getGoodArray[i]);}
+            if(i < getBadArray.length){
+              alert("not filled "+getBadArray[i]);}
+            //alert("found "+values[i]);
             }
-            e.preventDefault();
-        }*/
+            
+            console.log(values);
+            console.log(getGoodArray);
+            console.log(getBadArray);
+            */
+            
+            /*
+            // a for loop that compares arrays
+            for(var i = 0; i < values.length; i++) {
+              //alert("number of times loop has run:"+ i)
+                if(i < getBadArray.length){
+                if(values[i] == getBadArray[i]) {
+                    $('#' + displays[i]).html("Missing required field");
+                    if (values[i] == getGoodArray[i]) {
+                      $('#' + displays[i]).html("RIGHT");
+                    }
+                }
+                }
+                
+                else if(i < getGoodArray.length){
+                if(values[i] == getGoodArray[i]){
+                    $('#' + displays[i]).html("Right");
+                    if(values[i] == getBadArray[i]) {
+                      $('#' + displays[i]).html("Missing required field");
+                    }
+                }
+                
+            }
+            }*/
+            
+            
+            for (var i = 0; i < displays.length; i++) {
+                
+                
 
-        
-  document.addEventListener( "DOMContentLoaded", function( event ) {
 
-  document.getElementById( "sub" ).addEventListener( "click", function( event ) {
+                //alert("for - " + values[i]);
+                if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1/*values[i] != getBadArray[i]*/) {
+                  //if (i < getBadArray.length) {
+                  //alert("if - " + values[i]);
+                      $('#' + displays[i]).html("RIGHT");}
+                  //}
+                  else {//alert("else - " + values[i]);
+                      $('#' + displays[i]).html("Missing required field");
+                  }
+                
+                }
+                
+                // out of loop
+                if (validation4.validateUserName(usrField)) {
+                    $('#usrValid').html("valid user");
+                }
+                else {
+                    $('#usrValid').html("Not a valid user!");
+                }
+                
+                if (validation2.validateEmail(emailAddr)) {
+                    $('#emailValid').html("Email is valid");
+                }
+                else {
+                    $('#emailValid').html("Email not valid!");
+                }
 
-    console.log( window.edwardValidation );
+                if (validation3.validateNumber(numField)) {
+                    $('#numValid').html("Correct number");
+                }
+                else {
+                    $('#numValid').html("Not a number!");
+                }
 
-    var emailAddr = document.getElementById( "email" ).value,
-        validation = window.edwardValidation;
-		
-	var reqField = document.getElementById( "req" ).value;
+                // check if its entered, then check if its empty
+                if(pwField.length == 0 || pwField2.length == 0){
+                  $('#passValid').html("Both password fields must not be empty");
+                  $('#passValid2').html("Both password fields must not be empty");
+                }
+                else if (validation5.validatePass(pwField, pwField2)) {
+                    $('#passValid').html("both passwords match");
+                    $('#passValid2').html("both passwords match");
+                }
+                else {
+                    $('#passValid').html("passwords dont match!");
+                    $('#passValid2').html("passwords dont match!");
+                }
+                
 
-    if ( !validation.validateGeneral( emailAddr ) ) {
-    document.getElementById( "emailValid" ).innerHTML = "NOT VALID EMAIL ADDRESS";
-    } else {
+            //}
+            
+            
+            /*
+            // a for loop that compares arrays
+            for(var i = 0; i < values.length; i++) {
+              if (validation.validateGeneral(values))
+              {
+                if(i < getBadArray.length){
+                    $('#' + displays[i]).html("RIGHT");
+                }
+                else {
+                    $('#' + displays[i]).html("Missing required field");
+                }
+              }
+            }*/
 
-    document.getElementById( "emailValid" ).innerHTML = "EMAIL IS VALID";
-    } 
-	
-	if ( !validation.validateGeneral( reqField ) ) {
-    document.getElementById( "reqValid" ).innerHTML = "Required Field";
-    } else {
+        }, false);
 
-    document.getElementById( "reqValid" ).innerHTML = "Field is populated";
-    }
-  }, false );
-  
-	$('#nav li').hover(
+        $('#nav li').hover(
 		function () {
-			//show its submenu
-			$('ul', this).show();
-		}, 
+		    //show its submenu
+		    $('ul', this).show();
+		},
 		function () {
-			//hide its submenu
-			$('ul', this).hide();
+		    //hide its submenu
+		    $('ul', this).hide();
 		}
 	);
 
-  }, false );
+}, false);
+
+$(window).scroll(function () {
+    if ($(window).scrollTop() > $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+        $("#header").css("position", "fixed");
+        $("#header").css("top", "0");
+    }
+
+    if ($(window).scrollTop() <= $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+        $("#header").css("position", "relative");
+        $("#header").css("top", $(".smartBannerIdentifier").offset);
+    }
+});
+
 	</script>
 </head>
 
@@ -69,8 +224,13 @@
 		<h1><a href="index.html">Edward Street</a></h1>
 	</div>
     <p class="textright"><a class="textright" href="login.html">Log in</a></p>
+    <p class="sctext">SHOPPING CART</p>
+    <div id="scBox" class="shoppingcart">
+
+    </div>
 </div>
-	
+<div class="smartBannerIdentifier"></div>
+
 	<div id="menu">
 
 	<ul id="nav">
@@ -141,23 +301,44 @@
     Email: <input id="email" />
     <div id="emailValid"></div>
 
-    URL: <input id="url" />
-    <div id="urlValid"></div>
-
     Password: <input id="pass" />
     <div id="passValid"></div>
-
+    
     Confirm Password: <input id="pass2" />
     <div id="passValid2"></div>
-
+    
+    comment: <input id="reqtwo" />
+    <div id="reqValidtwo" ></div>
+    
     Number: <input id="num1" />
     <div id="numValid"></div>
 
     User Name: <input id="usrnam" />
     <div id="usrValid"></div>
-
+</div>
     <button id="sub"> SUBMIT </button>
-	</div>
+	
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
 </div>
 
 

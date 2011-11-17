@@ -6,8 +6,25 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street</title>
 <script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-1.2.6.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function (event) {
+
+        document.getElementById("submitBtn").addEventListener("click", function (event) {
+
+            if ($("#srchText").val() == "") {
+                alert("Field must not be empty");
+            }
+
+        }, false);
+
+        document.getElementById("submitBtnAll").addEventListener("click", function (event) {
+
+            if ($("#srchText").val() == "") {
+                alert("Field must not be empty");
+            }
+
+        }, false);
 
         $('#nav li').hover(
 		function () {
@@ -20,7 +37,19 @@
 		}
 	);
 
-    });
+}, false);
+
+$(window).scroll(function () {
+    if ($(window).scrollTop() > $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+        $("#header").css("position", "fixed");
+        $("#header").css("top", "0");
+    }
+
+    if ($(window).scrollTop() <= $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+        $("#header").css("position", "relative");
+        $("#header").css("top", $(".smartBannerIdentifier").offset);
+    }
+});
 </script>
 </head>
 
@@ -36,7 +65,7 @@
     
     </div>
 </div>
-
+<div class="smartBannerIdentifier"></div>
 	<div id="menu">
 
 	<ul id="nav">

@@ -6,8 +6,84 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street</title>
 <script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-1.2.6.min.js"></script>
+<script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function (event) {
+
+        document.getElementById("savBtn").addEventListener("click", function (event) {
+
+            // input elements
+            var $inputs = $('#page :input');
+            // div space for message
+            var $msgs = $('#page').children("div");
+            // array holding $inputs 
+            var values = [];
+            // array holding $msgs
+            var displays = [];
+            // initializing string for use in .each for $msgs and $inputs
+            var string1, string2;
+            // int variables used to iterate in .each for $msgs and $inputs 
+            var i = 0;
+            var j = 0;
+
+            // gets each $msg element and pushes to array called displays
+            $msgs.each(function () {
+
+                string2 = $msgs.get(j).tagName;
+                j = j + 1;
+                var text2 = $(this).attr('id');
+                displays.push(text2);
+            });
+            
+            // gets each $inputs element and pushes to array called values
+            $inputs.each(function () {
+                string1 = $inputs.get(i).tagName;
+                i = i + 1;
+                var text = $(this).attr('id');
+                values.push(text);
+            });
+
+            // each validation to validate certain rules
+            validation = window.edwardValidationRequired;
+            validation3 = window.edwardValidationNumber;
+
+            // used for individual validation
+            var numField = $("#price").val();
+
+            // array for storing fields that are empty
+            var getBadArray = [];
+            
+            // Adds each input element that is empty
+            // to an array that stores inputs that are empty
+            $inputs.each(function () {
+                if ($(this).val().length == 0) {
+                    txt = $(this).attr('id');
+                    getBadArray.push(txt);
+                }
+            });
+
+// For loop to determine each input box by calling validateGeneral
+// and checking each input box whether it is part of the array that
+// holds empty textboxes
+    for (var i = 0; i < displays.length; i++) {
+        if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
+            $('#' + displays[i]).html("RIGHT");
+        }
+        else {
+            $('#' + displays[i]).html("Missing required field");
+        }       
+    }
+                
+                // validate the number field
+                if (validation3.validateNumber(numField)) {
+                    $('#numValid').html("Correct number");
+                }
+                else {
+                    $('#numValid').html("Not a number, also needs dollar sign!");
+                }
+
+        }, false);
 
         $('#nav li').hover(
 		function () {
@@ -20,7 +96,19 @@
 		}
 	);
 
-    });
+}, false);
+
+$(window).scroll(function () {
+    if ($(window).scrollTop() > $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+        $("#header").css("position", "fixed");
+        $("#header").css("top", "0");
+    }
+
+    if ($(window).scrollTop() <= $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+        $("#header").css("position", "relative");
+        $("#header").css("top", $(".smartBannerIdentifier").offset);
+    }
+});
 	</script>
 </head>
 
@@ -36,7 +124,7 @@
     
     </div>
 </div>
-
+<div class="smartBannerIdentifier"></div>
 	<div id="menu">
 
 	<ul id="nav">
@@ -103,50 +191,65 @@
 		<h3>Edit Item</h3><br/>
 			
 			<div id="page">
-				<p>
-				Item Name <input type="text" value="" name="ItemName" id="itemName"/><br/>
-				Receipt Name <input id="rcptname" type="text" value="" name="ReceiptName"/><br/>
-
-				Item Category	<select name="ItemBox" id="itemBox">
+				
+				Item Name <input type="text" value=""  name="ItemName" id="itemNam"/><br/>
+				<div id="reqone"></div>
+				
+        Receipt Name <input id="rcptName" type="text" value="" name="ReceiptName"/><br/>
+        <div id="reqtwo"></div>
+        
+				Item Category	<select  name="ItemCategoryBox" id="itemCatBox">
   						<option value="buyer">Meat</option>
   						<option value="receiver">Cheese</option>
   						<option value="shipper">Fish</option>
 						</select><br/>
+				<div id="catoone"></div>
 
-				Comments <textarea rows="4" cols="20"></textarea><br/>
-
-				Item Type	<select name="ItemTypeBox" id="itemTypeBox">
-  						<option value="1">Market</option>
-  						<option value="2">Bistro</option>
-  						<option value="3">Shipper</option>
-  						<option value="4">Admin</option>
+				Comments <textarea rows="4" cols="20" name="Comment" id="commts"></textarea><br/>
+        <div id="reqthree"></div>
+        
+				Item Type	<select  name="ItemTypeBox" id="itemTypeBox">
+  						<option value="buyer">Market</option>
+  						<option value="receiver">Bistro</option>
+  						<option value="shipper">Shipper</option>
+  						<option value="admin">Admin</option>
 						</select><br/>
+				<div id="cattwo"></div>
 
-				Comments <textarea rows="4" cols="20" name="CommentBox" id="commtBox"></textarea><br/>
-
+				Comments <textarea rows="4" cols="20" name="Comment2" id="commts2"></textarea><br/>
+        <div id="reqfour"></div>
+        
 				From Supplier	<select name="SupplierBox" id="suppBox">
   						<option value="supp1">SupplierA</option>
   						<option value="supp2">SupplierB</option>
   						<option value="supp3">SupplierC</option>
   						<option value="supp4">[Create New]</option>
 						</select><br/>
+			  <div id="catthree"></div>
 
 				Price <input type="text" value="$" name="Price" id="price"/><br/>
-				Unit		<select>
+				<div id="numValid"></div>
+				
+				Unit		<select id="weightType">
   						<option value="kg">kg</option>
   						<option value="lbs">lbs</option>
 						</select><br/>
-				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
-				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>				
+				<div id="catfour"></div>
+								
 				<br/>
 				
-				</p><br/>
+				<br/>
 
-				<div id="content">
+				
+			</div>
+			<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
+				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
+			<div id="content">
 						
 				</div>
-			</div>
+			
 	</div>
+
 <div>
 
 
