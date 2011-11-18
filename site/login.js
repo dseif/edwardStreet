@@ -44,7 +44,19 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
             $( items[ i ] ).remove();
           }
         }
-      };
+      }
+      
+      function poReceiver( items ) {
+
+        for ( var i = items.length - 1; i >= 0; i-- ) {
+
+          var inner = items[ i ].children[ 0 ].innerHTML;
+          if ( items[ i ] && ( inner === "Create Purchase Order" || inner === "Modify Purchase Order" || inner === "Delete Purchase Order" ) ) {
+
+            $( items[ i ] ).remove();
+          }
+        }
+      };;
 
       function removeLogMenu( item ) {
 
@@ -71,6 +83,7 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
 
         if ( tmpCookie === "re" ) {
 
+          poReceiver( $( "#poMenu" ).children()[ 1 ].children );
           return;
         }
       } 

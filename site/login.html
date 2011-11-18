@@ -38,14 +38,14 @@ console.log( response );
 }, false);
 
 $(window).scroll(function () {
-    if ($(window).scrollTop() > $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+    if ($(window).scrollTop() > $(".scrollTrigger").offset({ scroll: false }).top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
     }
 
-    if ($(window).scrollTop() <= $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+    if ($(window).scrollTop() <= $(".scrollTrigger").offset({ scroll: false }).top) {
         $("#header").css("position", "relative");
-        $("#header").css("top", $(".smartBannerIdentifier").offset);
+        $("#header").css("top", $(".scrollTrigger").offset);
     }
 });
 </script>
@@ -63,7 +63,7 @@ $(window).scroll(function () {
 	</div>
     <p class="textright"><a class="textright" href="login.html">Log in</a></p>
 </div>
-<div class="smartBannerIdentifier"></div>
+<div class="scrollTrigger"></div>
 <div id="wrapper">
 
 	<h1>Log in</h1><br/>

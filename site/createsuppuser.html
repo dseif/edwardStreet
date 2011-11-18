@@ -171,14 +171,21 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
 }, false);
 
 $(window).scroll(function () {
-    if ($(window).scrollTop() > $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+    if ($(window).scrollTop() > $(".scrollTrigger").offset({ scroll: false }).top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
+        $("#menu").css("position", "fixed");
+        $("#menu").css("left", "379px");
+        $("#menu").css("bottom", "440px");
     }
-
-    if ($(window).scrollTop() <= $(".smartBannerIdentifier").offset({ scroll: false }).top) {
+    // Revert back to normal
+    if ($(window).scrollTop() <= $(".scrollTrigger").offset({ scroll: false }).top) {
         $("#header").css("position", "relative");
-        $("#header").css("top", $(".smartBannerIdentifier").offset);
+        $("#header").css("top", $(".scrollTrigger").offset);
+        $("#menu").css("position", "relative");
+        $("#menu").css("top", $(".scrollTrigger").offset);
+        $("#menu").css("left", "0px");
+        $("#menu").css("bottom", "0px");
     }
 });
 	</script>
@@ -196,7 +203,7 @@ $(window).scroll(function () {
     
     </div>
 </div>
-<div class="smartBannerIdentifier"></div>
+
 	<div id="menu">
 
 	<ul id="nav">
@@ -255,7 +262,7 @@ $(window).scroll(function () {
 	</ul>
 
 	</div>
-
+    <div class="scrollTrigger"></div>
 <div id="wrapper">
 	<h2 class="bigfont">User</h2><br />
 		
