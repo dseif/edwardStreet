@@ -29,6 +29,9 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
         SupplierComments: document.getElementByName( "SupplierComments" ).value,
         SpecialComments: document.getElementByName( "SpecialComments" ).value,
 
+        loginID: document.getElementById( "loginID" ).value,
+        pwd: document.getElementById( "pwd" ).value,
+        emailAddr: document.getElementById( "emailAddr" ).value
       },
       success: function( response, code, xhr ) {
 
@@ -88,7 +91,7 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
 		<ul>
 			<li><a href="createuser.html">Create User</a></li>
 			<li><a href="changepassword.html">Change Password</a></li>
-			<li><a href="edituserall.html">Edit Users</a></li>
+			<li><a href="edituser.html">Edit User</a></li>
 			<li><a href="edituserbr.html">Edit Buyers and Receivers</a></li>
 			<li><a href="modifyadmin.html">Modify Admin Info</a></li>
 			<li><a href="deleteuser.html">Delete User</a></li>
@@ -145,6 +148,9 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
 				Delivery Dates <textarea id="delivDates" rows="3" cols="20" name="DeliveryDates"></textarea><br/>
 				Supplier Comments <textarea id="suppComm" rows="3" cols="20" name="SupplierComments"></textarea><br/>
 				Other Comments <textarea id="otherComm" rows="3" cols="20" name="SpecialComments"></textarea><br/>
+        Login ID <input type="text" value="" name="LoginID" id="loginID"/><br/>
+				Password <input type="password" value="" name="Pass" id="pwd"/><br/>
+				Email address <input type="text" value="" name="EmailAddress" id="emailAddr"/><br/>
 				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
 				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>				
 				<br/>

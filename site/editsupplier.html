@@ -6,6 +6,72 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street</title>
 <script type="text/javascript" src="js/jquery.js"></script>
+
+<script>
+// Show all suppliers, also modify selected supplier
+// Selection is not implemented yet
+
+  document.addEventListener( "DOMContentLoaded", function( event ) {
+
+    $.ajax({
+      cache: false,
+      url: "http://localhost:8080/viewsupplier",
+      data: {
+        hash: getCookie( "EDST_H" )
+      },
+      success: function( response, code, xhr ) {
+
+        var table = document.getElementById( "suppTable" );
+
+        response = JSON.parse( response );
+
+        var addRow = function( count ) {
+          var row = table.insertRow( count + 1 ),
+          data = response[ count ],
+          count = 0;
+
+          for( var item in data ) {
+            row.insertCell( count ).innerHTML = data[ item ];
+          }
+        }
+
+        for( var i = 0, len = response.length; i < len; i ++ ) {
+          addRow( i );
+        }
+      }
+    });
+    
+    // Edit the selected supplier
+    var button = document.getElementById( "savBtn" );
+    button.addEventListener( "click", function( event ) {
+
+    $.ajax({
+      cache: false,
+      url: "http://localhost:8080/addsupplier",
+      data: {
+        usrName: document.getElementById( "usrName" ).value,
+        roleBox: document.getElementById( "roleBox" ).value,
+        suppName: document.getElementById( "suppName" ).value,
+        leglName: document.getElementById( "leglName" ).value,
+        addrs: document.getElementById( "addrs" ).value,
+        contact: document.getElementById( "contact" ).value,
+        leadTime: document.getElementById( "leadTime" ).value,
+        datesofdelivery: document.getElementById( "datesofdelivery" ).value,
+        
+        // Is this valid? getElementByName
+        suppComment: document.getElementByName( "suppComment" ).value,
+        otherComments: document.getElementByName( "otherComment" ).value,
+        
+      },
+      success: function( response, code, xhr ) {
+
+        // The supplier has been added successfully
+      }
+    });
+    
+  }, false );
+</script>
+
 <script type="text/javascript">
     $(document).ready(function () {
 
@@ -55,7 +121,7 @@
 		<ul>
 			<li><a href="createuser.html">Create User</a></li>
 			<li><a href="changepassword.html">Change Password</a></li>
-			<li><a href="edituserall.html">Edit Users</a></li>
+			<li><a href="edituser.html">Edit User</a></li>
 			<li><a href="edituserbr.html">Edit Buyers and Receivers</a></li>
 			<li><a href="modifyadmin.html">Modify Admin Info</a></li>
 			<li><a href="deleteuser.html">Delete User</a></li>
@@ -111,6 +177,59 @@
 				Supplier Comment <textarea name="SupplierComment" id="suppComment" rows="3" cols="10"></textarea><br/>
 				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
 				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>				
+				<br/>
+				
+				</p><br/>
+        <hr/>
+        Select user to edit:
+				<table border="1" id="suppTable">
+  					<tr>
+    						<th>Login Name</th>
+    						<th>Role</th>
+    						<th>Supplier Name</th>
+						<th>Legal Name</th>
+						<th>Address</th>
+						<th>Contact</th>
+						<th>Delivery Dates</th>
+						<th>Lead Time</th>
+						<th>Supplier Comment</th>
+						<th>Other Comment</th>
+    						<th>Selected</th>
+  					</tr>
+  					<tr>
+    						<td></td>
+						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td><input value="selectedItem" type="checkbox" name="SelectItem" id="selItem"/></td>
+  					</tr>
+					</table>
+				<br/>
+				<p>
+				LoginName <input type="text" value="" name="UserName" id="usrName"/><br/>
+				Role
+					<select name="RoleBox" id="roleBox">
+  						<option value="buyer">Buyer</option>
+  						<option value="receiver">Receiver</option>
+  						<option value="shipper">Shipper</option>
+  						<option value="admin">Admin</option>
+					</select><br/>
+				Supplier Name<input type="text" value="" name="SupplierName" id="suppName"/><br/>
+				Legal Name <input type="text" value="" name="LegalName" id="leglName"/><br/>
+				Address <input type="text" value="" name="Address" id="addrs"/><br/>
+				Contact <input type="text" value="" name="Contact" id="contact"/><br/>
+				Delivery Dates <textarea name="DeliveryDateText" id="datesofdelivery" rows="3" cols="10"></textarea><br/>
+				Lead Time <input type="text" value="" name="LeadTime" id="leadTime"/><br/>
+				Supplier Comment <textarea name="SupplierComment" id="suppComment" rows="3" cols="10"></textarea><br/>
+				Other Comment <textarea name="OtherComment" id="otherComment" rows="3" cols="10"></textarea><br/>
+				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
+				<input value="Cancel" type="reset" name="CancelButton" id="cancelButton"/>				
 				<br/>
 				
 				</p><br/>
