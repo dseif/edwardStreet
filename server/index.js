@@ -33,6 +33,8 @@ handle[ "/viewactivepurchaseorders" ] = requestHandlers.viewActivePurchaseOrders
 handle[ "/items/createitem" ] = requestHandlers.createItem;
 handle[ "/items/maintainitem" ] = requestHandlers.maintainItem;
 handle[ "/viewitems" ] = requestHandlers.viewItems;
+handle[ "/viewitemspage" ] = requestHandlers.viewItemsPage;
+
 
 //  Supplier Pages
 handle[ "/supplier/createsupplierprofile" ] = requestHandlers.createSupplierProfile;

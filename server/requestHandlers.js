@@ -215,8 +215,8 @@ function createSupplierProfile( response ) {
 }
 
 function viewItems( response ) {
-  
-  helper.query( "SELECT * FROM ITEM", function( error, rows, cols ) {
+
+  helper.query( "SELECT COUNT(*) FROM ITEM", function (error, rows, cols) {
 
     if ( error ) {
       console.log( error );
@@ -229,8 +229,28 @@ function viewItems( response ) {
 
     response.write( JSON.stringify( rows ) );
     response.end();
-  });
+    });
+  }
 }
+
+function viewItemsPage ( response) {
+  helper.query( "SELECT i.ITEM_ID, i.DIST_CODE, i.ITEM_NAME, i.RECEIPT_NAME, i.CATEGORY, i.UNIT, i.ITEM_TYPE, i.COMMENT, p.PRICE, s.NAME FROM ITEM i, SUPPLIER s, PRICE_HISTORY p WHERE i.SUPPLIER_ID = s.SUPPLIER_ID AND i.LATEST_PRICE = PRICE_ID ORDER BY i.ITEM_ID LIMIT " + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
+
+    if ( error ) {
+        console.log( error );
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+
+    response.write( JSON.stringify( rows ) );
+    response.end();
+    });
+  }
+}
+
 
 function maintainSupplierProfile() {
   return "Maintain Supplier Profile";
@@ -292,3 +312,4 @@ exports.viewItems = viewItems;
 exports.createSupplierProfile = createSupplierProfile;
 exports.maintainSupplierProfile = maintainSupplierProfile;
 exports.changePassword = changePassword;
+exports.viewItemsPage = viewItemsPage;
