@@ -155,7 +155,7 @@
               </tr>
               <tr>
                 <td>Receipt Name:</td>
-                <td><input type="text" value="" name="ReceiptName" id="receiptName"/></td>
+                <td><input id="rcptname" type="text" value="" name="ReceiptName"/></td>
               </tr>
               <tr>
                 <td>Item Category:</td> <!-- Auto populated -->

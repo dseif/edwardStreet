@@ -21,7 +21,7 @@
 	);
 
     });
-	</script>
+</script>
 </head>
 
 <body>
@@ -97,28 +97,36 @@
 	</div>
 
 <div id="wrapper">
-	<h2 class="bigfont">Item</h2><br />
+	<h2 class="bigfont">Purchase Orders</h2><br />
 		
 	<div id="wrapper-bgtop">
-		<h3>Delete Item</h3><br/>
+		<h3>Modify Purchase Orders</h3><br/>
 			
 			<div id="page">
 				
 				Search <input value="" type="text" name="SearchText" id="srchText"/>
-				<input value="Search" type="submit" name="SearchButton" id="srchBtn"/><br/>
+				<input value="Search" type="submit" name="SubmitButton" id="sbmtBtn"/><br/>
 
 				<div id="content">
 
 
-					<table border="1" id="itemTable">
+					<table border="1" id="modPoTable">
   					<tr>
-    						<th>Item Name</th>
-    						<th>Item Category</th>
-    						<th>Item Type</th>
+    						<th>OrderNumber</th>
+    						<th>Status</th>
+    						<th>Create Date</th>
+    						<th>Submit Date</th>
+    						<th>Delivery Date</th>
+    						<th>Receive Date</th>
+    						<th>Reference Number</th>
+    						<th>Author</th>
     						<th>Supplier</th>
+    						<th>Item</th>
+    						<th>QTY Ordered</th>
     						<th>price</th>
-    						<th>unit</th>
-    						<th>Comments</th>
+    						<th>price/unit comment</th>
+    						<th>Subtotal</th>
+    						<th>Grand Total</th>
     						<th>Selected</th>
   					</tr>
   					<tr>
@@ -128,13 +136,21 @@
     						<td></td>
     						<td></td>
     						<td></td>
-						<td></td>
-    						<td><input value="selectedItem" type="checkbox" name="SelectItem" id="selItem"/></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td><input value="" type="text" name="QTYBox" id="qtyBox"/></td>
+    						<td></td>
+    						<td></td>
+                            <td></td>
+                            <td></td>
+    						<td><input value="selectedItem" type="checkbox" name="SelectedItemBox" id="selectedBox"/></td>
   					</tr>
 					</table>
 
-				<input value="Delete" type="submit" name="DeleteButton" id="deleteBtn"/>
-				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
+				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
+				<input value="Cancel" type="reset" name="SancelButton" id="cancelBtn"/>
 				<br/>
 	
 				</div>
@@ -149,7 +165,6 @@
 <br />
 </div>
 </div>
-
 
 </body>
 

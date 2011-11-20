@@ -4,9 +4,37 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <link rel="stylesheet" type="text/css" href="style.css" />
-  <title>Edward Street - Create Item</title>
+  <title>Edward Street - Create User</title>
   <script type="text/javascript" src="js/jquery.js"></script>
   <script type="text/javascript">
+    document.addEventListener( "DOMContentLoaded", function( event ) {
+
+    var cookie = window.cookie;
+    if ( cookie.substring( 0, 2 ).toLowerCase() !== "ad" ) {
+
+      window.location = "http://localhost/~dseif/edwardStreet/site/login.html";
+    }
+
+    document.getElementById( "saveBtn" ).addEventListener( "click", function( event ) { 
+
+      $.ajax({
+        cache: false,
+        url: "http://localhost:8080/createuser",
+        data: {
+          user: document.getElementById( "userName" ).value,
+          pass: document.getElementById( "tempPwd" ).value,
+          hash: cookie,
+          email: document.getElementById( "emailAddress" ).value,
+          role: document.getElementById( "userRoleBox" ).value
+        },
+        success: function( response, code, xhr ) {
+
+          console.log( response );
+        }
+      });
+    }, false );
+  }, false );
+
     $(document).ready(function () {
       $('#nav li').hover(
         function () {
@@ -38,7 +66,7 @@
     <ul id="nav">
     <li id="itemMenu"><a href="#"> Item > </a>
       <ul>
-        <li><a href="#">Create Item</a></li>
+        <li><a href="createitem.html">Create Item</a></li>
         <li><a href="edititem.html">Edit Item</a></li>
       </ul>
       <div class="clear"></div>
@@ -46,7 +74,7 @@
 
     <li id="userMenu"><a href="#"> User > </a>
       <ul>
-        <li><a href="createuser.html">Create User</a></li>
+        <li><a href="#">Create User</a></li>
         <li><a href="edituser.html">Edit User</a></li>
         <li><a href="changepassword.html">Change Password</a></li>
       </ul>
@@ -82,66 +110,37 @@
   </div>
 
   <div id="wrapper">
-    <h2 class="bigfont">Item</h2><br />
+    <h2 class="bigfont">User</h2><br />
       
     <div id="wrapper-bgtop">
-      <h3>Create Item</h3><br/>
+      <h3>Create User</h3><br/>
         
         <div id="page">
 
 				  <div id="content">
-            <form id="createItemForm">
-            <table id="createItemTable">
+            <form id="createUserForm">
+            <table id="createUserTable">
               <tr>
-                <td>Item Name:</td>
-                <td><input type="text" value="" name="ItemName" id="itemName"/></td>
+                <td>User Name:</td>
+                <td><input type="text" value="" name="UserName" id="userName"/></td>
               </tr>
               <tr>
-                <td>Receipt Name:</td>
-                <td><input type="text" value="" name="ReceiptName" id="receiptName"/></td>
+                <td>User Email:</td>
+                <td><input type="text" value="" name="EmailAddress" id="emailAddress"/></td>
               </tr>
               <tr>
-                <td>Item Category:</td> <!-- Auto populated -->
-                <td><select name="itemCategory" id="iCategoryBox">
-                  <option value="meat">Meat</option>
-                  <option value="cheese">Cheese</option>
-                  <option value="fish">Fish</option>
+                <td>User Role:</td>
+                <td><select name="UserRole" id="userRoleBox">
+                  <option value="admin">Admin</option>
+                  <option value="buyer">Buyer</option>
+                  <option value="receiver">Receiver</option>
+                  <option value="supplier">Supplier</option>
                   </select>
                 </td>
               </tr>
               <tr>
-                <td>Item Type:</td> <!-- Auto populated -->
-                <td><select name="itemType" id="iTypeBox">
-                    <option value="market">Market</option>
-                    <option value="bistro">Bistro</option>
-                    <option value="catering">Catering</option>
-                    </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Supplier:</td> <!-- Auto populated -->
-                <td><select name="itemSupplier" id="iSupplierBox">
-                    <option value="supp1">SupplierA</option>
-                    <option value="supp2">SupplierB</option>
-                    <option value="supp3">SupplierC</option>
-                    </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Comments:</td>
-                <td><textarea rows="4" cols="20" name="ItemComments" id="itemComments"></textarea></td>
-              </tr>
-              <tr>
-                <td>Item Price:</td>
-                <td><input type="text" value="$" name="ItemPrice" id="itemPrice"/></td>
-              </tr>
-              <tr>
-                <td>Unit:</td>
-                <td><input type="text" value="" name="ItemName" id="itemName"/></td>
-              </tr>
-              <tr>
-                <td><input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/></td>
-                <td><input value="Save" type="submit" name="SaveButton" id="saveBtn"/></td>
+                <td><input value="Clear" type="reset" id="clearBtn"/></td>
+                <td><input value="Save" type="submit" id="saveBtn"/></td>
               </tr>
             </table>
             </form>

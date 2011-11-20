@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <title>Edward Street - Edit User</title>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/validation.js"></script>
+  <script type="text/javascript" src="../js/helper.js"></script>
+  <script type="text/javascript">
+  document.addEventListener( "DOMContentLoaded", function( event ) {
+
+    $.ajax({
+      cache: false,
+      url: "http://localhost:8080/viewusers",
+      data: {
+        hash: getCookie( "EDST_H" )
+      },
+      success: function( response, code, xhr ) {
+
+        var data = JSON.parse( response );
+        console.log( data );
+      }
+    }); 
+  }, false );
+    document.addEventListener("DOMContentLoaded", function (event) {
+
+       /* document.getElementById("savBtn").addEventListener("click", function (event) {
+
+            // input elements
+            var $inputs = $('#page :input');
+            // div space for message
+            var $msgs = $('#page').children("div");
+            // array holding $inputs 
+            var values = [];
+            // array holding $msgs
+            var displays = [];
+            // initializing string for use in .each for $msgs and $inputs
+            var string1, string2;
+            // int variables used to iterate in .each for $msgs and $inputs 
+            var i = 0;
+            var j = 0;
+
+            // gets each $msg element and pushes to array called displays
+            $msgs.each(function () {
+
+                string2 = $msgs.get(j).tagName;
+                j = j + 1;
+                var text2 = $(this).attr('id');
+                displays.push(text2);
+            });
+            
+            // gets each $inputs element and pushes to array called values
+            $inputs.each(function () {
+                string1 = $inputs.get(i).tagName;
+                i = i + 1;
+                var text = $(this).attr('id');
+                values.push(text);
+            });
+
+            // each validation to validate certain rules
+            validation = window.edwardValidationRequired;
+            validation2 = window.edwardValidationUser;
+            validation3 = window.edwardValidationEmail;
+
+            // used for individual validation
+            var loginName = $("#usrName").val();
+            var emailAddress = $("#emailAddr").val();
+
+            // array for storing fields that are empty
+            var getBadArray = [];
+            
+            // Adds each input element that is empty
+            // to an array that stores inputs that are empty
+            $inputs.each(function () {
+                if ($(this).val().length == 0) {
+                    txt = $(this).attr('id');
+                    getBadArray.push(txt);
+                    
+                }
+            });
+// For loop to determine each input box by calling validateGeneral
+// and checking each input box whether it is part of the array that
+// holds empty textboxes 
+    for (var i = 0; i < displays.length; i++) {
+      if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
+                      $('#' + displays[i]).html("RIGHT");}
+      else {
+                      $('#' + displays[i]).html("Missing required field");
+      }
+                
+    }            
+                // Validate the user name
+                if (validation2.validateUserName(loginName)) {
+                    $('#userValid').html("User name is valid");
+                }
+                else {
+                    $('#userValid').html("Invalid user name!");
+                }
+                
+                // Validate the email address
+                if (validation3.validateEmail(emailAddress)) {
+                    $('#emailValid').html("Email is valid");
+                }
+                else {
+                    $('#emailValid').html("Email not valid!");
+                }
+
+        }, false);*/
+    $(document).ready(function () {
+      $('#nav li').hover(
+        function () {
+          //show its submenu
+          $('ul', this).show();
+        },
+        function () {
+          //hide its submenu
+          $('ul', this).hide();
+        }
+      );
+    });
+	</script>
+</head>
+
+<body>
+  <div id="header">
+    <div id="logo">
+      <h1><a href="index.html">Edward Street</a></h1>
+    </div>
+    <p class="textright"><a class="textright" href="login.html">Log in</a></p>
+    <p class="sctext">SHOPPING CART</p>
+    <div id="scBox" class="shoppingcart">
+    
+    </div>
+  </div>
+
+  <div id="menu">
+    <ul id="nav">
+    <li id="itemMenu"><a href="#"> Item > </a>
+      <ul>
+        <li><a href="createitem.html">Create Item</a></li>
+        <li><a href="edititem.html">Edit Item</a></li>
+      </ul>
+      <div class="clear"></div>
+    </li>
+
+    <li id="userMenu"><a href="#"> User > </a>
+      <ul>
+        <li><a href="createuser.html">Create User</a></li>
+        <li><a href="#">Edit User</a></li>
+        <li><a href="changepassword.html">Change Password</a></li>
+      </ul>
+      <div class="clear"></div>
+    </li>
+    
+    <li id="supplierMenu"><a href="#"> Supplier > </a>
+      <ul>
+        <li><a href="createsupp.html">Create Supplier</a></li>
+        <li><a href="editsupplier.html">Edit Supplier</a></li>
+
+      </ul>
+      <div class="clear"></div>
+    </li>
+    
+    <li id="poMenu"><a href="#"> Purchase Order > </a>
+      <ul>
+        <li><a href="createpo.html">Create Purchase Order</a></li>
+        <li><a href="modifypo.html">Edit Purchase Order</a></li>
+        <li><a href="viewpo.html">View Purchase Order</a></li>
+        <li><a href="receivepo.html">Receive Purchase Order</a></li>
+        <li><a href="returnpo.html">Return Purchase Order</a></li>
+      </ul>			
+      <div class="clear"></div>
+    </li>
+    
+    <li id="searchMenu"><a href="search.html">Search</a></li>
+    <li id="shoppingCartMenu"><a href="shoppingcart.html">Shopping Cart</a></li>
+    <li id="viewLogMenu"><a href="viewlog.html">View Log</a></li>
+    
+    </ul>
+
+  </div>
+
+  <div id="wrapper">
+    <h2 class="bigfont">User</h2><br />
+      
+    <div id="wrapper-bgtop">
+      <h3>Edit User</h3><br/>
+        
+        <div id="page">
+          
+          <table>
+          <tr>
+            <td>Search: <input value="" type="text" name="SearchText" id="searchText"/></td>
+            <td>By:
+              <select name="searchDetails" id="searchDetails">
+                <option value="userName" selected="selected">User Name</option>
+                <option value="userRole">User Role</option>
+                <option value="emailAddress">Email Address</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td><input value="Search" type="submit" name="SubmitButton" id="submitBtn"/>OR
+            <input value="View All" type="submit" name="ViewAllButton" id="viewAllBtn"/></td>
+          </tr>
+          </table>
+          
+          <br/><hr/><br/>
+          Results:
+          <br/><br/>
+          <table border="1" id="itemTable">
+            <tr>
+              <th width="20%">User Name</th>
+              <th width="20%">User Role</th>
+              <th width="20%">Email Address</th>
+              <th width="20%">Edit</th>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><input value="selectedItem" type="checkbox" name="SelectItem" id="selectItem"/></td>
+            </tr>
+          </table>
+
+          <br/><br/><hr/><br/><br/>
+          
+          <div id="content">
+            
+            <form id="editUserForm">
+            <table id="editUserTable">
+              <tr>
+                <td>User Name:</td>
+                <td><input type="text" value="" name="UserName" id="userName"/></td>
+              </tr>
+              <tr>
+                <td>Email Address:</td>
+                <td><input id="emailAddress" type="text" value="" name="EmailAddress"/></td>
+              </tr>
+              <tr>
+                <td>User Role:</td> <!-- Auto Populated -->
+                <td><select name="UserRole" id="userRoleBox">
+                  <option value="admin">Admin</option>
+                  <option value="buyer">Buyer</option>
+                  <option value="receiver">Receiver</option>
+                  <option value="supplier">Supplier</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td><input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/></td>
+                <td><input value="Save" type="submit" name="SaveButton" id="saveBtn"/>OR
+                <input value="Delete" type="submit" name="DeleteButton" id="deleteBtn"/></td>
+              </tr>
+            </table>
+            </form>
+          </div> <!-- Content -->
+        </div><!-- Page -->
+    </div><!-- Wrapper-BgTop -->
+      
+    <br />
+    <div id="footer-bgcontent">
+        <br />
+    </div>
+  </div> <!-- Wrapper -->
+  
+</body>
+</html> 

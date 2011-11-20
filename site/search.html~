@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
-<title>Edward Street - View Logs</title>
+<title>Edward Street</title>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -75,35 +75,52 @@
       <div class="clear"></div>
     </li>
     
-    <li id="searchMenu"><a href="search.html">Search</a></li>
+    <li id="searchMenu"><a href="#">Search</a></li>
     <li id="shoppingCartMenu"><a href="shoppingcart.html">Shopping Cart</a></li>
-    <li id="viewLogMenu"><a href="#">View Log</a></li>
+    <li id="viewLogMenu"><a href="viewlog.html">View Log</a></li>
     
     </ul>
 
   </div>
 
 <div id="wrapper">
-	<h2 class="bigfont">Log</h2><br />
+	<h2 class="bigfont">Search</h2><br />
 		
 	<div id="wrapper-bgtop">
-		<h3>View Log</h3><br/>
+		<h3>Search Database</h3><br/>
 			
 			<div id="page">
 				<p>Search: <input type="text" value="" name="SearchText" id="srchText"/>
-				 <input value="search" type="submit" name="SearchButton" id="searchBtn"/><br/>
-				
-				Results <select name="resultBox" id="resBox">
-  					<option value="1">log 1/1/2012</option>
-  					<option value="2">log 2/1/2012</option>
-  					<option value="3">log 3/3/2012</option>
+				 
+				for <select name="searchDetails" id="srchDetail">
+  					<option value="suppID">Supplier ID</option>
+  					<option value="suppName">Supplier Name</option>
+  					<option value="legName">Legal Name</option>
+  					<option value="contactNum">Contact Number</option>
+					<option value="addr">Address</option>
 				    </select>
 				<br/>
-				</p>
-				Details <textarea rows="4" cols="20" name="DetailsText" id="detText"></textarea><br/>
+				<input value="search" type="submit" name="SubmitButton" id="submitBtn"/>
+				<input value="view all" type="submit" name="SubmitAll" id="submitBtnAll"/>
+				</p><br/>
 
 				<div id="content">
-					
+					<table border="1" id="resultTbl">
+  					<tr>
+    						<th>SupplierID</th>
+    						<th>Supplier Name</th>
+    						<th>Legal Name</th>
+    						<th>Contact Number</th>
+    						<th>Address</th>
+  					</tr>
+  					<tr>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+  					</tr>
+					</table>	
 				</div>
 			</div>
 	</div>

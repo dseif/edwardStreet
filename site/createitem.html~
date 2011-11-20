@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <link rel="stylesheet" type="text/css" href="style.css" />
-  <title>Edward Street - Edit Item</title>
+  <title>Edward Street - Create Item</title>
   <script type="text/javascript" src="js/jquery.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
@@ -38,8 +38,8 @@
     <ul id="nav">
     <li id="itemMenu"><a href="#"> Item > </a>
       <ul>
-        <li><a href="createitem.html">Create Item</a></li>
-        <li><a href="#">Edit Item</a></li>
+        <li><a href="#">Create Item</a></li>
+        <li><a href="edititem.html">Edit Item</a></li>
       </ul>
       <div class="clear"></div>
     </li>
@@ -85,70 +85,13 @@
     <h2 class="bigfont">Item</h2><br />
       
     <div id="wrapper-bgtop">
-      <h3>Edit Item</h3><br/>
+      <h3>Create Item</h3><br/>
         
         <div id="page">
-          
-          <table>
-          <tr>
-            <td>Search: <input value="" type="text" name="SearchText" id="searchText"/></td>
-            <td>By:
-              <select name="searchDetails" id="searchDetails">
-                <option value="iName" selected="selected">Item Name</option>
-                <option value="iPLU">Item PLU</option>
-                <option value="iType">Item Type</option>
-                <option value="iCat">Category</option>
-                <option value="iSupp">Supplier</option>
-                <option value="iPrice">Price</option>
-                <option value="rcptName">Receipt Name</option>
-                <option value="distCode">Distributor Code</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td><input value="Search" type="submit" name="SubmitButton" id="submitBtn"/>OR
-            <input value="View All" type="submit" name="ViewAllButton" id="viewAllBtn"/></td>
-          </tr>
-          </table>
-          
-          <br/><hr/><br/>
-          Results:
-          <br/><br/>
-          <table border="1" id="itemTable">
-            <tr>
-              <th width="9%">PLU</th>
-              <th width="9%">Distributor Code</th>
-              <th width="9%">Receipt Name</th>
-              <th width="9%">Item Name</th>
-              <th width="9%">Item Category</th>
-              <th width="9%">Item Type</th>
-              <th width="9%">Supplier</th>
-              <th width="9%">Price</th>
-              <th width="9%">Unit</th>
-              <th width="9%">Comments</th>
-              <th width="9%">Edit</th>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><textarea id="commentItem" name="CommentItem" cols="5" rows="2" readonly="readonly"></textarea></td>
-              <td><input value="selectedItem" type="checkbox" name="SelectItem" id="selectItem"/></td>
-            </tr>
-          </table>
 
-          <br/><br/><hr/><br/><br/>
-          
-          <div id="content">
-            
-            <form id="editItemForm">
-            <table id="editItemTable">
+				  <div id="content">
+            <form id="createItemForm">
+            <table id="createItemTable">
               <tr>
                 <td>Item Name:</td>
                 <td><input type="text" value="" name="ItemName" id="itemName"/></td>
@@ -185,17 +128,21 @@
                 </td>
               </tr>
               <tr>
+                <td>Comments:</td>
+                <td><textarea rows="4" cols="20" name="ItemComments" id="itemComments"></textarea></td>
+              </tr>
+              <tr>
                 <td>Item Price:</td>
-                <td><input type="text" value="$" name="Price" id="price"/></td>
+                <td><input type="text" value="$" name="ItemPrice" id="itemPrice"/></td>
               </tr>
               <tr>
                 <td>Unit:</td>
                 <td><input type="text" value="" name="ItemName" id="itemName"/></td>
               </tr>
               <tr>
+                <hr/>
                 <td><input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/></td>
-                <td><input value="Save" type="submit" name="SaveButton" id="saveBtn"/>OR
-                <input value="Delete" type="submit" name="DeleteButton" id="deleteBtn"/></td>
+                <td><input value="Save" type="submit" name="SaveButton" id="saveBtn"/></td>
               </tr>
             </table>
             </form>

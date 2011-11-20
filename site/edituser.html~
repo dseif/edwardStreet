@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <link rel="stylesheet" type="text/css" href="style.css" />
-  <title>Edward Street - Edit Item</title>
+  <title>Edward Street - Edit User</title>
   <script type="text/javascript" src="js/jquery.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
@@ -39,7 +39,7 @@
     <li id="itemMenu"><a href="#"> Item > </a>
       <ul>
         <li><a href="createitem.html">Create Item</a></li>
-        <li><a href="#">Edit Item</a></li>
+        <li><a href="edititem.html">Edit Item</a></li>
       </ul>
       <div class="clear"></div>
     </li>
@@ -47,7 +47,7 @@
     <li id="userMenu"><a href="#"> User > </a>
       <ul>
         <li><a href="createuser.html">Create User</a></li>
-        <li><a href="edituser.html">Edit User</a></li>
+        <li><a href="#">Edit User</a></li>
         <li><a href="changepassword.html">Change Password</a></li>
       </ul>
       <div class="clear"></div>
@@ -82,10 +82,10 @@
   </div>
 
   <div id="wrapper">
-    <h2 class="bigfont">Item</h2><br />
+    <h2 class="bigfont">User</h2><br />
       
     <div id="wrapper-bgtop">
-      <h3>Edit Item</h3><br/>
+      <h3>Edit User</h3><br/>
         
         <div id="page">
           
@@ -94,14 +94,9 @@
             <td>Search: <input value="" type="text" name="SearchText" id="searchText"/></td>
             <td>By:
               <select name="searchDetails" id="searchDetails">
-                <option value="iName" selected="selected">Item Name</option>
-                <option value="iPLU">Item PLU</option>
-                <option value="iType">Item Type</option>
-                <option value="iCat">Category</option>
-                <option value="iSupp">Supplier</option>
-                <option value="iPrice">Price</option>
-                <option value="rcptName">Receipt Name</option>
-                <option value="distCode">Distributor Code</option>
+                <option value="userName" selected="selected">User Name</option>
+                <option value="userRole">User Role</option>
+                <option value="emailAddress">Email Address</option>
               </select>
             </td>
           </tr>
@@ -116,29 +111,15 @@
           <br/><br/>
           <table border="1" id="itemTable">
             <tr>
-              <th width="9%">PLU</th>
-              <th width="9%">Distributor Code</th>
-              <th width="9%">Receipt Name</th>
-              <th width="9%">Item Name</th>
-              <th width="9%">Item Category</th>
-              <th width="9%">Item Type</th>
-              <th width="9%">Supplier</th>
-              <th width="9%">Price</th>
-              <th width="9%">Unit</th>
-              <th width="9%">Comments</th>
-              <th width="9%">Edit</th>
+              <th width="15%">User Name</th>
+              <th width="15%">User Role</th>
+              <th width="15%">Email Address</th>
+              <th width="15%">Edit</th>
             </tr>
             <tr>
               <td></td>
               <td></td>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><textarea id="commentItem" name="CommentItem" cols="5" rows="2" readonly="readonly"></textarea></td>
               <td><input value="selectedItem" type="checkbox" name="SelectItem" id="selectItem"/></td>
             </tr>
           </table>
@@ -147,50 +128,25 @@
           
           <div id="content">
             
-            <form id="editItemForm">
-            <table id="editItemTable">
+            <form id="editUserForm">
+            <table id="editUserTable">
               <tr>
-                <td>Item Name:</td>
-                <td><input type="text" value="" name="ItemName" id="itemName"/></td>
+                <td>User Name:</td>
+                <td><input type="text" value="" name="UserName" id="userName"/></td>
               </tr>
               <tr>
-                <td>Receipt Name:</td>
-                <td><input type="text" value="" name="ReceiptName" id="receiptName"/></td>
+                <td>Email Address:</td>
+                <td><input id="emailAddress" type="text" value="" name="EmailAddress"/></td>
               </tr>
               <tr>
-                <td>Item Category:</td> <!-- Auto populated -->
-                <td><select name="itemCategory" id="iCategoryBox">
-                  <option value="meat">Meat</option>
-                  <option value="cheese">Cheese</option>
-                  <option value="fish">Fish</option>
+                <td>User Role:</td> <!-- Auto Populated -->
+                <td><select name="UserRole" id="userRoleBox">
+                  <option value="admin">Admin</option>
+                  <option value="buyer">Buyer</option>
+                  <option value="receiver">Receiver</option>
+                  <option value="supplier">Supplier</option>
                   </select>
                 </td>
-              </tr>
-              <tr>
-                <td>Item Type:</td> <!-- Auto populated -->
-                <td><select name="itemType" id="iTypeBox">
-                    <option value="market">Market</option>
-                    <option value="bistro">Bistro</option>
-                    <option value="catering">Catering</option>
-                    </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Supplier:</td> <!-- Auto populated -->
-                <td><select name="itemSupplier" id="iSupplierBox">
-                    <option value="supp1">SupplierA</option>
-                    <option value="supp2">SupplierB</option>
-                    <option value="supp3">SupplierC</option>
-                    </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Item Price:</td>
-                <td><input type="text" value="$" name="Price" id="price"/></td>
-              </tr>
-              <tr>
-                <td>Unit:</td>
-                <td><input type="text" value="" name="ItemName" id="itemName"/></td>
               </tr>
               <tr>
                 <td><input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/></td>
