@@ -11,6 +11,27 @@
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
 
+
+        $.ajax({
+
+          cache: false,
+
+          url: "http://169.254.221.92:8080/viewItemsPage",
+
+          data: {
+ hash: getCookie( "EDST_H" ),
+ pagenum:5 },
+
+          success: function( response, code, xhr ) {
+
+console.log(response);
+
+      }
+
+    }); 
+
+
+
         document.getElementById("saveBtn").addEventListener("click", function (event) {
 
             // input elements

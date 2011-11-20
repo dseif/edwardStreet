@@ -147,8 +147,24 @@ function maintainPurchaseOrder() {
   return "Maintain Purchase Order";
 }
 
-function createPurchaseOrder() {
-  return "Create Purchase Order";
+function createPurchaseOrder( response ) {
+  var vals = response.values;
+
+  helper.query( "INSERT INTO PURCHASE_ORDER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE ) VALUES('" + vals.user + "', '" + vals.pass +
+                 "', '" + vals.email + "', '" + " " + "', '" + vals.role + "')", function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on select: " + error );
+      return;
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( "User successfully added" );
+    response.end();
+  });
 }
 
 function receivePurchaseOrder( response ) {
@@ -168,8 +184,8 @@ function receivePurchaseOrder( response ) {
   });
 }
 
-function receivePurchaseOrderPage( response ) {
-  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.SUPPLIER_NAME FROM PURCHASE_ORDER po, SUPPLIER s WHERE po.STATUS = 'Submitted' ORDER BY po.PO_ID LIMIT " + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
+functino receivePurchaseOrderPage( response ) {
+  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.SUPPLIER_NAME FROM PURCHASE_ORDER po, SUPPLIER s WHERE po.SUPPLIER_ID = s.SUPPLIER_ID AND po.STATUS = 'Submitted' ORDER BY po.PO_ID LIMIT " + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
        
     if ( error ) {
       console.log( "Error in select statement: " + error );
@@ -185,7 +201,7 @@ function receivePurchaseOrderPage( response ) {
   });
 }
 
-function viewPurchaseOrder( response) {
+function viewPurchaseOrder( response ) {
 
   helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER", function( error, rows, cols ) {
        
@@ -203,8 +219,8 @@ function viewPurchaseOrder( response) {
   });
 }
 
-function viewPurchaseOrderPage (response) {
-  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.NAME FROM PURCHASE_ORDER po, SUPPLIER s ORDER BY po.PO_ID LIMIT " + (response.pagenum-1) + ",5" + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
+function viewPurchaseOrderPage ( response ) {
+  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.NAME FROM PURCHASE_ORDER po, SUPPLIER s WHERE po.SUPPLIER_ID = s.SUPPLIER_ID ORDER BY po.PO_ID LIMIT " + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
        
     if ( error ) {
       console.log( "Error in select statement: " + error );
@@ -278,8 +294,9 @@ function viewItems( response ) {
     response.end();
     });
   }
+}
 
-function viewItemsPage( response) {
+function viewItemsPage ( response) {
   helper.query( "SELECT i.ITEM_ID, i.DIST_CODE, i.ITEM_NAME, i.RECEIPT_NAME, i.CATEGORY, i.UNIT, i.ITEM_TYPE, i.COMMENT, p.PRICE, s.NAME FROM ITEM i, SUPPLIER s, PRICE_HISTORY p WHERE i.SUPPLIER_ID = s.SUPPLIER_ID AND i.LATEST_PRICE = PRICE_ID ORDER BY i.ITEM_ID LIMIT " + (response.values.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
 
     if ( error ) {
@@ -295,6 +312,7 @@ function viewItemsPage( response) {
     response.end();
   });
 }
+
 
 function maintainSupplierProfile() {
   return "Maintain Supplier Profile";
@@ -326,41 +344,6 @@ function viewSupplier( response ) {
     if ( error ) {
       console.log( error );
     }
-
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    response.write( JSON.stringify( rows ) );
-    response.end();
-  });
-}
-
-function editUser( response ) {
-
-  helper.query( "SELECT * FROM USER", function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( error );
-    }
-
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    response.write( JSON.stringify( rows ) );
-    response.end();
-  });
-}
-
-function viewUsers( response ) {
-
-  console.log( "inside view users" );
-  helper.query( "SELECT * FROM USER", function( error, rows, cols ) {
-
-  if ( error ) {
-      console.log( error );
-  }
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -412,5 +395,4 @@ exports.viewItemsPage = viewItemsPage;
 exports.createSupplierProfile = createSupplierProfile;
 exports.maintainSupplierProfile = maintainSupplierProfile;
 exports.changePassword = changePassword;
-exports.editUser = editUser; 
-exports.viewUsers = viewUsers; 
+
