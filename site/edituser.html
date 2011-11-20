@@ -22,12 +22,25 @@
 
         var table = $( "#itemTable" );
 
-        var data = JSON.parse( response );
+        var data = JSON.parse( response ),
+            dataObj = {};
         for ( var i = 0, l = data.length; i < l; i++ ) {
-            
-        table.append( "<tr><td>" + data[ i ][ "USER_ID" ] + "</td><td>" + data[ i ][ "ROLE" ] + "</td>" + 
-          "<td>" + data[ i ][ "EMAIL" ] + "</td><td><button id='" + data[ i ][ "USER_ID" ] + "'>Edit</button></td></tr>" );
+
+          dataObj[ data[ i ][ "USER_ID" ] ] = data[ i ];
+
+          table.append( "<tr><td><b>" + data[ i ][ "USER_ID" ] + "</b></td><td>" + data[ i ][ "ROLE" ] + "</td>" + 
+            "<td>" + data[ i ][ "EMAIL" ] + "</td><td><button id='" + data[ i ][ "USER_ID" ] + "'>Edit</button></td></tr>" );
+
+          $( "#" + data[ i ][ "USER_ID" ] ).click(function() {
+
+            console.log( $( this ).attr( "id" ), dataObj[ $( this ).attr( "id" ) ][ "USER_ID" ], $( "#userName" ) );
+            $( "#userName" ).val( dataObj[ $( this ).attr( "id" ) ][ "USER_ID" ] );
+            $( "#emailAddress" ).val( dataObj[ $( this ).attr( "id" ) ][ "EMAIL" ] );
+            $( "#userRoleBox" ).val( String.prototype.toLowerCase.apply( dataObj[ $( this ).attr( "id" ) ][ "ROLE" ] ) );
+          });
         }
+
+        
       }
     }); 
   }, false );
@@ -241,10 +254,10 @@ $(window).scroll(function () {
           <br/><br/>
           <table border="1" id="itemTable">
             <tr>
-              <th width="20%">User Name</th>
-              <th width="20%">User Role</th>
-              <th width="20%">Email Address</th>
-              <th width="20%">Edit</th>
+              <th >User Name</th>
+              <th >User Role</th>
+              <th >Email Address</th>
+              <th >Edit</th>
             </tr>
           </table>
 
