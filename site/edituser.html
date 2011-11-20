@@ -20,8 +20,14 @@
       },
       success: function( response, code, xhr ) {
 
+        var table = $( "#itemTable" );
+
         var data = JSON.parse( response );
-        console.log( data );
+        for ( var i = 0, l = data.length; i < l; i++ ) {
+            
+        table.append( "<tr><td>" + data[ i ][ "USER_ID" ] + "</td><td>" + data[ i ][ "ROLE" ] + "</td>" + 
+          "<td>" + data[ i ][ "EMAIL" ] + "</td><td><button id='" + data[ i ][ "USER_ID" ] + "'>Edit</button></td></tr>" );
+        }
       }
     }); 
   }, false );
@@ -240,12 +246,6 @@ $(window).scroll(function () {
               <th width="20%">Email Address</th>
               <th width="20%">Edit</th>
             </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><input value="selectedItem" type="checkbox" name="SelectItem" id="selectItem"/></td>
-            </tr>
           </table>
 
           <br/><br/><hr/><br/><br/>
@@ -290,5 +290,4 @@ $(window).scroll(function () {
   </div> <!-- Wrapper -->
   
 </body>
->>>>>>> c271fadc8d03aa97983eeaea89f8514219c010d6
 </html> 
