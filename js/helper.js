@@ -28,6 +28,14 @@ $( function() {
           } else {
             cart[ id ] = obj;
           }
+
+          var children = $( "#scBox" ).children();
+
+          for ( var i = 0, l = children.length; i < l; i++ ) {
+            if ( children[ i ][ "edst-data" ] === obj[ "ITEM_NAME" ] ) {
+              children[ i ].children[ 1 ].innerHTML = "Qty: " + cart[ id ].qty;
+            }
+          }
         },
         // return the users shopping cart object
         cart: function() {
