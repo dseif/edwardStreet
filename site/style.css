@@ -13,47 +13,51 @@ body {
 	color: #757575;
 }
 
-ul li ul {
+.submenuitem {
 	width: 200px;
 }
 
-ul {
+.menuitem {
 	width: 1100px;
 }
 
-li {
-	width: 200px;
-	/*white-space: nowrap;*/
-}
-
-h1, h2, h3 {
+/*h1 h2 h3 classes*/
+.headings {
 	margin: 0;
 	font-family: "Calibri", "Times New Roman";
 	font-weight: bold;
 	color: #A15E00;
 }
 
-h1 { font-size: 44px; text-align:center; }
+div { padding: 2px 2px; }
 
-h2 { font-size: 18px; }
+/* for h1 */
+.bigheading { 
+	font-size: 44px; text-align:center; 
+}
 
-h3 { }
+/* for h2*/
+.mediumheading { 
+	font-size: 18px; 
+}
 
-p, ol {
+/* for h3*/
+.smallheading { }
+
+/* for p and ol*/
+.paragraphjustify {
 	margin-top: 0;
 	line-height: 240%;
 	text-align: justify;
 }
 
-.textright
-{
+.textright {
 	color: #FFFFFF;
 	text-align: left;
 	font-weight: bold;	
 }
 
-.sctext
-{
+.sctext {
 	z-index:300;
 	color: #FFFFFF;
 	text-align: center;
@@ -64,8 +68,7 @@ p, ol {
 
 }
 
-.shoppingcart
-{
+.shoppingcart {
 	background: #FFFFFF;
 	width: 400px;
 	height: 90px;
@@ -75,31 +78,28 @@ p, ol {
 	overflow: auto;
 }
 
-ol { }
+/* for ol */
+.orderedlist { }
 
-blockquote { }
+/* for blockquote */
+.bquote { }
 
-a { color: #000000; }
-
-a:hover { text-decoration: none; }
-
-a img {
-	border: none;
+/* for a tags*/
+.blacklink { 
+	color: #000000; 
+}
+.blacklink a { 
+	color: #000000; 
 }
 
-img.left {
-	float: left;
-	margin: 7px 30px 0 0;
+/* hover */
+.blacklink:hover { 
+	text-decoration: none; 
 }
 
-img.right {
-	float: right;
-	margin: 7px 0 0 30px;
-}
-
-hr  
-{
-margin: 0 auto;
+/* for hr */
+.horizontalbar {
+	margin: 0 auto;
 }
 
 .list1 {
@@ -130,13 +130,11 @@ margin: 0 auto;
 
 #wrapper-bgtop 
 {
-	background-image:url('img02.png');
 	background-repeat:no-repeat;
 	background-position:left top;
 }
 
 #wrapper-bgbtm {
-	/*background-image:url('img04.png');*/
 	background-repeat:no-repeat;
 	background-position:left bottom;
 }
@@ -292,7 +290,7 @@ margin: 0 auto;
 
 #logo {
 	float: left;
-	width: 300px;
+	/*width: 300px;*/
 	height: 94px;
 	margin: 0 auto;
 }
@@ -330,10 +328,6 @@ margin: 0 auto;
 #banner {
 	padding-bottom: 20px;
 }
-
-
-
-
 
 /* Sidebar */
 
@@ -398,63 +392,6 @@ margin: 0 auto;
 	text-decoration: none;
 	font-weight: bold;
 	color: Red;
-}
-
-/* Calendar */
-
-#calendar {
-}
-
-#calendar caption {
-	padding-bottom: 5px;
-	font-weight: bold;
-}
-
-#calendar table {
-	width: 100%;
-	border-collapse: collapse;
-	border-bottom: 1px solid #24130F;
-	border-left: 1px solid #24130F;
-	border-right: 1px solid #24130F;
-}
-
-#calendar thead th {
-	padding: 5px 0;
-	text-align: center;
-	border-top: 1px solid #24130F;
-	border-left: 1px solid #24130F;
-	background: #24130F;
-}
-
-#calendar tbody td {
-	padding: 5px 0;
-	text-align: center;
-	border-top: 1px solid #24130F;
-	border-left: 1px solid #24130F;
-	border-bottom: 1px solid #24130F;
-}
-
-#calendar tfoot td {
-	padding: 5px;
-	border-left: 1px solid #24130F;
-	border-bottom: 1px solid #24130F;
-}
-
-#calendar tfoot #next {
-	border-top: 1px solid #24130F;
-	text-align: right;
-}
-
-#calendar tfoot #prev {
-	border-top: 1px solid #24130F;
-}
-
-#calendar .pad {
-	border-bottom: 1px solid #24130F;
-}
-
-#calendar #today {
-	background: #24130F;
 }
 
 /* Footer */
