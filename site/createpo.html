@@ -171,7 +171,20 @@
 
         $( "#container" ).tabs();
       }
-    });
+      });
+      document.addEventListener( "click", function() {
+      $.ajax({
+          cache: false,
+          url: "http://localhost:8080/viewitems",
+          data: {
+            hash: getCookie( "EDST_H" ),
+            total: $( "#grndTotal" ).value,
+            hold: $( "#holdOrdr" ).is( ":checked" ),
+          },
+          success: function( response, code, xhr ) {
+          }
+        });
+      }, false );
   }, false );
 </script>
 <script type="text/javascript">

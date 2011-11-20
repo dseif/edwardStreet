@@ -272,6 +272,41 @@ function viewSupplier( response ) {
   });
 }
 
+function editUser( response ) {
+
+  helper.query( "SELECT * FROM USER", function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( error );
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
+}
+
+function viewUsers( response ) {
+
+  console.log( "inside view users" );
+  helper.query( "SELECT * FROM USER", function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( error );
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
+}
+
 exports.index = index;
 exports.login = login;
 exports.logout = logout;
@@ -292,3 +327,5 @@ exports.viewItems = viewItems;
 exports.createSupplierProfile = createSupplierProfile;
 exports.maintainSupplierProfile = maintainSupplierProfile;
 exports.changePassword = changePassword;
+exports.editUser = editUser; 
+exports.viewUsers = viewUsers; 
