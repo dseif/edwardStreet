@@ -195,8 +195,19 @@ function maintainItem() {
   return "Maintain Item";
 }
 
-function createSupplierProfile() {
-  return "Create Supplier Profile";
+function createSupplierProfile( response ) {
+
+  /*var vals = response.values;
+
+  helper.query( "INSERT INTO SUPPLIER( name, legal_name, lead_time, supplier_comment, special_comment ) VALUES( '" +
+                vals.name + "', '" + vals.legal_name + "', '" + vals.lead_time + "', '" + vals.supplier_comment "', '" +
+                vals.special_comment + "'", function( error, rows, cols ) {
+
+                  if ( error ) {
+                    console.log( error );
+                  }
+
+  });*/ 
 }
 
 function viewItems( response ) {
@@ -218,6 +229,25 @@ function viewItems( response ) {
 
 function maintainSupplierProfile() {
   return "Maintain Supplier Profile";
+}
+
+function deleteSupplier( response ) {
+
+  var vals = response.values;
+
+  helper.query( "DELETE FROM supplier WHERE supplier_id = '" + vals.supplierID + "'", function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( error );
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( true ); 
+    response.end();
+  });
 }
 
 function viewSupplier( response ) {
@@ -250,6 +280,7 @@ exports.receivePurchaseOrder = receivePurchaseOrder;
 exports.viewPurchaseOrder = viewPurchaseOrder;
 exports.viewActivePurchaseOrders = viewActivePurchaseOrders;
 exports.viewSupplier = viewSupplier;
+exports.deleteSupplier = deleteSupplier;
 exports.createItem = createItem;
 exports.maintainItem = maintainItem;
 exports.viewItems = viewItems;
