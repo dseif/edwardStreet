@@ -26,7 +26,9 @@ handle[ "/purchaseorder/returnorderline" ] = requestHandlers.returnOrderLine;
 handle[ "/purchaseorder/maintainpurchaseorder" ] = requestHandlers.maintainPurchaseOrder;
 handle[ "/createpurchaseorder" ] = requestHandlers.createPurchaseOrder;
 handle[ "/purchaseorder/receivepurchaseorder" ] = requestHandlers.receivePurchaseOrder;
+handle[ "/purchaseorder/receivepurchaseorderpage" ] = requestHandlers.receivePurchaseOrderPage;
 handle[ "/viewpurchaseorder" ] = requestHandlers.viewPurchaseOrder;
+handle[ "/viewpurchaseorderpage" ] = requestHandlers.viewPurchaseOrderPage;
 handle[ "/viewactivepurchaseorders" ] = requestHandlers.viewActivePurchaseOrders;
 
 //  Item pages
@@ -40,6 +42,7 @@ handle[ "/viewitemspage" ] = requestHandlers.viewItemsPage;
 handle[ "/supplier/createsupplierprofile" ] = requestHandlers.createSupplierProfile;
 handle[ "/supplier/maintainsupplierprofile" ] = requestHandlers.maintainSupplierProfile;
 handle[ "/viewsupplier" ] = requestHandlers.viewSupplier;
+handle[ "/viewsupplierpage" ] = requestHandlers.viewSupplierpage;
 handle[ "/deletesupplier" ] = requestHandlers.deleteSupplier;
 
 server.start( router.route, handle );
