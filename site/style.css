@@ -88,6 +88,9 @@ div { padding: 2px 2px; }
 .blacklink { 
 	color: #000000; 
 }
+.blacklink a { 
+	color: #000000; 
+}
 
 /* hover */
 .blacklink:hover { 
@@ -95,7 +98,7 @@ div { padding: 2px 2px; }
 }
 
 /* for hr */
-.horizontal bar {
+.horizontalbar {
 	margin: 0 auto;
 }
 
@@ -127,13 +130,11 @@ div { padding: 2px 2px; }
 
 #wrapper-bgtop 
 {
-	background-image:url('img02.png');
 	background-repeat:no-repeat;
 	background-position:left top;
 }
 
 #wrapper-bgbtm {
-	/*background-image:url('img04.png');*/
 	background-repeat:no-repeat;
 	background-position:left bottom;
 }
@@ -289,7 +290,7 @@ div { padding: 2px 2px; }
 
 #logo {
 	float: left;
-	width: 300px;
+	/*width: 300px;*/
 	height: 94px;
 	margin: 0 auto;
 }

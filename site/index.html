@@ -31,7 +31,7 @@ $(window).scroll(function () {
         $("#header").css("top", "0");
         $("#menu").css("position", "fixed");
         $("#menu").css("left", "379px");
-        $("#menu").css("bottom", "440px");
+        $("#menu").css("bottom", "470px");
     }
     // Revert back to normal
     if ($(window).scrollTop() <= $(".scrollTrigger").offset({ scroll: false }).top) {
@@ -50,7 +50,7 @@ $(window).scroll(function () {
 
 <div id="header">
 	<div id="logo">
-		<h1><a href="index.html">Edward Street</a></h1>
+		<h1 class="headings"><a href="index.html">Edward Street</a></h1>
 	</div>
     <p class="textright"><a class="textright" href="login.html">Log in</a></p>
     <p class="sctext">SHOPPING CART</p>
@@ -61,58 +61,58 @@ $(window).scroll(function () {
 
 	<div id="menu">
 
-	<ul id="nav">
+	<ul id="nav" class="menuitem">
 	
-	<li id="itemMenu"><a href="#"> Item > </a>
+	<li id="itemMenu" class="blacklink"><a href="#"> Item > </a>
 		<ul>
-			<li><a href="createitem.html">Create Item</a></li>
-			<li><a href="modifyitem.html">Modify Item</a></li>
-				<li><a href="edititem.html">Edit Item</a></li>
-			<li><a href="deleteitem.html">Delete Item</a></li>
+			<li class="blacklink"><a href="createitem.html">Create Item</a></li>
+			<li class="blacklink"><a href="modifyitem.html">Modify Item</a></li>
+				<li class="blacklink"><a href="edititem.html">Edit Item</a></li>
+			<li class="blacklink"><a href="deleteitem.html">Delete Item</a></li>
 		</ul>
 		<div class="clear"></div>
 	</li>
 
-	<li id="userMenu"><a href="#"> User > </a>
+	<li id="userMenu" class="blacklink"><a href="#"> User > </a>
 		<ul>
-			<li><a href="createuser.html">Create User</a></li>
-			<li><a href="changepassword.html">Change Password</a></li>
-			<li><a href="edituser.html">Edit User</a></li>
-			<li><a href="edituserbr.html">Edit Buyers and Receivers</a></li>
-			<li><a href="modifyadmin.html">Modify Admin Info</a></li>
-			<li><a href="deleteuser.html">Delete User</a></li>
+			<li class="blacklink"><a href="createuser.html">Create User</a></li>
+			<li class="blacklink"><a href="changepassword.html">Change Password</a></li>
+			<li class="blacklink"><a href="edituser.html">Edit User</a></li>
+			<li class="blacklink"><a href="edituserbr.html">Edit Buyers and Receivers</a></li>
+			<li class="blacklink"><a href="modifyadmin.html">Modify Admin Info</a></li>
+			<li class="blacklink"><a href="deleteuser.html">Delete User</a></li>
 		</ul>
 		<div class="clear"></div>
 	</li>
 	
-	<li id="supplierMenu"><a href="#"> Supplier > </a>
+	<li id="supplierMenu" class="blacklink"><a href="#"> Supplier > </a>
 		<ul>
-			<li><a href="createsupp.html">Create Supplier</a></li>
-				<li><a href="createsuppuser.html">Create Supplier as User</a></li>
-			<li><a href="modifysuppinfo.html">Modify Supplier Info</a></li>
-				<li><a href="editsupplier.html">Edit Supplier</a></li>
-				<li><a href="editsupplierall.html">Edit All Suppliers</a></li>
-			<li><a href="deletesupp.html">Delete Supplier</a></li>
+			<li class="blacklink"><a href="createsupp.html">Create Supplier</a></li>
+				<li class="blacklink"><a href="createsuppuser.html">Create Supplier as User</a></li>
+			<li class="blacklink"><a href="modifysuppinfo.html">Modify Supplier Info</a></li>
+				<li class="blacklink"><a href="editsupplier.html">Edit Supplier</a></li>
+				<li class="blacklink"><a href="editsupplierall.html">Edit All Suppliers</a></li>
+			<li class="blacklink"><a href="deletesupp.html">Delete Supplier</a></li>
 		</ul>
 		<div class="clear"></div>
 	</li>
 	
-	<li id="poMenu"><a href="#"> Purchase Order > </a>
+	<li id="poMenu" class="blacklink"><a href="#"> Purchase Order > </a>
 		<ul>
-			<li><a href="createpo.html">Create Purchase Order</a></li>
-			<li><a href="modifypo.html">Modify Purchase Order</a></li>
-			<li><a href="deletepo.html">Delete Purchase Order</a></li>
-			<li><a href="receivepo.html">Receive Purchase Order</a></li>
-			<li><a href="returnpo.html">Return Purchase Order</a></li>
-			<li><a href="viewactivepo.html">View Active Purchase Order</a></li>
-			<li><a href="viewpo.html">View Purchase Order</a></li>
+			<li class="blacklink"><a href="createpo.html">Create Purchase Order</a></li>
+			<li class="blacklink"><a href="modifypo.html">Modify Purchase Order</a></li>
+			<li class="blacklink"><a href="deletepo.html">Delete Purchase Order</a></li>
+			<li class="blacklink"><a href="receivepo.html">Receive Purchase Order</a></li>
+			<li class="blacklink"><a href="returnpo.html">Return Purchase Order</a></li>
+			<li class="blacklink"><a href="viewactivepo.html">View Active Purchase Order</a></li>
+			<li class="blacklink"><a href="viewpo.html">View Purchase Order</a></li>
 		</ul>			
 		<div class="clear"></div>
 	</li>
 	
-	<li id="searchMenu"><a href="search.html">Search</a></li>
-	<li id="shoppingCartMenu"><a href="shoppingcart.html">Shopping Cart</a></li>
-	<li id="viewLogMenu"><a href="viewlog.html">View Log</a></li>
+	<li id="searchMenu" class="blacklink"><a href="search.html">Search</a></li>
+	<li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
+	<li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
 	
 	</ul>
 
