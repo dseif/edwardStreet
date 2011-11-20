@@ -151,13 +151,60 @@ function createPurchaseOrder() {
   return "Create Purchase Order";
 }
 
-function receivePurchaseOrder() {
-  return "Receive Purchase Order";
+function receivePurchaseOrder( response ) {
+  helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER WHERE STATUS = 'Received'", function( error, rows, cols ) {
+       
+    if ( error ) {
+      console.log( "Error in select statement: " + error );
+      return;
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
+}
+
+function receivePurchaseOrderPage( response ) {
+  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.SUPPLIER_NAME FROM PURCHASE_ORDER po, SUPPLIER s WHERE po.STATUS = 'Submitted' ORDER BY po.PO_ID LIMIT " + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
+       
+    if ( error ) {
+      console.log( "Error in select statement: " + error );
+      return;
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
 }
 
 function viewPurchaseOrder( response) {
 
-  helper.query( "SELECT * FROM PURCHASE_ORDER", function( error, rows, cols ) {
+  helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER", function( error, rows, cols ) {
+       
+    if ( error ) {
+      console.log( "Error in select statement: " + error );
+      return;
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
+}
+
+function viewPurchaseOrderPage (response) {
+  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.NAME FROM PURCHASE_ORDER po, SUPPLIER s ORDER BY po.PO_ID LIMIT " + (response.pagenum-1) + ",5" + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
        
     if ( error ) {
       console.log( "Error in select statement: " + error );
@@ -215,11 +262,28 @@ function createSupplierProfile( response ) {
 }
 
 function viewItems( response ) {
-  
-  helper.query( "SELECT * FROM ITEM", function( error, rows, cols ) {
+
+  helper.query( "SELECT COUNT(*) FROM ITEM", function (error, rows, cols) {
 
     if ( error ) {
       console.log( error );
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+
+    response.write( JSON.stringify( rows ) );
+    response.end();
+    });
+  }
+
+function viewItemsPage( response) {
+  helper.query( "SELECT i.ITEM_ID, i.DIST_CODE, i.ITEM_NAME, i.RECEIPT_NAME, i.CATEGORY, i.UNIT, i.ITEM_TYPE, i.COMMENT, p.PRICE, s.NAME FROM ITEM i, SUPPLIER s, PRICE_HISTORY p WHERE i.SUPPLIER_ID = s.SUPPLIER_ID AND i.LATEST_PRICE = PRICE_ID ORDER BY i.ITEM_ID LIMIT " + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
+
+    if ( error ) {
+        console.log( error );
     }
 
     response.writeHead( 200, {
@@ -294,6 +358,23 @@ function viewUsers( response ) {
   console.log( "inside view users" );
   helper.query( "SELECT * FROM USER", function( error, rows, cols ) {
 
+  if ( error ) {
+      console.log( error );
+  }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
+}
+
+function viewSupplierPage( response ) {
+  
+  helper.query( "SELECT * FROM SUPPLIER ORDER BY NAME LIMIT " + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
+
     if ( error ) {
       console.log( error );
     }
@@ -317,13 +398,17 @@ exports.returnOrderLine = returnOrderLine;
 exports.maintainPurchaseOrder = maintainPurchaseOrder;
 exports.createPurchaseOrder = createPurchaseOrder;
 exports.receivePurchaseOrder = receivePurchaseOrder;
+exports.receivePurchaseOrderPage = receivePurchaseOrder;
 exports.viewPurchaseOrder = viewPurchaseOrder;
+exports.viewPurchaseOrderPage = viewPurchaseOrderPage;
 exports.viewActivePurchaseOrders = viewActivePurchaseOrders;
 exports.viewSupplier = viewSupplier;
+exports.viewSupplierPage = viewSupplierPage;
 exports.deleteSupplier = deleteSupplier;
 exports.createItem = createItem;
 exports.maintainItem = maintainItem;
 exports.viewItems = viewItems;
+exports.viewItemsPage = viewItemsPage;
 exports.createSupplierProfile = createSupplierProfile;
 exports.maintainSupplierProfile = maintainSupplierProfile;
 exports.changePassword = changePassword;
