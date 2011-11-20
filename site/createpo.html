@@ -4,12 +4,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
-<title>Edward Street</title>
+<link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui.css" />
+<title>Edward Street - Create Purchase Order</title>
 <script src="login.js"></script>
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/jquery-1.2.6.min.js"></script>
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
 <script>
   document.addEventListener( "DOMContentLoaded", function( event ) {
+
+    // get our helper object
+    var helper = edstHelper();
+    helper.setupSortable();
 
     $.ajax({
       cache: false,
@@ -19,19 +25,23 @@
       },
       success: function( response, code, xhr ) {
 
+        if ( response === "Invalid user/pass" ) {
+          window.location = "http://localhost/~dseif/edwardStreet/site/login.html";
+        }
+
         response = JSON.parse( response );
         var dropDown = document.getElementById( "suppBox" );
 
         var addOption = function( text ) {
           var opt = document.createElement( "option" );
-          opt.text = text; 
-          opt.value = text; 
+          opt.text = text;
+          opt.value = text;
           dropDown.options.add( opt );
         }
 
-        for ( var i = 0, len = response.length; i < len; i++ ) {  
+        for ( var i = 0, len = response.length; i < len; i++ ) {
           var temp = response[ i ].NAME;
-          addOption( temp ); 
+          addOption( temp );
         }
       }
     });
@@ -43,25 +53,138 @@
       },
       success: function( response, code, xhr ) {
 
-        var table = document.getElementById( "poTable" );
-
         response = JSON.parse( response );
 
-        var addRow = function( count ) {
-          var row = table.insertRow( count + 1 ),
-          data = response[ count ],
-          count = 0;
+        var container = document.getElementById( "container" ),
+            ul = document.createElement( "ul" ),
+            responseItems = response.length,
+            tabs = responseItems/100,
+            counter = 1;
 
-          for( var item in data ) {
-            row.insertCell( count ).innerHTML = data[ item ];
+            container.appendChild( ul );
+
+        for ( var i = 1; i < tabs + 1; i++ ) {
+
+          var item = document.createElement( "div" ),
+              li = document.createElement( "li" ),
+              div = document.createElement( "div" ),
+              innerItem = document.createElement( "a" );
+
+          ul.appendChild( li );
+          li.appendChild( item );
+          item.appendChild( innerItem );
+          innerItem.href = "#tabs" + i;
+          innerItem.innerHTML = i;
+          div.id = "tabs" + i;
+          container.appendChild( div );
+        }
+
+        var addRow = function( count, target ) {
+
+          // create a new item
+          var item = document.createElement( "div" ),
+              innerDiv = document.createElement( "div" ),
+              header = document.createElement( "h3" ),
+              innerHeader = document.createElement( "a" ),
+              qtyBox = document.createElement( "input" ),
+              submitBtn = document.createElement( "button" ),
+              qtySpan = document.createElement( "a" ),
+              data = response[ count ];
+
+          $( submitBtn ).click(function( event ) {
+
+            var item = document.createElement( "div" ),
+                obj = {},
+                data = response[ $( this ).parent().attr( "name" ) ],
+                itemID = $( this ).parent().attr( "id" ).substring( 5 );
+
+           for ( var prop in data ) { 
+             obj[ prop ] = data[ prop ]; 
+           }
+
+           obj.qty = $( this ).parent().children( ".edst-val" )[ 0 ].value;
+           item.style.width = $( "#scBox" ).width() + "px";
+           item.setAttribute( "edst-data", itemID );
+
+           $( item ).append( 
+             "<p style='display:inline-block;'>" + itemID + " </p>" +
+             "<p id='qty' style='display:inline-block;'>Qty: " + obj.qty + "</p>");  
+
+            helper.addItem( obj );
+            helper.updateStorage();
+
+            $( "#scBox" ).append( item );
+
+            event.stopPropagation();
+          });
+
+          $( qtyBox ).click(function( event ) {
+
+            event.stopPropagation();
+          });
+
+          innerHeader.href = "#";
+          innerDiv.style.position = "absolute";
+          innerDiv.style.right = "0";
+          qtyBox.style.width = "30px";
+          qtyBox.value = 1;
+          $( qtyBox ).addClass( "edst-val" );
+
+          innerHeader.style.display = "inline-block";
+          innerDiv.style.display = "inline-block";
+          qtySpan.style.display = "inline-block";
+
+          qtySpan.innerHTML = "Quantity: ";
+          submitBtn.innerHTML = "Add to Cart";
+          innerDiv.id = "edst-" + data[ "ITEM_NAME" ];
+          innerDiv.setAttribute( "name", count );
+          innerHeader.innerHTML = data[ "ITEM_NAME" ];
+
+          header.appendChild( innerHeader );
+          innerDiv.appendChild( qtySpan );
+          innerDiv.appendChild( qtyBox );
+          innerDiv.appendChild( submitBtn );
+          header.appendChild( innerDiv );
+          target.appendChild( header );
+
+          for( var prop in data ) {
+            if ( data[ prop ]  ) {
+              item.innerHTML += "<b>" + prop + ": </b>" + data[ prop ] + "</br>";
+            }
           }
+
+          item.id = count; 
+          target.appendChild( item );
         }
 
-        for( var i = 0, len = response.length; i < len; i ++ ) {
-          addRow( i );
+        for( var i = 0, k = 0, len = response.length; i < len; i++, k++ ) {
+
+          if ( k >= 100 ) {
+            helper.setupAccordion( document.getElementById( "tabs" + counter ) );
+            counter++;
+            k = 0;
+          }
+          addRow( i, document.getElementById( "tabs" + counter ) );
         }
+
+        helper.setupAccordion( document.getElementById( "tabs" + counter ) );
+
+        $( "#container" ).tabs();
       }
-    });
+      });
+      document.addEventListener( "click", function() {
+      $.ajax({
+          cache: false,
+          url: "http://localhost:8080/viewitems",
+          data: {
+            hash: getCookie( "EDST_H" ),
+            total: $( "#grndTotal" ).value,
+            hold: $( "#holdOrdr" ).is( ":checked" ),
+          },
+          success: function( response, code, xhr ) {
+          }
+        });
+      }, false );
   }, false );
 </script>
 <script type="text/javascript">
@@ -102,77 +225,65 @@ $(window).scroll(function () {
 </head>
 
 <body>
-
-<div id="header">
-	<div id="logo">
-		<h1><a href="index.html">Edward Street</a></h1>
-	</div>
+  <div id="header">
+    <div id="logo">
+      <h1><a href="index.html">Edward Street</a></h1>
+    </div>
     <p class="textright"><a class="textright" href="login.html">Log in</a></p>
     <p class="sctext">SHOPPING CART</p>
     <div id="scBox" class="shoppingcart">
     
     </div>
-</div>
+  </div>
 
-	<div id="menu">
+  <div id="menu">
+    <ul id="nav">
+    <li id="itemMenu"><a href="#"> Item > </a>
+      <ul>
+        <li><a href="createitem.html">Create Item</a></li>
+        <li><a href="edititem.html">Edit Item</a></li>
+      </ul>
+      <div class="clear"></div>
+    </li>
 
-	<ul id="nav">
-	
-	<li id="itemMenu"><a href="#"> Item > </a>
-		<ul>
-			<li><a href="createitem.html">Create Item</a></li>
-			<li><a href="modifyitem.html">Modify Item</a></li>
-				<li><a href="edititem.html">Edit Item</a></li>
-			<li><a href="deleteitem.html">Delete Item</a></li>
-		</ul>
-		<div class="clear"></div>
-	</li>
+    <li id="userMenu"><a href="#"> User > </a>
+      <ul>
+        <li><a href="createuser.html">Create User</a></li>
+        <li><a href="edituser.html">Edit User</a></li>
+        <li><a href="changepassword.html">Change Password</a></li>
+      </ul>
+      <div class="clear"></div>
+    </li>
+    
+    <li id="supplierMenu"><a href="#"> Supplier > </a>
+      <ul>
+        <li><a href="createsupp.html">Create Supplier</a></li>
+        <li><a href="editsupplier.html">Edit Supplier</a></li>
 
-	<li id="userMenu"><a href="#"> User > </a>
-		<ul>
-			<li><a href="createuser.html">Create User</a></li>
-			<li><a href="changepassword.html">Change Password</a></li>
-			<li><a href="edituserall.html">Edit Users</a></li>
-			<li><a href="edituserbr.html">Edit Buyers and Receivers</a></li>
-			<li><a href="modifyadmin.html">Modify Admin Info</a></li>
-			<li><a href="deleteuser.html">Delete User</a></li>
-		</ul>
-		<div class="clear"></div>
-	</li>
-	
-	<li id="supplierMenu"><a href="#"> Supplier > </a>
-		<ul>
-			<li><a href="createsupp.html">Create Supplier</a></li>
-				<li><a href="createsuppuser.html">Create Supplier as User</a></li>
-			<li><a href="modifysuppinfo.html">Modify Supplier Info</a></li>
-				<li><a href="editsupplier.html">Edit Supplier</a></li>
-				<li><a href="editsupplierall.html">Edit All Suppliers</a></li>
-			<li><a href="deletesupp.html">Delete Supplier</a></li>
-		</ul>
-		<div class="clear"></div>
-	</li>
-	
-	<li id="poMenu"><a href="#"> Purchase Order > </a>
-		<ul>
-			<li><a href="createpo.html">Create Purchase Order</a></li>
-			<li><a href="modifypo.html">Modify Purchase Order</a></li>
-			<li><a href="deletepo.html">Delete Purchase Order</a></li>
-			<li><a href="receivepo.html">Receive Purchase Order</a></li>
-			<li><a href="returnpo.html">Return Purchase Order</a></li>
-			<li><a href="viewactivepo.html">View Active Purchase Order</a></li>
-			<li><a href="viewpo.html">View Purchase Order</a></li>
-		</ul>			
-		<div class="clear"></div>
-	</li>
-	
-	<li id="searchMenu"><a href="search.html">Search</a></li>
-	<li id="shoppingCartMenu"><a href="shoppingcart.html">Shopping Cart</a></li>
-	<li id="viewLogMenu"><a href="viewlog.html">View Log</a></li>
-	
-	</ul>
+      </ul>
+      <div class="clear"></div>
+    </li>
+    
+    <li id="poMenu"><a href="#"> Purchase Order > </a>
+      <ul>
+        <li><a href="#">Create Purchase Order</a></li>
+        <li><a href="modifypo.html">Edit Purchase Order</a></li>
+        <li><a href="viewpo.html">View Purchase Order</a></li>
+        <li><a href="receivepo.html">Receive Purchase Order</a></li>
+        <li><a href="returnpo.html">Return Purchase Order</a></li>
+      </ul>			
+      <div class="clear"></div>
+    </li>
+    
+    <li id="searchMenu"><a href="search.html">Search</a></li>
+    <li id="shoppingCartMenu"><a href="shoppingcart.html">Shopping Cart</a></li>
+    <li id="viewLogMenu"><a href="viewlog.html">View Log</a></li>
+    
+    </ul>
 
 	</div>
     <div class="scrollTrigger"></div>
+
 <div id="wrapper">
 	<h2 class="bigfont">Purchase Orders</h2><br />
 		
@@ -190,18 +301,8 @@ $(window).scroll(function () {
 				
 					Select Item:<br/>
 					<a href="createitem.html">Create New Item</a><br/>
-					<table border="1" id="poTable">
-  					<tr>
-    						<th>Item Name</th>
-    						<th>Item Category</th>
-					    	<th>Item Type</th>
-    						<th>price</th>
-    						<th>unit</th>
-    						<th>comments</th>
-    						<th>Quantity</th>
-    						<th>Subtotal</th>
-  					</tr>
-					</table><br/>
+					<div border="1" id="container">
+					</div><br/>
 						
 				Grand Total : <input type="text" value="" name="GrandTotal" id="grndTotal"/>
 				Hold Order <input type="checkbox" value="hold" name="HoldOrder" id="holdOrdr"/>

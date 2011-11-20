@@ -33,14 +33,16 @@ var helper = {
       }
 
       this.query( queryString ).
-      execute( function( error, rows, cols ) {callback( error, rows, cols ) });
+      execute( function( error, rows, cols ) { callback( error, rows, cols ) });
     });
   }
 }
 
 function index( response, cb ) {
 
+  console.log( "INDINEDED" );
   var vals = response.values;
+  console.log( vals.user );
 
   helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.user + "' AND PASSWORD = '" + vals.pass + "'", function( error, rows, cols ) {
 
@@ -53,11 +55,13 @@ function index( response, cb ) {
     vals.userName = rows[ 0 ] && rows[ 0 ].USER_ID;
     vals.role = rows[ 0 ] && rows[ 0 ].ROLE;
 
+    console.log( !!rows.length );
     cb && cb( !!rows.length );
   });   
 }
 
 function login( response ) {
+
      response.writeHead(200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
@@ -222,6 +226,7 @@ function viewItems( response ) {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
+
     response.write( JSON.stringify( rows ) );
     response.end();
   });
@@ -267,6 +272,41 @@ function viewSupplier( response ) {
   });
 }
 
+function editUser( response ) {
+
+  helper.query( "SELECT * FROM USER", function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( error );
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
+}
+
+function viewUsers( response ) {
+
+  console.log( "inside view users" );
+  helper.query( "SELECT * FROM USER", function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( error );
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
+}
+
 exports.index = index;
 exports.login = login;
 exports.logout = logout;
@@ -287,3 +327,5 @@ exports.viewItems = viewItems;
 exports.createSupplierProfile = createSupplierProfile;
 exports.maintainSupplierProfile = maintainSupplierProfile;
 exports.changePassword = changePassword;
+exports.editUser = editUser; 
+exports.viewUsers = viewUsers; 

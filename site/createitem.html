@@ -11,7 +11,7 @@
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
 
-        document.getElementById("savBtn").addEventListener("click", function (event) {
+        document.getElementById("saveBtn").addEventListener("click", function (event) {
 
             // input elements
             var $inputs = $('#page :input');
@@ -116,157 +116,141 @@ $(window).scroll(function () {
         $("#menu").css("bottom", "0px");
     }
 });
-	</script>
+</script>
 </head>
 
 <body>
-
-<div id="header">
-	<div id="logo">
-		<h1><a href="index.html">Edward Street</a></h1>
-	</div>
+  <div id="header">
+    <div id="logo">
+      <h1><a href="index.html">Edward Street</a></h1>
+    </div>
     <p class="textright"><a class="textright" href="login.html">Log in</a></p>
     <p class="sctext">SHOPPING CART</p>
     <div id="scBox" class="shoppingcart">
     
     </div>
-</div>
+  </div>
 
-	<div id="menu">
+  <div id="menu">
+    <ul id="nav">
+    <li id="itemMenu"><a href="#"> Item > </a>
+      <ul>
+        <li><a href="#">Create Item</a></li>
+        <li><a href="edititem.html">Edit Item</a></li>
+      </ul>
+      <div class="clear"></div>
+    </li>
 
-	<ul id="nav">
-	
-	<li id="itemMenu"><a href="#"> Item > </a>
-		<ul>
-			<li><a href="createitem.html">Create Item</a></li>
-			<li><a href="modifyitem.html">Modify Item</a></li>
-				<li><a href="edititem.html">Edit Item</a></li>
-			<li><a href="deleteitem.html">Delete Item</a></li>
-		</ul>
-		<div class="clear"></div>
-	</li>
+    <li id="userMenu"><a href="#"> User > </a>
+      <ul>
+        <li><a href="createuser.html">Create User</a></li>
+        <li><a href="edituser.html">Edit User</a></li>
+        <li><a href="changepassword.html">Change Password</a></li>
+      </ul>
+      <div class="clear"></div>
+    </li>
+    
+    <li id="supplierMenu"><a href="#"> Supplier > </a>
+      <ul>
+        <li><a href="createsupp.html">Create Supplier</a></li>
+        <li><a href="editsupplier.html">Edit Supplier</a></li>
 
-	<li id="userMenu"><a href="#"> User > </a>
-		<ul>
-			<li><a href="createuser.html">Create User</a></li>
-			<li><a href="changepassword.html">Change Password</a></li>
-			<li><a href="edituserall.html">Edit Users</a></li>
-			<li><a href="edituserbr.html">Edit Buyers and Receivers</a></li>
-			<li><a href="modifyadmin.html">Modify Admin Info</a></li>
-			<li><a href="deleteuser.html">Delete User</a></li>
-		</ul>
-		<div class="clear"></div>
-	</li>
-	
-	<li id="supplierMenu"><a href="#"> Supplier > </a>
-		<ul>
-			<li><a href="createsupp.html">Create Supplier</a></li>
-				<li><a href="createsuppuser.html">Create Supplier as User</a></li>
-			<li><a href="modifysuppinfo.html">Modify Supplier Info</a></li>
-				<li><a href="editsupplier.html">Edit Supplier</a></li>
-				<li><a href="editsupplierall.html">Edit All Suppliers</a></li>
-			<li><a href="deletesupp.html">Delete Supplier</a></li>
-		</ul>
-		<div class="clear"></div>
-	</li>
-	
-	<li id="poMenu"><a href="#"> Purchase Order > </a>
-		<ul>
-			<li><a href="createpo.html">Create Purchase Order</a></li>
-			<li><a href="modifypo.html">Modify Purchase Order</a></li>
-			<li><a href="deletepo.html">Delete Purchase Order</a></li>
-			<li><a href="receivepo.html">Receive Purchase Order</a></li>
-			<li><a href="returnpo.html">Return Purchase Order</a></li>
-			<li><a href="viewactivepo.html">View Active Purchase Order</a></li>
-			<li><a href="viewpo.html">View Purchase Order</a></li>
-		</ul>			
-		<div class="clear"></div>
-	</li>
-	
-	<li id="searchMenu"><a href="search.html">Search</a></li>
-	<li id="shoppingCartMenu"><a href="shoppingcart.html">Shopping Cart</a></li>
-	<li id="viewLogMenu"><a href="viewlog.html">View Log</a></li>
-	
-	</ul>
+      </ul>
+      <div class="clear"></div>
+    </li>
+    
+    <li id="poMenu"><a href="#"> Purchase Order > </a>
+      <ul>
+        <li><a href="createpo.html">Create Purchase Order</a></li>
+        <li><a href="modifypo.html">Edit Purchase Order</a></li>
+        <li><a href="viewpo.html">View Purchase Order</a></li>
+        <li><a href="receivepo.html">Receive Purchase Order</a></li>
+        <li><a href="returnpo.html">Return Purchase Order</a></li>
+      </ul>			
+      <div class="clear"></div>
+    </li>
+    
+    <li id="searchMenu"><a href="search.html">Search</a></li>
+    <li id="shoppingCartMenu"><a href="shoppingcart.html">Shopping Cart</a></li>
+    <li id="viewLogMenu"><a href="viewlog.html">View Log</a></li>
+    
+    </ul>
 
-	</div>
-    <div class="scrollTrigger"></div>
-<div id="wrapper">
-	<h2 class="bigfont">Item</h2><br />
-		
-	<div id="wrapper-bgtop">
-		<h3>Create Item</h3><br/>
-			
-			<div id="page">
-				
-				Item Name <input type="text" value=""  name="ItemName" id="itemNam"/><br/>
-				<div id="reqone"></div>
-				
-        Receipt Name <input id="rcptName" type="text" value="" name="ReceiptName"/><br/>
-        <div id="reqtwo"></div>
+  </div>
+
+  <div id="wrapper">
+    <h2 class="bigfont">Item</h2><br />
+      
+    <div id="wrapper-bgtop">
+      <h3>Create Item</h3><br/>
         
-				Item Category	<select  name="ItemCategoryBox" id="itemCatBox">
-  						<option value="buyer">Meat</option>
-  						<option value="receiver">Cheese</option>
-  						<option value="shipper">Fish</option>
-						</select><br/>
-				<div id="catoone"></div>
+        <div id="page">
 
-				Comments <textarea rows="4" cols="20" name="Comment" id="commts"></textarea><br/>
-        <div id="reqthree"></div>
-        
-				Item Type	<select  name="ItemTypeBox" id="itemTypeBox">
-  						<option value="buyer">Market</option>
-  						<option value="receiver">Bistro</option>
-  						<option value="shipper">Shipper</option>
-  						<option value="admin">Admin</option>
-						</select><br/>
-				<div id="cattwo"></div>
-
-				Comments <textarea rows="4" cols="20" name="Comment2" id="commts2"></textarea><br/>
-        <div id="reqfour"></div>
-        
-				From Supplier	<select name="SupplierBox" id="suppBox">
-  						<option value="supp1">SupplierA</option>
-  						<option value="supp2">SupplierB</option>
-  						<option value="supp3">SupplierC</option>
-  						<option value="supp4">[Create New]</option>
-						</select><br/>
-			  <div id="catthree"></div>
-
-				Price <input type="text" value="$" name="Price" id="price"/><br/>
-				<div id="numValid"></div>
-				
-				Unit		<select id="weightType">
-  						<option value="kg">kg</option>
-  						<option value="lbs">lbs</option>
-						</select><br/>
-				<div id="catfour"></div>
-								
-				<br/>
-				
-				<br/>
-
-				
-			</div>
-			<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
-				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
-			<div id="content">
-						
-				</div>
-			
-	</div>
-<div>
-
-
-</div>
-<br />
-<div id="footer-bgcontent">
-<br />
-</div>
-</div>
-
-
+				  <div id="content">
+            <form id="createItemForm">
+            <table id="createItemTable">
+              <tr>
+                <td>Item Name:</td>
+                <td><input type="text" value="" name="ItemName" id="itemName"/></td>
+              </tr>
+              <tr>
+                <td>Receipt Name:</td>
+                <td><input type="text" value="" name="ReceiptName" id="receiptName"/></td>
+              </tr>
+              <tr>
+                <td>Item Category:</td> <!-- Auto populated -->
+                <td><select name="itemCategory" id="iCategoryBox">
+                  <option value="meat">Meat</option>
+                  <option value="cheese">Cheese</option>
+                  <option value="fish">Fish</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>Item Type:</td> <!-- Auto populated -->
+                <td><select name="itemType" id="iTypeBox">
+                    <option value="market">Market</option>
+                    <option value="bistro">Bistro</option>
+                    <option value="catering">Catering</option>
+                    </select>
+                </td>
+              </tr>
+              <tr>
+                <td>Supplier:</td> <!-- Auto populated -->
+                <td><select name="itemSupplier" id="iSupplierBox">
+                    <option value="supp1">SupplierA</option>
+                    <option value="supp2">SupplierB</option>
+                    <option value="supp3">SupplierC</option>
+                    </select>
+                </td>
+              </tr>
+              <tr>
+                <td>Comments:</td>
+                <td><textarea rows="4" cols="20" name="ItemComments" id="itemComments"></textarea></td>
+              </tr>
+              <tr>
+                <td>Item Price:</td>
+                <td><input type="text" value="$" name="ItemPrice" id="itemPrice"/></td>
+              </tr>
+              <tr>
+                <td>Unit:</td>
+                <td><input type="text" value="" name="ItemName" id="itemName"/></td>
+              </tr>
+              <tr>
+                <td><input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/></td>
+                <td><input value="Save" type="submit" name="SaveButton" id="saveBtn"/></td>
+              </tr>
+            </table>
+            </form>
+          </div> <!-- Content -->
+        </div><!-- Page -->
+    </div><!-- Wrapper-BgTop -->
+      
+    <br />
+    <div id="footer-bgcontent">
+        <br />
+    </div>
+  </div> <!-- Wrapper -->
+  
 </body>
-
 </html> 

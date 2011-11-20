@@ -20,7 +20,7 @@ function getCookie( c_name ) {
 function setCookie( c_name, value, exdays ) {
 
   var exdate = new Date();
-  exdate.setDate( exdate.getDate() + exdays );
+  exdate.setMinutes( exdate.getMinutes() + 30 );
   var c_value = escape( value ) + ( ( exdays == null ) ? "" : "; expires=" + exdate.toUTCString() );
   document.cookie = c_name + "=" + c_value;
 }
@@ -34,22 +34,58 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
     } else {
 
       var tmpCookie = cookie.substring( 0, 2 ).toLowerCase();
-    
+
+      function alterUserMenu( items ) {
+
+        for ( var i = items.length - 1; i >= 0; i-- ) {
+
+          if ( items[ i ] && items[ i ].children[ 0 ].innerHTML !== "Change Password" ) {
+
+            $( items[ i ] ).remove();
+          }
+        }
+      }
+      
+      function poReceiver( items ) {
+
+        for ( var i = items.length - 1; i >= 0; i-- ) {
+
+          var inner = items[ i ].children[ 0 ].innerHTML;
+          if ( items[ i ] && ( inner === "Create Purchase Order" || inner === "Modify Purchase Order" || inner === "Delete Purchase Order" ) ) {
+
+            $( items[ i ] ).remove();
+          }
+        }
+      };;
+
+      function removeLogMenu( item ) {
+
+        item.remove();
+      };
+
       if ( tmpCookie === "ad" ) {
         //  Early return so we dont check other ifs
         return;
-      }
+      } else {
 
-      if ( tmpCookie === "bu" ) {
-        //  Hide stuff buyers cant access
-      }
+        alterUserMenu( $( "#userMenu" ).children()[ 1 ].children );
+        removeLogMenu( $( "#viewLogMenu" ) );
+
+        if ( tmpCookie === "bu" ) {
+
+          return;
+        }
     
-      if ( tmpCookie === "su" ) {
-        //  Hide stuff suppliers cant access
-      }
+        if ( tmpCookie === "su" ) {
 
-      if ( tmpCookie === "re" ) {
-        //  Hide stuff receivers cant access
+          return;
+        }
+
+        if ( tmpCookie === "re" ) {
+
+          poReceiver( $( "#poMenu" ).children()[ 1 ].children );
+          return;
+        }
       } 
     }
   }
