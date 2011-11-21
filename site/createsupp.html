@@ -5,7 +5,7 @@
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street - Create Supplier</title>
-<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-1.7.js"></script>
 <script>
 // Add a listenter for the submit button
 document.addEventListener( "DOMContentLoaded", function( event ) {
@@ -69,13 +69,12 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
                 displays.push(text2);
             });
             
-            // gets each $inputs element and pushes to array called values
-            $inputs.each(function () {
-                string1 = $inputs.get(i).tagName;
-                i = i + 1;
-                var text = $(this).attr('id');
-                values.push(text);
-            });
+//            $inputs.each(function () {
+//                string1 = $inputs.get(i).tagName;
+//                i = i + 1;
+//                var text = $(this).attr('id');
+//                values.push(text);
+//            });
 
             // each validation to validate certain rules
             validation = window.edwardValidationRequired;
@@ -89,15 +88,21 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
             // array for storing fields that are empty
             var getBadArray = [];
 
-            // Adds each input element that is empty
+            // Gets each $inputs element and pushes to array called values
+            // Aslo, it adds each input element that is empty
             // to an array that stores inputs that are empty
             $inputs.each(function () {
+                string1 = $inputs.get(i).tagName;
+                i = i + 1;
+                var text = $(this).attr('id');
+                values.push(text);
                 if ($(this).val().length == 0) {
                     txt = $(this).attr('id');
                     getBadArray.push(txt);
-                    
+
                 }
             });
+
 // For loop to determine each input box by calling validateGeneral
 // and checking each input box whether it is part of the array that
 // holds empty textboxes

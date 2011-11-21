@@ -70,12 +70,14 @@
     // Validates two password fields using a regular expression testing method
     window.edwardValidationPass = {
         validatePass: function (passWord, passWord2) {
+        if (passWord.length <= 20 && passWord.length >= 6 && passWord2.length <= 20 && passWord2.length >= 6) {
             if (passWord == passWord2 && passWord != "" && passWord2 != "") {
                 return true;
             }
             else {
                 return false;
             }
+          }
         }
     };
     
