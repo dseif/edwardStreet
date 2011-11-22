@@ -7,7 +7,7 @@ function route( handle, pathname, response, cb ) {
   //  Call requestHandler function stored in our object if its there
   if ( typeof handle[ pathname ] === "function" ) {
 
-    console.log( handle, pathname );
+    console.log( "INSIDE ROUTE", handle, pathname );
     handle[ pathname ]( response, cb );
 
   //  else return not found

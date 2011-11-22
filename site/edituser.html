@@ -12,6 +12,25 @@
 <script type="text/javascript">
   document.addEventListener( "DOMContentLoaded", function( event ) {
 
+    $( "#saveBtn" ).click(function() {
+
+      $.ajax({
+        cache: false,
+        url: "http://localhost:8080/edituser",
+        data: {
+          hash: getCookie( "EDST_H" ),
+          username: document.getElementById( "userName" ).value,
+          email: document.getElementById( "emailAddress" ).value,
+          role: $( "#userRoleBox" ).val() 
+        },
+        success: function( response, code, xhr ) {
+
+        console.log( JSON.parse( response ) );
+          console.log( "user info successfully changed" );
+        }
+      });
+    });
+
     $.ajax({
       cache: false,
       url: "http://localhost:8080/viewusers",
@@ -265,7 +284,6 @@ $(window).scroll(function () {
           
           <div id="content">
             
-            <form id="editUserForm">
             <table id="editUserTable">
               <tr>
                 <td>User Name:</td>
@@ -291,7 +309,6 @@ $(window).scroll(function () {
                 <input value="Delete" type="submit" name="DeleteButton" id="deleteBtn"/></td>
               </tr>
             </table>
-            </form>
           </div> <!-- Content -->
         </div><!-- Page -->
     </div><!-- Wrapper-BgTop -->

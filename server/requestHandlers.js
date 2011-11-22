@@ -42,7 +42,7 @@ function index( response, cb ) {
 
   console.log( "INDINEDED" );
   var vals = response.values;
-  console.log( vals.user );
+  console.log( "INSIDE HERE THIS IS VALUE", vals.user );
 
   helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.user + "' AND PASSWORD = '" + vals.pass + "'", function( error, rows, cols ) {
 
@@ -131,6 +131,49 @@ function createUser( response ) {
   });
 }
 
+function viewUsers( response ) {
+
+  console.log( "INSIDE VIEW USERS!" );
+  var vals = response.values;
+
+  helper.query( "SELECT * FROM USER", function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on select: " + error );
+      return;
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) ); 
+    response.end();
+  });
+}
+
+function editUser( response ) {
+
+  var vals = response.values;
+  console.log( vals.role, vals.username, vals.email, vals.userID );
+
+  helper.query( "UPDATE USER SET USER_ID = '" + vals.username + "' WHERE EMPLOYEE_ID = '" + vals.userID + "'", function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on select: " + error );
+      return;
+    }
+
+    console.log( "SUCCESS!", rows );
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) ); 
+    response.end();
+  });
+}
+
 function logs() {
   return "Logs";
 }
@@ -184,7 +227,7 @@ function receivePurchaseOrder( response ) {
   });
 }
 
-functino receivePurchaseOrderPage( response ) {
+function receivePurchaseOrderPage( response ) {
   helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.SUPPLIER_NAME FROM PURCHASE_ORDER po, SUPPLIER s WHERE po.SUPPLIER_ID = s.SUPPLIER_ID AND po.STATUS = 'Submitted' ORDER BY po.PO_ID LIMIT " + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
        
     if ( error ) {
@@ -220,7 +263,7 @@ function viewPurchaseOrder( response ) {
 }
 
 function viewPurchaseOrderPage ( response ) {
-  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.NAME FROM PURCHASE_ORDER po, SUPPLIER s WHERE po.SUPPLIER_ID = s.SUPPLIER_ID ORDER BY po.PO_ID LIMIT " + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
+  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.NAME FROM PURCHASE_ORDER po, SUPPLIER s WHERE po.SUPPLIER_ID = s.SUPPLIER_ID ORDER BY po.PO_ID LIMIT " + (response.values.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
        
     if ( error ) {
       console.log( "Error in select statement: " + error );
@@ -294,9 +337,8 @@ function viewItems( response ) {
     response.end();
     });
   }
-}
 
-function viewItemsPage ( response) {
+function viewItemsPage( response) {
   helper.query( "SELECT i.ITEM_ID, i.DIST_CODE, i.ITEM_NAME, i.RECEIPT_NAME, i.CATEGORY, i.UNIT, i.ITEM_TYPE, i.COMMENT, p.PRICE, s.NAME FROM ITEM i, SUPPLIER s, PRICE_HISTORY p WHERE i.SUPPLIER_ID = s.SUPPLIER_ID AND i.LATEST_PRICE = PRICE_ID ORDER BY i.ITEM_ID LIMIT " + (response.values.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
 
     if ( error ) {
@@ -377,11 +419,13 @@ exports.logout = logout;
 exports.profile = profile;
 exports.logs = logs;
 exports.createUser = createUser;
+exports.viewUsers = viewUsers;
+exports.editUser = editUser;
 exports.returnOrderLine = returnOrderLine;
 exports.maintainPurchaseOrder = maintainPurchaseOrder;
 exports.createPurchaseOrder = createPurchaseOrder;
 exports.receivePurchaseOrder = receivePurchaseOrder;
-exports.receivePurchaseOrderPage = receivePurchaseOrder;
+exports.receivePurchaseOrderPage = receivePurchaseOrderPage;
 exports.viewPurchaseOrder = viewPurchaseOrder;
 exports.viewPurchaseOrderPage = viewPurchaseOrderPage;
 exports.viewActivePurchaseOrders = viewActivePurchaseOrders;
