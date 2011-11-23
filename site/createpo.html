@@ -19,7 +19,7 @@
 
     $.ajax({
       cache: false,
-      url: "http://localhost:8080/viewsupplier",
+      url: "http://96.126.109.151:8080/viewsupplier",
       data: {
         hash: getCookie( "EDST_H" )
       },
@@ -47,7 +47,7 @@
     });
     $.ajax({
       cache: false,
-      url: "http://localhost:8080/viewitems",
+      url: "http://96.126.109.151:8080/viewitems",
       data: {
         hash: getCookie( "EDST_H" )
       },
@@ -175,7 +175,7 @@
       document.addEventListener( "click", function() {
       $.ajax({
           cache: false,
-          url: "http://localhost:8080/viewitems",
+          url: "http://96.126.109.151:8080/viewitems",
           data: {
             hash: getCookie( "EDST_H" ),
             total: $( "#grndTotal" ).value,

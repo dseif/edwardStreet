@@ -16,7 +16,7 @@
 
       $.ajax({
         cache: false,
-        url: "http://localhost:8080/edituser",
+        url: "http://96.126.109.151:8080/edituser",
         data: {
           hash: getCookie( "EDST_H" ),
           username: document.getElementById( "userName" ).value,
@@ -33,7 +33,7 @@
 
     $.ajax({
       cache: false,
-      url: "http://localhost:8080/viewusers",
+      url: "http://96.126.109.151:8080/viewusers",
       data: {
         hash: getCookie( "EDST_H" )
       },
