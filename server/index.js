@@ -16,6 +16,7 @@ handle[ "/logout" ] = requestHandlers.logout;
 //  Admin pages
 handle[ "/createuser" ] = requestHandlers.createUser;
 handle[ "/edituser" ] = requestHandlers.editUser;
+handle[ "/deleteuser" ] = requestHandlers.deleteUser;
 handle[ "/viewusers" ] = requestHandlers.viewUsers;
 handle[ "/admin/logs" ] = requestHandlers.logs;
 

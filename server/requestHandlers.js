@@ -358,6 +358,25 @@ function maintainSupplierProfile() {
   return "Maintain Supplier Profile";
 }
 
+function deleteUser( response ) {
+
+  var vals = response.values;
+
+  helper.query( "DELETE FROM USER WHERE USER_ID = '" + vals.username + "'", function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( error );
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( true ); 
+    response.end();
+  });
+}
+
 function deleteSupplier( response ) {
 
   var vals = response.values;
@@ -430,6 +449,7 @@ exports.viewActivePurchaseOrders = viewActivePurchaseOrders;
 exports.viewSupplier = viewSupplier;
 exports.viewSupplierPage = viewSupplierPage;
 exports.deleteSupplier = deleteSupplier;
+exports.deleteUser = deleteUser;
 exports.createItem = createItem;
 exports.maintainItem = maintainItem;
 exports.viewItems = viewItems;
