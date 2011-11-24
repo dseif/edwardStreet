@@ -44,6 +44,28 @@
   }, false );
     document.addEventListener("DOMContentLoaded", function (event) {
 
+document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
+      console.log( "HERE BITCH" );
+
+    if( $( "#userName" ).val() !== "" ) {
+
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/deleteuser",
+        data: {
+          hash: getCookie( "EDST_H" ),
+          username: document.getElementById( "userName" ).value
+        },
+        success: function( response, code, xhr ) {
+
+          console.log( JSON.parse( response ) );
+          alert( "User Successfully deleted!" );
+        }
+      });
+    }
+  }, false);
+
+
      document.getElementById("submitBtn").addEventListener("click", function (event) {
 
             if ($("#searchText").val() == "") {
@@ -173,29 +195,7 @@
 
         }, false);
   
-  $( "#deleteBtn" ).click(function() {
-
-    var userName = $( "#userName" );
-
-    if( userName.val() !== "" ) {
-
-      $.ajax({
-        cache: false,
-        url: "http://96.126.109.151:8080/deleteuser",
-        data: {
-          hash: getCookie( "EDST_H" ),
-          username: userName.val() 
-        },
-        success: function( response, code, xhr ) {
-
-          console.log( JSON.parse( response ) );
-          alert( "User Successfully deleted!" );
-        }
-      });
-    }
-  });
-
-  $('#nav li').hover(
+    $('#nav li').hover(
 		function () {
 		    //show its submenu
 		    $('ul', this).show();
@@ -348,9 +348,9 @@ $(window).scroll(function () {
                 </td>
               </tr>
               <tr>
-                <td><input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/></td>
-                <td><input value="Save" type="submit" name="SaveButton" id="saveBtn"/>OR
-                <input value="Delete" type="submit" name="DeleteButton" id="deleteBtn"/></td>
+                <td><button value="Clear" type="reset" name="CancelButton" id="cancelBtn">Clear</button></td>
+                <td><button value="Save" type="submit" name="SaveButton" id="saveBtn">Save</button>OR
+                  <button value="Delete" type="submit" name="DeleteButton" id="deleteBtn">Delete</button></td>
               </tr>
             </table>
                 </select>
