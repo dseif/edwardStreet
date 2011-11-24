@@ -70,7 +70,6 @@ function start( route, handle ) {
             userHashs[ values.hash ].id = response.values.id;
             userHashs[ values.hash ].userName = response.values.userName;
 
-console.log( "BEFORE HEAD WRITE", values.hash );
             response.writeHead( 200, {
               "Content-Type": "text/plain",
               "Access-Control-Allow-Origin": "*"

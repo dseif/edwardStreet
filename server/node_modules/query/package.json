@@ -1,0 +1,11 @@
+{
+  "name": "query",
+  "description": "command-line jquery",
+  "version": "0.2.0",
+  "keywords": ["jquery", "html", "jsdom", "dom"],
+  "author": "TJ Holowaychuk",
+  "main": "index",
+  "bin": { "query": "./index.js" },
+  "dependencies": { "jsdom": ">= 0.1.0" },
+  "engines": { "node": "*" }
+}

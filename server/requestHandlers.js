@@ -40,9 +40,7 @@ var helper = {
 
 function index( response, cb ) {
 
-  console.log( "INDINEDED" );
   var vals = response.values;
-  console.log( "INSIDE HERE THIS IS VALUE", vals.user );
 
   helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.user + "' AND PASSWORD = '" + vals.pass + "'", function( error, rows, cols ) {
 
