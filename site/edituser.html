@@ -172,9 +172,28 @@
 
 
         }, false);
+  
+  $( "#deleteBtn" ).click(function() {
 
+    var userName = $( "#userName" );
 
+    if( userName.val() !== "" ) {
 
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/deleteuser",
+        data: {
+          hash: getCookie( "EDST_H" ),
+          username: userName.val() 
+        },
+        success: function( response, code, xhr ) {
+
+          console.log( JSON.parse( response ) );
+          alert( "User Successfully deleted!" );
+        }
+      });
+    }
+  });
 
   $('#nav li').hover(
 		function () {
@@ -312,18 +331,7 @@ $(window).scroll(function () {
           <div id="content">
             
             <table id="editUserTable">
-              <tr>
-                <td>User Name:</td>
-                <td><input type="text" value="" name="UserName" id="userName"/></td>
-              </tr>
-              <tr>
-                <td>Email Address:</td>
-                <td><input id="emailAddress" type="text" value="" name="EmailAddress"/></td>
-              </tr>
-              <tr>
-                <td>User Role:</td> <!-- Auto Populated -->
-                <td><select name="UserRole" id="userRoleBox">
-          
+                        
                 User Name:<input type="text" value="" name="UserName" id="userName"/></td>
                 <div id="userValid"></div>
                 
@@ -349,11 +357,6 @@ $(window).scroll(function () {
                 <div id="userRoleValid"></div>
                   
           </div> <!-- Content -->
-          
-                <input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/>
-                <input value="Save" type="submit" name="SaveButton" id="saveBtn"/>OR
-                <input value="Delete" type="submit" name="DeleteButton" id="deleteBtn"/>
-        </div><!-- Page -->
     </div><!-- Wrapper-BgTop -->
       
     <br />
