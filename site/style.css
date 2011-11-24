@@ -29,7 +29,20 @@ body {
 	color: #A15E00;
 }
 
-div { padding: 2px 2px; }
+div { padding: 3px 3px; }
+
+label {
+  width: 10em;
+  float: left;
+  text-align: right;
+  margin-right: 0.5em;
+  display: block;
+}
+
+.submitbutton
+{
+margin-left: 4.5em;
+} 
 
 /* for h1 */
 .bigheading { 
@@ -49,6 +62,9 @@ div { padding: 2px 2px; }
 	margin-top: 0;
 	line-height: 240%;
 	text-align: justify;
+	padding: 10px
+	margin-bottom: 5px;
+  display: block;
 }
 
 .textright {
@@ -58,14 +74,13 @@ div { padding: 2px 2px; }
 }
 
 .sctext {
-	z-index:300;
-	color: #FFFFFF;
-	text-align: center;
-	font-weight: bold;
-	position: relative;
-	right: -155px;
-	bottom: -30px;
-
+  color: #FFFFFF;
+  text-align: right;
+  font-weight: bold;
+  z-index: 300;
+  position: relative;
+  left: -850px;
+  bottom: -70px;
 }
 
 .shoppingcart {
@@ -76,6 +91,7 @@ div { padding: 2px 2px; }
  	top:-55px;
  	left:500px;
 	overflow: auto;
+	border: solid 2px #000000;
 }
 
 /* for ol */
