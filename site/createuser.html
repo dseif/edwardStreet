@@ -53,10 +53,13 @@
             validation = window.edwardValidationRequired;
             validation2 = window.edwardValidationUser;
             validation3 = window.edwardValidationEmail;
+            validation4 = window.edwardValidationPass;
 
             // used for individual validation
             var userField = $("#userName").val();
             var emailField = $("#emailAddress").val();
+            var passField = $("#pass").val();
+            var passField2 = $("#confpass").val();
 
             // array for storing fields that are empty
             var getBadArray = [];
@@ -103,6 +106,22 @@
                 }
                 else {
                     $('#emailValid').html("Email not valid!");
+                    ok = false;
+                }
+                
+                // check if password is entered, then check if its empty
+                if(passField.length == 0 || passField2.length == 0){
+                  $('#passValid').html("Both password fields must not be empty");
+                  $('#passValid2').html("Both password fields must not be empty");
+                  ok = false;
+                }
+                else if (validation4.validatePass(passField, passField2)) {
+                    $('#passValid').html("both passwords match");
+                    $('#passValid2').html("both passwords match");
+                }
+                else {
+                    $('#passValid').html("passwords dont match, or incorrect length!");
+                    $('#passValid2').html("passwords dont match, or incorrect length!");
                     ok = false;
                 }
 
@@ -235,6 +254,12 @@ $(window).scroll(function () {
               
               User Email:<input type="text" value="" name="EmailAddress" id="emailAddress"/></td>
               <div id="emailValid"></div>
+              
+              Password <input id="pass" name="NewPass" type="password" value=""/><br/>
+              <div id="passValid"></div>
+        
+				      Confirm Password <input id="confpass" name="ConfPass" type="password" value=""/><br/>
+              <div id="passValid2"></div>
               
               User Role:<select name="UserRole" id="userRoleBox">
                   <option value="admin">Admin</option>
