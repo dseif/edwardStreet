@@ -163,13 +163,13 @@ $(window).scroll(function () {
     <div id="page">
 	<h1>Log in</h1><br/>
 	
-    username <input type="text" value="" name="userName" id="user"/><br/><br />
+    <label for="user">username</label> <input type="text" value="" name="userName" id="user"/><br/><br />
 	<div id="usrValid" ></div>
 
-    password <input type="password" value="" name="password" id="pass"/><br/>
+    <label for="pass">password</label> <input type="password" value="" name="password" id="pass"/><br/>
 	<div id="passValid" ></div>
     </div>
-    <input type="submit" value="Login" name="LoginButton" id="loginBtn" />
+    <input class="submitbutton" type="submit" value="Login" name="LoginButton" id="loginBtn" />
 	<div id="response" style="color:red">
 
 	</div>

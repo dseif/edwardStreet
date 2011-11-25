@@ -249,19 +249,19 @@ $(window).scroll(function () {
 
 				  <div id="content">
             
-              User Name:<input type="text" value="" name="UserName" id="userName"/></td>
+              <label for="userName">User Name:</label> <input type="text" value="" name="UserName" id="userName"/>
               <div id="userValid"></div>
               
-              User Email:<input type="text" value="" name="EmailAddress" id="emailAddress"/></td>
+              <label for="emailAddress">User Email:</label> <input type="text" value="" name="EmailAddress" id="emailAddress"/>
               <div id="emailValid"></div>
               
-              Password <input id="pass" name="NewPass" type="password" value=""/><br/>
+              <label for="pass">Password</label> <input id="pass" name="NewPass" type="password" value=""/>
               <div id="passValid"></div>
-        
-				      Confirm Password <input id="confpass" name="ConfPass" type="password" value=""/><br/>
+              
+              <label for="confpass">Confirm Password</label> <input id="confpass" name="ConfPass" type="password" value=""/>
               <div id="passValid2"></div>
               
-              User Role:<select name="UserRole" id="userRoleBox">
+              <label for="userRoleBox">User Role:</label> <select name="UserRole" id="userRoleBox">
                   <option value="admin">Admin</option>
                   <option value="buyer">Buyer</option>
                   <option value="receiver">Receiver</option>
@@ -270,8 +270,8 @@ $(window).scroll(function () {
               <div id="roleValid"></div>
               
           </div> <!-- Content -->
-              <input value="Clear" type="reset" id="clearBtn"/></td>
-              <input value="Save" type="submit" id="saveBtn"/></td>
+              <input class="submitbutton" value="Clear" type="reset" id="clearBtn"/>
+              <input value="Save" type="submit" id="saveBtn"/>
         </div><!-- Page -->
     </div><!-- Wrapper-BgTop -->
       

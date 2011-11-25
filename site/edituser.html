@@ -297,22 +297,17 @@ $(window).scroll(function () {
         
         <div id="page">
           
-          <table>
-          <tr>
-            <td>Search: <input value="" type="text" name="SearchText" id="searchText"/></td>
-            <td>By:
+            <label for="searchText">Search:</label> <input value="" type="text" name="SearchText" id="searchText"/>
+            
+            By:
               <select name="searchDetails" id="searchDetails">
                 <option value="userName" selected="selected">User Name</option>
                 <option value="userRole">User Role</option>
                 <option value="emailAddress">Email Address</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td><input value="Search" type="submit" name="SubmitButton" id="submitBtn"/>OR
-            <input value="View All" type="submit" name="ViewAllButton" id="viewAllBtn"/></td>
-          </tr>
-          </table>
+              </select><br />
+
+            <input class="submitbutton" value="Search" type="submit" name="SubmitButton" id="submitBtn"/>OR
+            <input value="View All" type="submit" name="ViewAllButton" id="viewAllBtn"/>
           
           <br/><hr/><br/>
           Results:
@@ -332,29 +327,29 @@ $(window).scroll(function () {
             
             <table id="editUserTable">
                         
-                User Name:<input type="text" value="" name="UserName" id="userName"/></td>
+                <label for="userName">User Name:</label> <input type="text" value="" name="UserName" id="userName"/></td>
                 <div id="userValid"></div>
                 
-                Email Address:<input id="emailAddress" type="text" value="" name="EmailAddress"/></td>
+                <label for="emailAddress">Email Address:</label> <input id="emailAddress" type="text" value="" name="EmailAddress"/></td>
                 <div id="emailValid"></div>
                 
-                User Role: <!-- Auto Populated -->
+                <label for="userRoleBox">User Role:</label> <!-- Auto Populated -->
                 <select name="UserRole" id="userRoleBox">
                   <option value="admin">Admin</option>
                   <option value="buyer">Buyer</option>
                   <option value="receiver">Receiver</option>
                   <option value="supplier">Supplier</option>
                   </select>
+                  <div id="userRoleValid"></div>
                 </td>
               </tr>
               <tr>
-                <td><button value="Clear" type="reset" name="CancelButton" id="cancelBtn">Clear</button></td>
+                <td><button class="submitbutton" value="Clear" type="reset" name="CancelButton" id="cancelBtn">Clear</button></td>
                 <td><button value="Save" type="submit" name="SaveButton" id="saveBtn">Save</button>OR
                   <button value="Delete" type="submit" name="DeleteButton" id="deleteBtn">Delete</button></td>
               </tr>
             </table>
-                </select>
-                <div id="userRoleValid"></div>
+                
                   
           </div> <!-- Content -->
     </div><!-- Wrapper-BgTop -->
