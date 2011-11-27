@@ -4,10 +4,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui-1.8.16.custom.css" />
 <title>Edward Street</title>
 <script src="login.js" ></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
-<script type="text/javascript" src="../jqueryui/js/jqueryui.js"></script>
+<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript" src="../js/helper.js"></script>
 <script type="text/javascript" src="login.js"></script>
@@ -56,7 +57,7 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
 
     $( "#dialog-confirm" ).dialog({
         resizable: false,
-        height:140,
+        height:160,
         modal: true,
         buttons: {
           "Delete": function() {
@@ -70,6 +71,9 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
               },
               success: function( response, code, xhr ) {
 
+                $( "#userName" ).val( " " );
+                $( "#emailAddress" ).val(  " " );
+                $( "userRoleBox" ).val( " " );
                 $( "#itemTable" ).find( "tr:gt(0)" ).remove();
                 viewuser();
               }
@@ -206,7 +210,8 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
          },
          success: function( response, code, xhr ) {
 
-           console.log( JSON.parse( response ) );
+
+           viewuser();
            console.log( "user info successfully changed" );
          }
        });
@@ -372,7 +377,7 @@ $(window).scroll(function () {
                 
                   
           </div> <!-- Content -->
-          <div id="dialog-confirm" title="Delete user?">
+          <div id="dialog-confirm" title="Delete user?" style="display:none">
             <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span> This user will be permanently deleted and cannot be recovered. Are you sure?</p>
           </div>
     </div><!-- Wrapper-BgTop -->

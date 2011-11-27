@@ -157,7 +157,7 @@ function editUser( response ) {
   var vals = response.values;
   console.log( vals.role, vals.username, vals.email, vals.userID );
 
-  helper.query( "UPDATE USER SET USER_ID = '" + vals.username + "' WHERE EMPLOYEE_ID = '" + vals.userID + "'", function( error, rows, cols ) {
+  helper.query( "UPDATE USER SET USER_ID = '" + vals.username + "', EMAIL = '" + vals.email + "', ROLE = '" + vals.role + "' WHERE EMPLOYEE_ID = '" + vals.userID + "'", function( error, rows, cols ) {
 
     if ( error ) {
       console.log( "Error on select: " + error );
