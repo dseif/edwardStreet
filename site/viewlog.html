@@ -103,7 +103,6 @@ $(window).scroll(function () {
       <div class="clear"></div>
     </li>
     
-    <li id="searchMenu" class="blacklink"><a href="search.html">Search</a></li>
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
     <li id="viewLogMenu" class="blacklink"><a href="#">View Log</a></li>
     
@@ -119,17 +118,17 @@ $(window).scroll(function () {
 		<h3>View Log</h3><br/>
 			
 			<div id="page">
-				<p>Search: <input type="text" value="" name="SearchText" id="srchText"/>
-				 <input value="search" type="submit" name="SearchButton" id="searchBtn"/><br/>
+				<label for="srchText">Search:</label> <input type="text" value="" name="SearchText" id="srchText"/>
+				<input value="search" type="submit" name="SearchButton" id="searchBtn"/><br/>
 				
-				Results <select name="resultBox" id="resBox">
+				<label for="resBox">Results</label> <select name="resultBox" id="resBox">
   					<option value="1">log 1/1/2012</option>
   					<option value="2">log 2/1/2012</option>
   					<option value="3">log 3/3/2012</option>
 				    </select>
 				<br/>
-				</p>
-				Details <textarea rows="4" cols="20" name="DetailsText" id="detText"></textarea><br/>
+				
+				<label for="detText">Details</label> <textarea rows="4" cols="20" name="DetailsText" id="detText"></textarea><br/>
 
 				<div id="content">
 					

@@ -367,7 +367,6 @@ $(window).scroll(function () {
       <div class="clear"></div>
     </li>
     
-    <li id="searchMenu" class="blacklink"><a href="search.html">Search</a></li>
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
     <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     
@@ -385,31 +384,32 @@ $(window).scroll(function () {
 			<div id="page">
 				
 				 
-				Select Supplier:<select name="SupplierBox" id="suppBox"></select><br/>
-				Select Item:<br/>
-        <a href="createitem.html">Create New Item</a><br/>
+				<label for="suppBox">Select Supplier:</label> <select name="SupplierBox" id="suppBox"></select><br/>
+				<label>Select Item:</label><br/>
+                <label><a href="createitem.html">Create New Item</a></label><br/>
 				<div border="1" id="container">
 				</div><br/>
 				
         <div id="content">
 						
-				Grand Total : <input type="text" value="" name="GrandTotal" id="grndTotal"/>
+				<label for="grndTotal">Grand Total :</label> <input type="text" value="" name="GrandTotal" id="grndTotal"/>
 				<div id="grandTotalValid"></div>
 				
-				Delivery Date: <input type="text" value="" name="DeliveryDate" id="delivDate"/><br/>
+				<label for="delivDate">Delivery Date:</label><input type="text" value="" name="DeliveryDate" id="delivDate"/><br/>
         <div id="deliveryDateValid"></div>
         
 				</div>
 				
-				Comment: <textarea rows="4" cols="20" name="Comment" id="comment"></textarea><br/>
+				<label for="comment">Comment:</label> <textarea rows="4" cols="20" name="Comment" id="comment"></textarea><br/>
 				
-				Hold Order: <input type="checkbox" value="hold" name="HoldOrder" id="holdOrdr"/><br/>
+				<label for="holdOrdr">Hold Order:</label> <input type="checkbox" value="hold" name="HoldOrder" id="holdOrdr"/><br/>
 				
-				<input value="Queue" type="submit" name="QueueButton" id="queueBtn"/>
-				<input value="Confirm" type="submit" name="ConfirmButton" id="confBtn"/>
-				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
+				
 				<br/>
 			</div>
+            <input class="submitbutton" value="Queue" type="submit" name="QueueButton" id="queueBtn"/>
+			<input value="Confirm" type="submit" name="ConfirmButton" id="confBtn"/>
+			<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
 	</div>
 <div>
 

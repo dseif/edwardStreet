@@ -8,13 +8,9 @@
 <script src="login.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
+<script type="text/javascript" src="login.js"></script>
 <script type="text/javascript">
   document.addEventListener( "DOMContentLoaded", function( event ) {
-    var cookie = window.cookie;
-    if ( cookie.substring( 0, 2 ).toLowerCase() !== "ad" ) {
-
-      window.location = "http://localhost/~dseif/edwardStreet/site/login.html";
-    }
 
     document.getElementById("saveBtn").addEventListener( "click", function() {
 
@@ -53,10 +49,13 @@
             validation = window.edwardValidationRequired;
             validation2 = window.edwardValidationUser;
             validation3 = window.edwardValidationEmail;
+            validation4 = window.edwardValidationPass;
 
             // used for individual validation
             var userField = $("#userName").val();
             var emailField = $("#emailAddress").val();
+            var passField = $("#pass").val();
+            var passField2 = $("#confpass").val();
 
             // array for storing fields that are empty
             var getBadArray = [];
@@ -105,6 +104,22 @@
                     $('#emailValid').html("Email not valid!");
                     ok = false;
                 }
+                
+                // check if password is entered, then check if its empty
+                if(passField.length == 0 || passField2.length == 0){
+                  $('#passValid').html("Both password fields must not be empty");
+                  $('#passValid2').html("Both password fields must not be empty");
+                  ok = false;
+                }
+                else if (validation4.validatePass(passField, passField2)) {
+                    $('#passValid').html("both passwords match");
+                    $('#passValid2').html("both passwords match");
+                }
+                else {
+                    $('#passValid').html("passwords dont match, or incorrect length!");
+                    $('#passValid2').html("passwords dont match, or incorrect length!");
+                    ok = false;
+                }
 
 if(ok){
       $.ajax({
@@ -112,7 +127,7 @@ if(ok){
         url: "http://96.126.109.151:8080/createuser",
         data: {
           user: document.getElementById( "userName" ).value,
-          //pass: document.getElementById( "tempPwd" ).value,
+          pass: document.getElementById( "confpass" ).value,
           hash: cookie,
           email: document.getElementById( "emailAddress" ).value,
           role: document.getElementById( "userRoleBox" ).value
@@ -212,7 +227,6 @@ $(window).scroll(function () {
       <div class="clear"></div>
     </li>
     
-    <li id="searchMenu" class="blacklink"><a href="search.html">Search</a></li>
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
     <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     
@@ -230,13 +244,19 @@ $(window).scroll(function () {
 
 				  <div id="content">
             
-              User Name:<input type="text" value="" name="UserName" id="userName"/></td>
+              <label for="userName">User Name:</label> <input type="text" value="" name="UserName" id="userName"/>
               <div id="userValid"></div>
               
-              User Email:<input type="text" value="" name="EmailAddress" id="emailAddress"/></td>
+              <label for="emailAddress">User Email:</label> <input type="text" value="" name="EmailAddress" id="emailAddress"/>
               <div id="emailValid"></div>
               
-              User Role:<select name="UserRole" id="userRoleBox">
+              <label for="pass">Password</label> <input id="pass" name="NewPass" type="password" value=""/>
+              <div id="passValid"></div>
+              
+              <label for="confpass">Confirm Password</label> <input id="confpass" name="ConfPass" type="password" value=""/>
+              <div id="passValid2"></div>
+              
+              <label for="userRoleBox">User Role:</label> <select name="UserRole" id="userRoleBox">
                   <option value="admin">Admin</option>
                   <option value="buyer">Buyer</option>
                   <option value="receiver">Receiver</option>
@@ -245,8 +265,8 @@ $(window).scroll(function () {
               <div id="roleValid"></div>
               
           </div> <!-- Content -->
-              <input value="Clear" type="reset" id="clearBtn"/></td>
-              <input value="Save" type="submit" id="saveBtn"/></td>
+              <input class="submitbutton" value="Clear" type="reset" id="clearBtn"/>
+              <input value="Save" type="submit" id="saveBtn"/>
         </div><!-- Page -->
     </div><!-- Wrapper-BgTop -->
       

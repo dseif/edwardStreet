@@ -68,22 +68,28 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
                 var text2 = $(this).attr('id');
                 displays.push(text2);
             });
-            
-//            $inputs.each(function () {
-//                string1 = $inputs.get(i).tagName;
-//                i = i + 1;
-//                var text = $(this).attr('id');
-//                values.push(text);
-//            });
+
+            //            $inputs.each(function () {
+            //                string1 = $inputs.get(i).tagName;
+            //                i = i + 1;
+            //                var text = $(this).attr('id');
+            //                values.push(text);
+            //            });
 
             // each validation to validate certain rules
             validation = window.edwardValidationRequired;
             validation2 = window.edwardValidationPhoneNum;
             validation3 = window.edwardValidationDate;
+            validation4 = window.edwardValidationUser;
+            validation5 = window.edwardValidationPassOne;
+            validation6 = window.edwardValidationEmail;
 
             // used for individual validation
             var phoneNumber = $("#cntctNumber").val();
             var leadTime = $("#leadTime").val();
+            var loginID = $("#loginID").val();
+            var pass = $("#pwd").val();
+            var emailAddr = $("#emailAddr").val();
 
             // array for storing fields that are empty
             var getBadArray = [];
@@ -103,32 +109,57 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
                 }
             });
 
-// For loop to determine each input box by calling validateGeneral
-// and checking each input box whether it is part of the array that
-// holds empty textboxes
-    for (var i = 0; i < displays.length; i++) {
-      if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
-                      $('#' + displays[i]).html("RIGHT");}
-      else {
-                      $('#' + displays[i]).html("Missing required field");
-      }
-                
-    }            
-                // Validate the phone number
-                if (validation2.validatePhoneNum(phoneNumber)) {
-                    $('#phNumValid').html("valid phone number");
+            // For loop to determine each input box by calling validateGeneral
+            // and checking each input box whether it is part of the array that
+            // holds empty textboxes
+            for (var i = 0; i < displays.length; i++) {
+                if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
+                    $('#' + displays[i]).html("RIGHT");
                 }
                 else {
-                    $('#phNumValid').html("Not a valid phone number!");
+                    $('#' + displays[i]).html("Missing required field");
                 }
-                
-                // Validate the date
-                if (validation3.validateDate(leadTime)) {
-                    $('#leadTimeValid').html("Date is valid");
-                }
-                else {
-                    $('#leadTimeValid').html("Date not valid!");
-                }
+
+            }
+            // Validate the phone number
+            if (validation2.validatePhoneNum(phoneNumber)) {
+                $('#phNumValid').html("valid phone number");
+            }
+            else {
+                $('#phNumValid').html("Not a valid phone number!");
+            }
+
+            // Validate the date
+            if (validation3.validateDate(leadTime)) {
+                $('#leadTimeValid').html("Date is valid");
+            }
+            else {
+                $('#leadTimeValid').html("Date not valid!");
+            }
+
+            // Validate the user id
+            if (validation4.validateUserName(loginID) {
+                $('#userValid').html("Login ID is valid");
+            }
+            else {
+                $('#userValid').html("Login ID is not valid!");
+            }
+
+            // Validate the password
+            if (validation5.validatePassOne(pass)) {
+                $('#passValid').html("Password is valid");
+            }
+            else {
+                $('#passValid').html("password is not valid!");
+            }
+
+            // Validate the email
+            if (validation6.validateEmail(emailAddr)) {
+                $('#emailValid').html("Email is valid");
+            }
+            else {
+                $('#emailValid').html("Email is not valid!");
+            }
 
         }, false);
 
@@ -143,7 +174,7 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
 		}
 	);
 
-}, false);
+    }, false);
 
 $(window).scroll(function () {
     if ($(window).scrollTop() > $(".scrollTrigger").offset({ scroll: false }).top) {
@@ -217,7 +248,6 @@ $(window).scroll(function () {
       <div class="clear"></div>
     </li>
     
-    <li id="searchMenu" class="blacklink"><a href="search.html">Search</a></li>
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
     <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     
@@ -234,43 +264,42 @@ $(window).scroll(function () {
 			
 			<div id="page">
 				
-				Supplier Name <input type="text" value="" name="SupplierName" id="suppName"/><br/>
+				<label for="suppName">Supplier Name</label> <input type="text" value="" name="SupplierName" id="suppName"/><br/>
 				<div id="suppValid"></div>
 				
-				Legal Name <input type="text" value="" name="LegalName" id="legName"/><br/>
+				<label for="legName">Legal Name</label> <input type="text" value="" name="LegalName" id="legName"/><br/>
 				<div id="legNamValid"></div>
 				
-				Address <input type="text" value="" name="Address" id="addrs"/><br/>
+				<label for="addrs">Address</label> <input type="text" value="" name="Address" id="addrs"/><br/>
 				<div id="addrValid"></div>
 				
-				Contact Number <input type="text" value="" name="ContactNumber" id="cntctNumber"/><br/>
+				<label for="cntctNumber">Contact Number</label> <input type="text" value="" name="ContactNumber" id="cntctNumber"/><br/>
 				<div id="phNumValid"></div>
 				
-				Lead Time <input type="text" value="" name="LeadTime" id="leadTime"/><br/>
-				Delivery Dates <textarea id="delivDates" rows="3" cols="20" name="DeliveryDates"></textarea><br/>
-				Supplier Comments <textarea id="suppComm" rows="3" cols="20" name="SupplierComments"></textarea><br/>
-				Other Comments <textarea id="otherComm" rows="3" cols="20" name="SpecialComments"></textarea><br/>
-        Login ID <input type="text" value="" name="LoginID" id="loginID"/><br/>
-				Password <input type="password" value="" name="Pass" id="pwd"/><br/>
-				Email address <input type="text" value="" name="EmailAddress" id="emailAddr"/><br/>
-				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
-				<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>				
-				<br/>
-				
-				<br/>
+				<label for="leadTime">Lead Time</label> <input type="text" value="" name="LeadTime" id="leadTime"/><br/>
+				<div id="leadTimeValid"></div>
 
-				
+                <label for="delivDates">Delivary Dates</label> <textarea id="delivDates" rows="3" cols="20" name="DeliveryDates"></textarea><br/>
+                <div id="delivdatevalid"></div>
+
+                <label for="loginID">Login ID</label> <input type="text" value="" name="LoginID" id="loginID"/><br/>
+				<div id="userValid"></div>
+
+                <label for="pwd">Password</label> <input type="password" value="" name="Pass" id="pwd"/><br/>
+				<div id="passValid"></div>
+
+                <label for="emailAddr">Email address</label> <input type="text" value="" name="EmailAddress" id="emailAddr"/><br/>			
+				<div id="emailValid"></div>
 			</div>
 			
-				Supplier Comments <textarea id="suppComm" rows="3" cols="20" name="SupplierComments"></textarea><br/>
-				
-				Other Comments <textarea id="otherComm" rows="3" cols="20" name="SpecialComments"></textarea><br/>
+				<label for="suppComm">Supplier Comments</label> <textarea id="suppComm" rows="3" cols="20" name="SupplierComments"></textarea><br/>
+				<label for="otherComm">Other Comments</label> <textarea id="otherComm" rows="3" cols="20" name="SpecialComments"></textarea><br/>
 			
       <div id="content">
 						
 				</div>
-      <input value="Save" type="submit" name="SaveButton" id="savBtn"/>
-			<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
+      <input class="submitbutton" value="Save" type="submit" name="SaveButton" id="savBtn"/>
+      <input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
 	</div>
 <div>
 

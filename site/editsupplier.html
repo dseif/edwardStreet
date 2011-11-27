@@ -280,7 +280,6 @@ $(window).scroll(function () {
       <div class="clear"></div>
     </li>
     
-    <li id="searchMenu" class="blacklink"><a href="search.html">Search</a></li>
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
     <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     
@@ -296,36 +295,36 @@ $(window).scroll(function () {
 			
 			<div id="page">
 				
-				Supplier Name <input type="text" value="" name="SupplierName" id="suppName"/><br/>
+				<label for="suppName">Supplier Name</label> <input type="text" value="" name="SupplierName" id="suppName"/><br/>
 				<div id="suppValid"></div>
 				
-				Legal Name <input type="text" value="" name="LegalName" id="legName"/><br/>
+				<label for="legName">Legal Name</label> <input type="text" value="" name="LegalName" id="legName"/><br/>
 				<div id="legNamValid"></div>
 				
-				Address <input type="text" value="" name="Address" id="addrs"/><br/>
+				<label for="addrs">Address</label> <input type="text" value="" name="Address" id="addrs"/><br/>
 				<div id="addrValid"></div>
 				
-				Contact Number <input type="text" value="" name="ContactNumber" id="cntctNumber"/><br/>
+				<label for="cntctNumber">Contact Number</label> <input type="text" value="" name="ContactNumber" id="cntctNumber"/><br/>
 				<div id="phNumValid"></div>
 				
-				Lead Time <input type="text" value="" name="LeadTime" id="leadTime"/><br/>
+				<label for="leadTime">Lead Time</label> <input type="text" value="" name="LeadTime" id="leadTime"/><br/>
 				<div id="leadTimeValid"></div>
 				
-				Delivery Dates <textarea id="delivDates" rows="3" cols="20" name="deliveryDates"></textarea><br/>
+				<label for="delivDates">Delivery Dates</label> <textarea id="delivDates" rows="3" cols="20" name="deliveryDates"></textarea><br/>
 				<div id="delivValid"></div>
 				
-				Login ID <input type="text" value="" name="LoginID" id="logID"/><br/>
-			  <div id="loginValid"></div>
-			   
-        Password <input type="password" value="" name="Pass" id="pwd"/><br/>
+				<label for="logID">Login ID</label> <input type="text" value="" name="LoginID" id="logID"/><br/>
+			    <div id="loginValid"></div>
+
+                <label for="pwd">Password</label> <input type="password" value="" name="Pass" id="pwd"/><br/>
 				<div id="passValid"></div>
-				
-        Email address <input type="text" value="" name="EmailAddress" id="emailAddr"/><br/>
-			  <div id="emailValid"></div>
+                
+                <label for="emailAddr">Email address</label> <input type="text" value="" name="EmailAddress" id="emailAddr"/><br/>
+                <div id="emailValid"></div>
 				
 				<br/>
 				
-				</p><br/>
+				<br/>
         <hr/>
         Select user to edit:
 				<table border="1" id="suppTable">
@@ -357,41 +356,41 @@ $(window).scroll(function () {
   					</tr>
 					</table>
 				<br/>
-				<p>
-				LoginName <input type="text" value="" name="UserName" id="usrName"/><br/>
-				Role
+				
+				<label for="usrName">LoginName</label> <input type="text" value="" name="UserName" id="usrName"/><br/>
+				
+                <label for="roleBox">Role</label>
 					<select name="RoleBox" id="roleBox">
   						<option value="buyer">Buyer</option>
   						<option value="receiver">Receiver</option>
   						<option value="shipper">Shipper</option>
   						<option value="admin">Admin</option>
 					</select><br/>
-				Supplier Name<input type="text" value="" name="SupplierName" id="suppName"/><br/>
-				Legal Name <input type="text" value="" name="LegalName" id="leglName"/><br/>
-				Address <input type="text" value="" name="Address" id="addrs"/><br/>
-				Contact <input type="text" value="" name="Contact" id="contact"/><br/>
-				Delivery Dates <textarea name="DeliveryDateText" id="datesofdelivery" rows="3" cols="10"></textarea><br/>
-				Lead Time <input type="text" value="" name="LeadTime" id="leadTime"/><br/>
-				Supplier Comment <textarea name="SupplierComment" id="suppComment" rows="3" cols="10"></textarea><br/>
-				Other Comment <textarea name="OtherComment" id="otherComment" rows="3" cols="10"></textarea><br/>
-				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
-				<input value="Cancel" type="reset" name="CancelButton" id="cancelButton"/>				
+				
+                <label for="suppName">Supplier Name</label> <input type="text" value="" name="SupplierName" id="suppName"/><br/>
+				
+                <label for="leglName">Legal Name</label> <input type="text" value="" name="LegalName" id="leglName"/><br/>
+				
+                <label for="addrs">Address</label> <input type="text" value="" name="Address" id="addrs"/><br/>
+				
+                <label for="contact">Contact</label> <input type="text" value="" name="Contact" id="contact"/><br/>
+				
+                <label for="datesofdelivery">Delivery Dates</label> <textarea name="DeliveryDateText" id="datesofdelivery" rows="3" cols="10"></textarea><br/>
+				
+                <label for="leadTime">Lead Time</label> <input type="text" value="" name="LeadTime" id="leadTime"/><br/>
 				<br/>
-				
-				</p><br/>
 
-				
 			</div>
 			
-				Supplier Comments <textarea id="suppComm" rows="3" cols="20" name="SupplierComments"></textarea><br/>
+				<label for="suppComm">Supplier Comments</label> <textarea id="suppComm" rows="3" cols="20" name="SupplierComments"></textarea><br/>
 				
-				Other Comments <textarea id="otherComm" rows="3" cols="20" name="SpecialComments"></textarea><br/>
+				<label for="otherComm">Other Comments</label> <textarea id="otherComm" rows="3" cols="20" name="SpecialComments"></textarea><br/>
 			
       <div id="content">
 						
 				</div>
-      <input value="Save" type="submit" name="SaveButton" id="savBtn"/>
-			<input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
+                <input class="submitbutton" value="Save" type="submit" name="SaveButton" id="savBtn"/>
+                <input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
 	</div>
 <div>
 
