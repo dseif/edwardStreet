@@ -360,7 +360,9 @@ function maintainSupplierProfile() {
 
 function deleteUser( response ) {
 
+console.log( "INSIDE DELETE USER" );
   var vals = response.values;
+console.log( "VALS BITCHES", vals );
 
   helper.query( "DELETE FROM USER WHERE USER_ID = '" + vals.username + "'", function( error, rows, cols ) {
 
@@ -372,7 +374,7 @@ function deleteUser( response ) {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( true ); 
+    response.write( "" + true ); 
     response.end();
   });
 }
