@@ -8,13 +8,9 @@
 <script src="login.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
+<script type="text/javascript" src="login.js"></script>
 <script type="text/javascript">
   document.addEventListener( "DOMContentLoaded", function( event ) {
-    var cookie = window.cookie;
-    if ( cookie.substring( 0, 2 ).toLowerCase() !== "ad" ) {
-
-      window.location = "http://localhost/~dseif/edwardStreet/site/login.html";
-    }
 
     document.getElementById("saveBtn").addEventListener( "click", function() {
 
@@ -131,7 +127,7 @@ if(ok){
         url: "http://96.126.109.151:8080/createuser",
         data: {
           user: document.getElementById( "userName" ).value,
-          //pass: document.getElementById( "tempPwd" ).value,
+          pass: document.getElementById( "confpass" ).value,
           hash: cookie,
           email: document.getElementById( "emailAddress" ).value,
           role: document.getElementById( "userRoleBox" ).value
@@ -231,7 +227,6 @@ $(window).scroll(function () {
       <div class="clear"></div>
     </li>
     
-    <li id="searchMenu" class="blacklink"><a href="search.html">Search</a></li>
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
     <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     

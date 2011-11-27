@@ -7,61 +7,82 @@
 <title>Edward Street</title>
 <script src="login.js" ></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
+<script type="text/javascript" src="../jqueryui/js/jqueryui.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript" src="../js/helper.js"></script>
+<script type="text/javascript" src="login.js"></script>
 <script type="text/javascript">
+
+  var viewuser;
   document.addEventListener( "DOMContentLoaded", function( event ) {
 
-    $.ajax({
-      cache: false,
-      url: "http://96.126.109.151:8080/viewusers",
-      data: {
-        hash: getCookie( "EDST_H" )
-      },
-      success: function( response, code, xhr ) {
+    viewuser = function() {
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/viewusers",
+        data: {
+          hash: getCookie( "EDST_H" )
+        },
+        success: function( response, code, xhr ) {
 
-        var table = $( "#itemTable" );
+          var table = $( "#itemTable" );
 
-        var data = JSON.parse( response ),
-            dataObj = {};
-        for ( var i = 0, l = data.length; i < l; i++ ) {
+          var data = JSON.parse( response ),
+              dataObj = {};
+          for ( var i = 0, l = data.length; i < l; i++ ) {
 
-          dataObj[ data[ i ][ "USER_ID" ] ] = data[ i ];
+            dataObj[ data[ i ][ "USER_ID" ] ] = data[ i ];
 
-          table.append( "<tr><td><b>" + data[ i ][ "USER_ID" ] + "</b></td><td>" + data[ i ][ "ROLE" ] + "</td>" + 
-            "<td>" + data[ i ][ "EMAIL" ] + "</td><td><button id='" + data[ i ][ "USER_ID" ] + "'>Edit</button></td></tr>" );
+            table.append( "<tr><td><b>" + data[ i ][ "USER_ID" ] + "</b></td><td>" + data[ i ][ "ROLE" ] + "</td>" + 
+              "<td>" + data[ i ][ "EMAIL" ] + "</td><td><button id='" + data[ i ][ "USER_ID" ] + "'>Edit</button></td></tr>" );
 
-          $( "#" + data[ i ][ "USER_ID" ] ).click(function() {
+            $( "#" + data[ i ][ "USER_ID" ] ).click(function() {
 
-            console.log( $( this ).attr( "id" ), dataObj[ $( this ).attr( "id" ) ][ "USER_ID" ], $( "#userName" ) );
-            $( "#userName" ).val( dataObj[ $( this ).attr( "id" ) ][ "USER_ID" ] );
-            $( "#emailAddress" ).val( dataObj[ $( this ).attr( "id" ) ][ "EMAIL" ] );
-            $( "#userRoleBox" ).val( String.prototype.toLowerCase.apply( dataObj[ $( this ).attr( "id" ) ][ "ROLE" ] ) );
-          });
+              $( "#userName" ).val( dataObj[ $( this ).attr( "id" ) ][ "USER_ID" ] );
+              $( "#emailAddress" ).val( dataObj[ $( this ).attr( "id" ) ][ "EMAIL" ] );
+              $( "#userRoleBox" ).val( String.prototype.toLowerCase.apply( dataObj[ $( this ).attr( "id" ) ][ "ROLE" ] ) );
+            });
+          }
         }
-      }
-    }); 
+      }); 
+    };
+    viewuser();
   }, false );
     document.addEventListener("DOMContentLoaded", function (event) {
 
 document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
-      console.log( "HERE BITCH" );
 
     if( $( "#userName" ).val() !== "" ) {
 
-      $.ajax({
-        cache: false,
-        url: "http://96.126.109.151:8080/deleteuser",
-        data: {
-          hash: getCookie( "EDST_H" ),
-          username: document.getElementById( "userName" ).value
-        },
-        success: function( response, code, xhr ) {
+    $( "#dialog-confirm" ).dialog({
+        resizable: false,
+        height:140,
+        modal: true,
+        buttons: {
+          "Delete": function() {
 
-          console.log( JSON.parse( response ) );
-          alert( "User Successfully deleted!" );
+            $.ajax({
+              cache: false,
+              url: "http://96.126.109.151:8080/deleteuser",
+              data: {
+                hash: getCookie( "EDST_H" ),
+                username: document.getElementById( "userName" ).value
+              },
+              success: function( response, code, xhr ) {
+
+                $( "#itemTable" ).find( "tr:gt(0)" ).remove();
+                viewuser();
+              }
+            });
+            $( this ).dialog( "close" );
+          },
+          Cancel: function() {
+            
+            $( this ).dialog( "close" );
+          }
         }
       });
+      
     }
   }, false);
 
@@ -281,7 +302,6 @@ $(window).scroll(function () {
       <div class="clear"></div>
     </li>
     
-    <li id="searchMenu" class="blacklink"><a href="search.html">Search</a></li>
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
     <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     
@@ -352,6 +372,9 @@ $(window).scroll(function () {
                 
                   
           </div> <!-- Content -->
+          <div id="dialog-confirm" title="Delete user?">
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span> This user will be permanently deleted and cannot be recovered. Are you sure?</p>
+          </div>
     </div><!-- Wrapper-BgTop -->
       
     <br />
