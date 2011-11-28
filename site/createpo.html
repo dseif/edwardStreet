@@ -12,7 +12,7 @@
 <script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
 <script type="text/javascript" src="../js/helper.js"></script>
 <script>
-  document.addEventListener( "DOMContentLoaded", function( event ) {
+  document.addEventListener("DOMContentLoaded", function (event) {
 
     // get our helper object
     var helper = edstHelper();
@@ -24,27 +24,27 @@
       cache: false,
       url: "http://96.126.109.151:8080/viewsupplier",
       data: {
-        hash: getCookie( "EDST_H" )
+        hash: getCookie("EDST_H")
       },
-      success: function( response, code, xhr ) {
+      success: function (response, code, xhr) {
 
-        if ( response === "Invalid user/pass" ) {
+        if (response === "Invalid user/pass") {
           window.location = "http://localhost/~dseif/edwardStreet/site/login.html";
         }
 
-        response = JSON.parse( response );
-        var dropDown = document.getElementById( "suppBox" );
+        response = JSON.parse(response);
+        var dropDown = document.getElementById("suppBox");
 
-        var addOption = function( text ) {
-          var opt = document.createElement( "option" );
-          opt.text = text;
-          opt.value = text;
-          dropDown.options.add( opt );
-        }
+        var addOption = function (text) {
+            var opt = document.createElement("option");
+            opt.text = text;
+            opt.value = text;
+            dropDown.options.add(opt);
+          }
 
-        for ( var i = 0, len = response.length; i < len; i++ ) {
-          var temp = response[ i ].NAME;
-          addOption( temp );
+        for (var i = 0, len = response.length; i < len; i++) {
+          var temp = response[i].NAME;
+          addOption(temp);
         }
       }
     });
@@ -52,268 +52,263 @@
       cache: false,
       url: "http://96.126.109.151:8080/viewitems",
       data: {
-        hash: getCookie( "EDST_H" )
+        hash: getCookie("EDST_H")
       },
-      success: function( response, code, xhr ) {
+      success: function (response, code, xhr) {
 
-        response = JSON.parse( response );
+        response = JSON.parse(response);
 
-        var container = document.getElementById( "container" ),
-            ul = document.createElement( "ul" ),
-            responseItems = response.length,
-            tabs = responseItems/100,
-            counter = 1;
+        var container = document.getElementById("container"),
+          ul = document.createElement("ul"),
+          responseItems = response.length,
+          tabs = responseItems / 100,
+          counter = 1;
 
-            container.appendChild( ul );
+        container.appendChild(ul);
 
-        for ( var i = 1; i < tabs + 1; i++ ) {
+        for (var i = 1; i < tabs + 1; i++) {
 
-          var item = document.createElement( "div" ),
-              li = document.createElement( "li" ),
-              div = document.createElement( "div" ),
-              innerItem = document.createElement( "a" );
+          var item = document.createElement("div"),
+            li = document.createElement("li"),
+            div = document.createElement("div"),
+            innerItem = document.createElement("a");
 
-          ul.appendChild( li );
-          li.appendChild( item );
-          item.appendChild( innerItem );
+          ul.appendChild(li);
+          li.appendChild(item);
+          item.appendChild(innerItem);
           innerItem.href = "#tabs" + i;
           innerItem.innerHTML = i;
           div.id = "tabs" + i;
-          container.appendChild( div );
+          container.appendChild(div);
         }
 
-        var addRow = function( count, target ) {
+        var addRow = function (count, target) {
 
-          // create a new item
-          var item = document.createElement( "div" ),
-              innerDiv = document.createElement( "div" ),
-              header = document.createElement( "h3" ),
-              innerHeader = document.createElement( "a" ),
-              qtyBox = document.createElement( "input" ),
-              submitBtn = document.createElement( "button" ),
-              qtySpan = document.createElement( "a" ),
-              data = response[ count ];
+            // create a new item
+            var item = document.createElement("div"),
+              innerDiv = document.createElement("div"),
+              header = document.createElement("h3"),
+              innerHeader = document.createElement("a"),
+              qtyBox = document.createElement("input"),
+              submitBtn = document.createElement("button"),
+              qtySpan = document.createElement("a"),
+              data = response[count];
 
-          $( submitBtn ).click(function( event ) {
+            $(submitBtn).click(function (event) {
 
-            var item = document.createElement( "div" ),
+              var item = document.createElement("div"),
                 obj = {},
-                data = response[ $( this ).parent().attr( "name" ) ],
-                itemID = $( this ).parent().attr( "id" ).substring( 5 );
+                data = response[$(this).parent().attr("name")],
+                itemID = $(this).parent().attr("id").substring(5);
 
-           for ( var prop in data ) { 
-             obj[ prop ] = data[ prop ]; 
-           }
+              for (var prop in data) {
+                obj[prop] = data[prop];
+              }
 
-           obj.qty = $( this ).parent().children( ".edst-val" )[ 0 ].value;
-           item.style.width = $( "#scBox" ).width() + "px";
-           item.setAttribute( "edst-data", itemID );
+              obj.qty = $(this).parent().children(".edst-val")[0].value;
+              item.style.width = $("#scBox").width() + "px";
+              item.setAttribute("edst-data", itemID);
 
-           $( item ).append( 
-             "<p style='display:inline-block;'>" + itemID + " </p>" +
-             "<p id='qty' style='display:inline-block;'>Qty: " + obj.qty + "</p>");  
+              $(item).append("<p style='display:inline-block;'>" + itemID + " </p>" + "<p id='qty' style='display:inline-block;'>Qty: " + obj.qty + "</p>");
 
-            helper.addItem( obj );
-            helper.updateStorage();
+              helper.addItem(obj);
+              helper.updateStorage();
 
-            $( "#scBox" ).append( item );
+              $("#scBox").append(item);
 
-            event.stopPropagation();
-          });
+              event.stopPropagation();
+            });
 
-          $( qtyBox ).click(function( event ) {
+            $(qtyBox).click(function (event) {
 
-            event.stopPropagation();
-          });
+              event.stopPropagation();
+            });
 
-          innerHeader.href = "#";
-          innerDiv.style.position = "absolute";
-          innerDiv.style.right = "0";
-          qtyBox.style.width = "30px";
-          qtyBox.value = 1;
-          $( qtyBox ).addClass( "edst-val" );
+            innerHeader.href = "#";
+            innerDiv.style.position = "absolute";
+            innerDiv.style.right = "0";
+            qtyBox.style.width = "30px";
+            qtyBox.value = 1;
+            $(qtyBox).addClass("edst-val");
 
-          innerHeader.style.display = "inline-block";
-          innerDiv.style.display = "inline-block";
-          qtySpan.style.display = "inline-block";
+            innerHeader.style.display = "inline-block";
+            innerDiv.style.display = "inline-block";
+            qtySpan.style.display = "inline-block";
 
-          qtySpan.innerHTML = "Quantity: ";
-          submitBtn.innerHTML = "Add to Cart";
-          innerDiv.id = "edst-" + data[ "ITEM_NAME" ];
-          innerDiv.setAttribute( "name", count );
-          innerHeader.innerHTML = data[ "ITEM_NAME" ];
+            qtySpan.innerHTML = "Quantity: ";
+            submitBtn.innerHTML = "Add to Cart";
+            innerDiv.id = "edst-" + data["ITEM_NAME"];
+            innerDiv.setAttribute("name", count);
+            innerHeader.innerHTML = data["ITEM_NAME"];
 
-          header.appendChild( innerHeader );
-          innerDiv.appendChild( qtySpan );
-          innerDiv.appendChild( qtyBox );
-          innerDiv.appendChild( submitBtn );
-          header.appendChild( innerDiv );
-          target.appendChild( header );
+            header.appendChild(innerHeader);
+            innerDiv.appendChild(qtySpan);
+            innerDiv.appendChild(qtyBox);
+            innerDiv.appendChild(submitBtn);
+            header.appendChild(innerDiv);
+            target.appendChild(header);
 
-          for( var prop in data ) {
-            if ( data[ prop ]  ) {
-              item.innerHTML += "<b>" + prop + ": </b>" + data[ prop ] + "</br>";
+            for (var prop in data) {
+              if (data[prop]) {
+                item.innerHTML += "<b>" + prop + ": </b>" + data[prop] + "</br>";
+              }
             }
+
+            item.id = count;
+            target.appendChild(item);
           }
 
-          item.id = count; 
-          target.appendChild( item );
-        }
+        for (var i = 0, k = 0, len = response.length; i < len; i++, k++) {
 
-        for( var i = 0, k = 0, len = response.length; i < len; i++, k++ ) {
-
-          if ( k >= 100 ) {
-            helper.setupAccordion( document.getElementById( "tabs" + counter ) );
+          if (k >= 100) {
+            helper.setupAccordion(document.getElementById("tabs" + counter));
             counter++;
             k = 0;
           }
-          addRow( i, document.getElementById( "tabs" + counter ) );
+          addRow(i, document.getElementById("tabs" + counter));
         }
 
-        helper.setupAccordion( document.getElementById( "tabs" + counter ) );
+        helper.setupAccordion(document.getElementById("tabs" + counter));
 
-        $( "#container" ).tabs();
+        $("#container").tabs();
       }
+    });
+    document.getElementById("confBtn").addEventListener("click", function () {
+
+      var ok = true;
+      // input elements
+      var $inputs = $('#content :input');
+      // div space for message
+      var $msgs = $('#content').children("div");
+      // array holding $inputs 
+      var values = [];
+      // array holding $msgs
+      var displays = [];
+      // initializing string for use in .each for $msgs and $inputs
+      var string1, string2;
+      // int variables used to iterate in .each for $msgs and $inputs 
+      var i = 0;
+      var j = 0;
+
+      // gets each $msg element and pushes to array called displays
+      $msgs.each(function () {
+
+        string2 = $msgs.get(j).tagName;
+        j = j + 1;
+        var text2 = $(this).attr('id');
+        displays.push(text2);
       });
-      document.getElementById("confBtn").addEventListener( "click", function() {
-      
-            var ok = true;
-            // input elements
-            var $inputs = $('#content :input');
-            // div space for message
-            var $msgs = $('#content').children("div");
-            // array holding $inputs 
-            var values = [];
-            // array holding $msgs
-            var displays = [];
-            // initializing string for use in .each for $msgs and $inputs
-            var string1, string2;
-            // int variables used to iterate in .each for $msgs and $inputs 
-            var i = 0;
-            var j = 0;
 
-            // gets each $msg element and pushes to array called displays
-            $msgs.each(function () {
+      //            $inputs.each(function () {
+      //                string1 = $inputs.get(i).tagName;
+      //                i = i + 1;
+      //                var text = $(this).attr('id');
+      //                values.push(text);
+      //            });
+      // each validation to validate certain rules
+      validation = window.edwardValidationRequired;
+      validation2 = window.edwardValidationNumber;
+      validation3 = window.edwardValidationDate;
 
-                string2 = $msgs.get(j).tagName;
-                j = j + 1;
-                var text2 = $(this).attr('id');
-                displays.push(text2);
-            });
-            
-//            $inputs.each(function () {
-//                string1 = $inputs.get(i).tagName;
-//                i = i + 1;
-//                var text = $(this).attr('id');
-//                values.push(text);
-//            });
+      // used for individual validation
+      var numberField = $("#grndTotal").val();
+      var dateField = $("#delivDate").val();
 
-            // each validation to validate certain rules
-            validation = window.edwardValidationRequired;
-            validation2 = window.edwardValidationNumber;
-            validation3 = window.edwardValidationDate;
+      // array for storing fields that are empty
+      var getBadArray = [];
 
-            // used for individual validation
-            var numberField = $("#grndTotal").val();
-            var dateField = $("#delivDate").val();
+      // Gets each $inputs element and pushes to array called values
+      // Aslo, it adds each input element that is empty
+      // to an array that stores inputs that are empty
+      $inputs.each(function () {
+        string1 = $inputs.get(i).tagName;
+        i = i + 1;
+        var text = $(this).attr('id');
+        values.push(text);
+        if ($(this).val().length == 0) {
+          txt = $(this).attr('id');
+          getBadArray.push(txt);
 
-            // array for storing fields that are empty
-            var getBadArray = [];
-            
-            // Gets each $inputs element and pushes to array called values
-            // Aslo, it adds each input element that is empty
-            // to an array that stores inputs that are empty
-            $inputs.each(function () {
-                string1 = $inputs.get(i).tagName;
-                i = i + 1;
-                var text = $(this).attr('id');
-                values.push(text);
-                if ($(this).val().length == 0) {
-                    txt = $(this).attr('id');
-                    getBadArray.push(txt);
-                    
-                }
-            });
+        }
+      });
 
-// For loop to determine each input box by calling validateGeneral
-// and checking each input box whether it is part of the array that
-// holds empty textboxes 
-    for (var i = 0; i < displays.length; i++) {
-      if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
-                      $('#' + displays[i]).html("RIGHT");}
-      else {
-                      $('#' + displays[i]).html("Missing required field");
-                      ok = false;
+      // For loop to determine each input box by calling validateGeneral
+      // and checking each input box whether it is part of the array that
+      // holds empty textboxes 
+      for (var i = 0; i < displays.length; i++) {
+        if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
+          $('#' + displays[i]).html("RIGHT");
+        } else {
+          $('#' + displays[i]).html("Missing required field");
+          ok = false;
+        }
+
       }
-                
-    }            
-                // Validate the number
-                if (validation2.validateNumber(numberField)) {
-                    $('#grandTotalValid').html("Number is valid");
-                }
-                else {
-                    $('#grandTotalValid').html("Invalid number!");
-                    ok = false;
-                }
-                
-                // Validate the date
-                if (validation3.validateDate(dateField)) {
-                    $('#deliveryDateValid').html("Date is valid");
-                }
-                else {
-                    $('#deliveryDateValid').html("Date not valid!");
-                    ok = false;
-                }
-      if(ok){
-      $.ajax({
+      // Validate the number
+      if (validation2.validateNumber(numberField)) {
+        $('#grandTotalValid').html("Number is valid");
+      } else {
+        $('#grandTotalValid').html("Invalid number!");
+        ok = false;
+      }
+
+      // Validate the date
+      if (validation3.validateDate(dateField)) {
+        $('#deliveryDateValid').html("Date is valid");
+      } else {
+        $('#deliveryDateValid').html("Date not valid!");
+        ok = false;
+      }
+      if (ok) {
+        $.ajax({
           cache: false,
           url: "http://96.126.109.151:8080/viewitems",
           data: {
-            hash: getCookie( "EDST_H" ),
-            total: $( "#grndTotal" ).value,
-            hold: $( "#holdOrdr" ).is( ":checked" ),
+            hash: getCookie("EDST_H"),
+            total: $("#grndTotal").value,
+            hold: $("#holdOrdr").is(":checked"),
           },
-          success: function( response, code, xhr ) {
-          }
-        });}
-      }, false );
-  }, false );
+          success: function (response, code, xhr) {}
+        });
+      }
+    }, false);
+  }, false);
 </script>
 <script type="text/javascript">
     $(document).ready(function () {
 
-        $('#nav li').hover(
-		function () {
-		    //show its submenu
-		    $('ul', this).show();
-		},
-		function () {
-		    //hide its submenu
-		    $('ul', this).hide();
-		}
-	);
+      $('#nav li').hover(
 
-});
+      function () {
+        //show its submenu
+        $('ul', this).show();
+      }, function () {
+        //hide its submenu
+        $('ul', this).hide();
+      });
 
-$(window).scroll(function () {
-    if ($(window).scrollTop() > $(".scrollTrigger").offset({ scroll: false }).top) {
+    });
+
+    // While user is scrolling down, the shopping cart banner and the menu follows
+    $(window).scroll(function () {
+      if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
         $("#menu").css("position", "fixed");
-        $("#menu").css("left", "379px");
-        $("#menu").css("bottom", "470px");
-    }
-    // Revert back to normal
-    if ($(window).scrollTop() <= $(".scrollTrigger").offset({ scroll: false }).top) {
+        $("#menu").css("right", $(document).width() / 24);
+        $("#menu").css("top", 156);
+      }
+      // Revert back to normal
+      if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
         $("#header").css("position", "relative");
         $("#header").css("top", $(".scrollTrigger").offset);
         $("#menu").css("position", "relative");
         $("#menu").css("top", $(".scrollTrigger").offset);
-        $("#menu").css("left", "0px");
-        $("#menu").css("bottom", "0px");
-    }
-});
-	</script>
+        $("#menu").css("left", 0);
+        $("#menu").css("top", 0);
+      }
+    });
+</script>
 </head>
 
 <body>
