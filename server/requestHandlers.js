@@ -77,12 +77,25 @@ function logout( response ) {
      response.end();
 }
 
+// Question: What is this?
+function logs() {
+  return "Logs";
+}
+
+// Question: What is this?
+function profile() {
+  return "Profile";
+}
+
+// Question: vals all correct? consistent? CHange into change password/email?
 function changePassword( response ) {
 
   var vals = response.values;
 
   var that = this;
-  helper.query( "UPDATE USER SET PASSWORD = '" + vals.pass + "' WHERE EMPLOYEE_ID = '" + vals.userID + "'", function( error, rows, cols ) {
+  helper.query( "UPDATE USER SET PASSWORD = '" + vals.pass + "' " +
+                "WHERE EMPLOYEE_ID = '" + vals.userID + "'", 
+				function( error, rows, cols ) {
 
     if ( error ) {
       console.log( "Error on select: " + error );
@@ -96,8 +109,8 @@ function changePassword( response ) {
     response.write( "Password Successfully Changed" );
     response.end();
 
-    helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) VALUES( '" +
-                  vals.userName + "', 'Change', 'Changed Password', '" + vals.userName + "', '" + helper.date() + "')",
+    helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+	              "VALUES( '" + vals.userName + "', 'Change', 'Changed Password', '" + vals.userName + "', '" + helper.date() + "')",
                   function( error, rows, cols ) {
 
       if ( error ) {
@@ -108,12 +121,39 @@ function changePassword( response ) {
   });
 }
 
+// Create User - Step 1: Checks if current user_id already exists. Returns COUNT of 1 if it exists, Count of 0 if not.
+// Question: vals.user correct? different vals? vals correct? May require standardization of vals across pages
+function createUserCheckDupe( response ) {
+
+  var vals = response.values;
+
+  helper.query( "SELECT COUNT(USER_ID) " +
+                "FROM USER WHERE USER_ID = '" + vals.user + "'",
+				function( error, rows, cols ) {
+  
+    if ( error ) {
+      console.log( "Error on select: " + error );
+      return;
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) ); 
+    response.end();
+  });
+}
+
+// Create User - Step 2: Insert new user into USER table. Inserts log into USER_HISTORY table.
+// Question: vals correct? May require standardization of vals across pages
 function createUser( response ) {
 
   var vals = response.values;
 
-  helper.query( "INSERT INTO USER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE ) VALUES('" + vals.user + "', '" + vals.pass +
-                 "', '" + vals.email + "', '" + " " + "', '" + vals.role + "')", function( error, rows, cols ) {
+  helper.query( "INSERT INTO USER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE ) " +
+                "VALUES('" + vals.user + "', '" + vals.pass + "', '" + vals.email + "', '" + " " + "', '" + vals.role + "')",
+				function( error, rows, cols ) {
 
     if ( error ) {
       console.log( "Error on select: " + error );
@@ -124,17 +164,27 @@ function createUser( response ) {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( "User successfully added" );
+    response.write( "User " + vals.user + " successfully added." );
     response.end();
-  });
+	
+	helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+	              "VALUES( '" + vals.userName + "', 'Create', 'New user created.', '" + vals.userName + "', '" + helper.date() + "')",
+                  function( error, rows, cols ) {
+
+      if ( error ) {
+        console.log( "Error in inserting into history: " + error );
+        return;
+      }
+    });
+  });  
 }
 
+// View User  - Step 1: Returns number of users in USER table for page calculation.
 function viewUsers( response ) {
 
-  console.log( "INSIDE VIEW USERS!" );
   var vals = response.values;
 
-  helper.query( "SELECT * FROM USER", function( error, rows, cols ) {
+  helper.query( "SELECT COUNT(*) FROM USER", function( error, rows, cols ) {
 
     if ( error ) {
       console.log( "Error on select: " + error );
@@ -150,19 +200,116 @@ function viewUsers( response ) {
   });
 }
 
+// View User - Step 2: Returns a list of users for current page, ordered by USER_ID.
+function viewUsersPage( response ) {
+
+  var vals = response.values;
+
+  helper.query( "SELECT u.USER_ID, u.EMAIL, u.EMPLOYEE_ID, u.ROLE, s.NAME " + 
+                "FROM USER u LEFT JOIN SUPPLIER s ON u.SUPPLIER_ID = s.SUPPLIER_ID " + 
+				"ORDER BY USER_ID " +
+				"LIMIT " + (response.values.pagenum-1)*20 + ", 20",
+				function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on select: " + error );
+      return;
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) ); 
+    response.end();
+  });
+}
+
+// Edit User - Update USER table with new user information for row USER_ID.
 function editUser( response ) {
 
   var vals = response.values;
   console.log( vals.role, vals.username, vals.email, vals.userID );
 
-  helper.query( "UPDATE USER SET USER_ID = '" + vals.username + "', EMAIL = '" + vals.email + "', ROLE = '" + vals.role + "' WHERE EMPLOYEE_ID = '" + vals.userID + "'", function( error, rows, cols ) {
+  helper.query( "UPDATE USER SET USER_ID = '" + vals.username + "', EMAIL = '" + vals.email +
+                "', ROLE = '" + vals.role + "' WHERE EMPLOYEE_ID = '" + vals.userID + "'",
+				function( error, rows, cols ) {
 
     if ( error ) {
       console.log( "Error on select: " + error );
       return;
     }
 
-    console.log( "SUCCESS!", rows );
+    console.log( "User information successfully changed.", rows );
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) ); 
+    response.end();
+	
+	helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+	              "VALUES( '" + vals.userName + "', 'Change', 'Changed user information.', '" + vals.username + "', '" + helper.date() + "')",
+                  function( error, rows, cols ) {
+
+      if ( error ) {
+        console.log( "Error in inserting into history: " + error );
+        return;
+      }
+    });
+  });
+}
+
+// Delete User - Delete selected user from USER table.
+function deleteUser( response ) {
+
+  var vals = response.values;
+  console.log( vals.role, vals.username, vals.email, vals.userID );
+
+  helper.query( "DELETE FROM USER TABLE "+
+                "WHERE USER_ID = '" + vals.username + "'",
+				function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on select: " + error );
+      return;
+    }
+
+    console.log( "User deleted.", rows );
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( "User " + vals.userID + " successfully deleted." ); 
+    response.end();
+	
+	helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                  "VALUES( '" + vals.username + "', 'Delete', 'Deleted " + vals.userID + ".', '" + vals.username + "', '" + helper.date() + "')",
+                  function( error, rows, cols ) {
+
+      if ( error ) {
+        console.log( "Error in inserting into history: " + error );
+        return;
+      }
+    });
+  });
+}
+
+// Create Item - Step 1: Checks if current itemname+supplier already exists. Returns COUNT of 1 if it exists, Count of 0 if not.
+// Question: vals.supplier_id? check on that
+function createItemCheckDupe( response ) {
+
+  var vals = response.values;
+
+  helper.query( "SELECT COUNT(ITEM_NAME) " +
+                "FROM ITEM WHERE LOWER(ITEM_NAME) = LOWER('" + vals.item_name + "') AND SUPPLIER_ID = " + vals.supplier_id,
+				function( error, rows, cols ) {
+  
+    if ( error ) {
+      console.log( "Error on select: " + error );
+      return;
+    }
+
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
@@ -172,30 +319,20 @@ function editUser( response ) {
   });
 }
 
-function logs() {
-  return "Logs";
-}
+// Create Item - Step 2: Insert new item into ITEM table. Inserts log into ITEM_HISTORY table.
+// Question: vals correct? May require standardization of vals across pages
+function createItem( response ) {
 
-function profile() {
-  return "Profile";
-}
-
-function returnOrderLine() {
-  return "Return Order Line";
-}
-
-function maintainPurchaseOrder() {
-  return "Maintain Purchase Order";
-}
-
-function createPurchaseOrder( response ) {
   var vals = response.values;
 
-  helper.query( "INSERT INTO PURCHASE_ORDER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE ) VALUES('" + vals.user + "', '" + vals.pass +
-                 "', '" + vals.email + "', '" + " " + "', '" + vals.role + "')", function( error, rows, cols ) {
+  helper.query( "INSERT INTO ITEM( DIST_CODE, ITEM_NAME, RECEIPT_NAME, CATEGORY, UNIT, ITEM_TYPE, COMMENT, SUPPLIER_ID, " +
+                "U_MINOR_REPO, U_ACTIVE_INA, U_BIZERBA, U_BRAND, U_CASE_SIZE, U_COOKING_IN, U_COUNTRY, U_DESCRIPTO, U_EXPIRY_DAT, U_INGREDIENT, U_KEYWORDS, U_NOTES, U_ORDER, U_PLU, U_PRICE, U_SILVERWARE, U_SKU, U_STORAGE, U_STORAGE_TY, U_TYPE, U_UPC_CODE, U_PRICE_PER, U_TAX, U_SCALE) " +
+                "VALUES('" + vals.dist_code + "', '" + vals.item_name + "', '" + vals.receipt_name + "', '" + vals.category + "', '" + vals.unit + "', '" + vals.item_type + "', '" + vals.comment + "', '" + vals.supplier_id +
+				"', '" + vals.u_minor_repo + "', '" + vals.u_active_ina + "', '" + vals.u_bizerba + "', '" + vals.u_brand + "', '" + vals.u_case_size + "', '" + vals.u_cooking_in + "', '" + vals.u_country + "', '" + vals.u_descripto + "', '" + vals.u_expiry_dat + "', '" + vals.u_ingredient + "', '" + vals.u_keywords + "', '" + vals.u_notes + "', '" + vals.u_order + "', '" + vals.u_plu + "', '" + vals.u_price + "', '" + vals.u_silverware + "', '" + vals.u_sku + "', '" + vals.u_storage + "', '" + vals.u_storage_ty + "', '" + vals.u_type + "', '" + vals.u_upc_code + "', '" + vals.u_price_per + "', '" + vals.u_tax + "', '" + vals.u_scale + "')",
+				function( error, rows, cols ) {
 
     if ( error ) {
-      console.log( "Error on select: " + error );
+      console.log( "Error on insert: " + error );
       return;
     }
 
@@ -203,119 +340,22 @@ function createPurchaseOrder( response ) {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( "User successfully added" );
+    response.write( "Item " + vals.item_name + " successfully added." );
     response.end();
-  });
-}
+	
+	// get new item ID somehow
+	var item_id;
+	
+	helper.query( "INSERT INTO ITEM_HISTORY( ITEM_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+	              "VALUES( '" + vals.item_id + "', 'Create', 'New item created.', '" + vals.userName + "', '" + helper.date() + "')",
+                  function( error, rows, cols ) {
 
-function receivePurchaseOrder( response ) {
-  helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER WHERE STATUS = 'Received'", function( error, rows, cols ) {
-       
-    if ( error ) {
-      console.log( "Error in select statement: " + error );
-      return;
-    }
-
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
+      if ( error ) {
+        console.log( "Error in inserting into history: " + error );
+        return;
+      }
     });
-    response.write( JSON.stringify( rows ) );
-    response.end();
-  });
-}
-
-function receivePurchaseOrderPage( response ) {
-  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.SUPPLIER_NAME FROM PURCHASE_ORDER po, SUPPLIER s WHERE po.SUPPLIER_ID = s.SUPPLIER_ID AND po.STATUS = 'Submitted' ORDER BY po.PO_ID LIMIT " + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
-       
-    if ( error ) {
-      console.log( "Error in select statement: " + error );
-      return;
-    }
-
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    response.write( JSON.stringify( rows ) );
-    response.end();
-  });
-}
-
-function viewPurchaseOrder( response ) {
-
-  helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER", function( error, rows, cols ) {
-       
-    if ( error ) {
-      console.log( "Error in select statement: " + error );
-      return;
-    }
-
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    response.write( JSON.stringify( rows ) );
-    response.end();
-  });
-}
-
-function viewPurchaseOrderPage ( response ) {
-  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.NAME FROM PURCHASE_ORDER po, SUPPLIER s WHERE po.SUPPLIER_ID = s.SUPPLIER_ID ORDER BY po.PO_ID LIMIT " + (response.values.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
-       
-    if ( error ) {
-      console.log( "Error in select statement: " + error );
-      return;
-    }
-
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    response.write( JSON.stringify( rows ) );
-    response.end();
-  });
-}
-
-function viewActivePurchaseOrders( response ) {
-
-  helper.query( "SELECT * FROM PURCHASE_ORDER WHERE STATUS = 'open'", function( error, rows, cols ) {
-     
-    if ( error ) {
-      console.log( "error: " + error );
-      return;
-    }
-
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    response.write( JSON.stringify( rows ) );
-    response.end();
-  });
-}
-
-function createItem() {
-  return "Create Item";
-}
-
-function maintainItem() {
-  return "Maintain Item";
-}
-
-function createSupplierProfile( response ) {
-
-  /*var vals = response.values;
-
-  helper.query( "INSERT INTO SUPPLIER( name, legal_name, lead_time, supplier_comment, special_comment ) VALUES( '" +
-                vals.name + "', '" + vals.legal_name + "', '" + vals.lead_time + "', '" + vals.supplier_comment "', '" +
-                vals.special_comment + "'", function( error, rows, cols ) {
-
-                  if ( error ) {
-                    console.log( error );
-                  }
-
-  });*/ 
+  });  
 }
 
 function viewItems( response ) {
@@ -349,51 +389,6 @@ function viewItemsPage( response) {
     });
 
     response.write( JSON.stringify( rows ) );
-    response.end();
-  });
-}
-
-
-function maintainSupplierProfile() {
-  return "Maintain Supplier Profile";
-}
-
-function deleteUser( response ) {
-
-console.log( "INSIDE DELETE USER" );
-  var vals = response.values;
-console.log( "VALS BITCHES", vals );
-
-  helper.query( "DELETE FROM USER WHERE USER_ID = '" + vals.username + "'", function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( error );
-    }
-
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    response.write( "" + true ); 
-    response.end();
-  });
-}
-
-function deleteSupplier( response ) {
-
-  var vals = response.values;
-
-  helper.query( "DELETE FROM supplier WHERE supplier_id = '" + vals.supplierID + "'", function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( error );
-    }
-
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    response.write( true ); 
     response.end();
   });
 }
@@ -432,31 +427,158 @@ function viewSupplierPage( response ) {
   });
 }
 
+function deleteSupplier( response ) {
+
+  var vals = response.values;
+
+  helper.query( "DELETE FROM supplier WHERE supplier_id = '" + vals.supplierID + "'", function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( error );
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( true ); 
+    response.end();
+  });
+}
+
+function createPurchaseOrder( response ) {
+  var vals = response.values;
+
+  helper.query( "INSERT INTO PURCHASE_ORDER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE ) VALUES('" + vals.user + "', '" + vals.pass +
+                 "', '" + vals.email + "', '" + " " + "', '" + vals.role + "')", function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on select: " + error );
+      return;
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( "User successfully added" );
+    response.end();
+  });
+}
+
+function viewPurchaseOrders( response ) {
+
+  helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER", function( error, rows, cols ) {
+       
+    if ( error ) {
+      console.log( "Error in select statement: " + error );
+      return;
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
+}
+
+function viewPurchaseOrdersPage ( response ) {
+  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.NAME FROM PURCHASE_ORDER po, SUPPLIER s WHERE po.SUPPLIER_ID = s.SUPPLIER_ID ORDER BY po.PO_ID LIMIT " + (response.values.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
+       
+    if ( error ) {
+      console.log( "Error in select statement: " + error );
+      return;
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
+}
+
+function returnOrderLine() {
+  return "Return Order Line";
+}
+
+function maintainPurchaseOrder() {
+  return "Maintain Purchase Order";
+}
+
+function receivePurchaseOrder( response ) {
+  helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER WHERE STATUS = 'Received'", function( error, rows, cols ) {
+       
+    if ( error ) {
+      console.log( "Error in select statement: " + error );
+      return;
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
+}
+
+function receivePurchaseOrderPage( response ) {
+  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.SUPPLIER_NAME FROM PURCHASE_ORDER po, SUPPLIER s WHERE po.SUPPLIER_ID = s.SUPPLIER_ID AND po.STATUS = 'Submitted' ORDER BY po.PO_ID LIMIT " + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
+       
+    if ( error ) {
+      console.log( "Error in select statement: " + error );
+      return;
+    }
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    response.write( JSON.stringify( rows ) );
+    response.end();
+  });
+}
+
 exports.index = index;
 exports.login = login;
 exports.logout = logout;
 exports.profile = profile;
 exports.logs = logs;
+exports.changePassword = changePassword;
+
+exports.createUserCheckDupe = createUserCheckDupe;
 exports.createUser = createUser;
 exports.viewUsers = viewUsers;
+exports.viewUsersPage = viewUsersPage;
 exports.editUser = editUser;
-exports.returnOrderLine = returnOrderLine;
-exports.maintainPurchaseOrder = maintainPurchaseOrder;
-exports.createPurchaseOrder = createPurchaseOrder;
-exports.receivePurchaseOrder = receivePurchaseOrder;
-exports.receivePurchaseOrderPage = receivePurchaseOrderPage;
-exports.viewPurchaseOrder = viewPurchaseOrder;
-exports.viewPurchaseOrderPage = viewPurchaseOrderPage;
-exports.viewActivePurchaseOrders = viewActivePurchaseOrders;
-exports.viewSupplier = viewSupplier;
-exports.viewSupplierPage = viewSupplierPage;
-exports.deleteSupplier = deleteSupplier;
 exports.deleteUser = deleteUser;
+
+exports.createItemCheckDupe = createItemCheckDupe;
 exports.createItem = createItem;
-exports.maintainItem = maintainItem;
 exports.viewItems = viewItems;
 exports.viewItemsPage = viewItemsPage;
-exports.createSupplierProfile = createSupplierProfile;
-exports.maintainSupplierProfile = maintainSupplierProfile;
-exports.changePassword = changePassword;
+//exports.editItem = editItem;
+//exports.deleteItem = deleteItem;
+
+//exports.createSupplierCheckDupe = createSupplierCheckDupe;
+//exports.createSupplier = createSupplier;
+exports.viewSuppliers = viewSupplier;
+exports.viewSuppliersPage = viewSupplierPage;
+//exports.editSupplier = editSupplier;
+exports.deleteSupplier = deleteSupplier;
+
+exports.createPurchaseOrder = createPurchaseOrder;
+exports.viewPurchaseOrders = viewPurchaseOrder;
+exports.viewPurchaseOrdersPage = viewPurchaseOrderPage;
+//exports.editPurchaseOrder = editPurchaseOrder;
+
+exports.returnOrderLine = returnOrderLine;
+
+exports.receivePurchaseOrder = receivePurchaseOrder;
+exports.receivePurchaseOrderPage = receivePurchaseOrderPage;
+
 
