@@ -16,7 +16,7 @@ var helper = {
   },
   //  function to make database calls for us
   query: function( queryString, callback ) {
-    
+
     new mysql.Database({
       hostname: "localhost",
       user: "dave",
@@ -57,26 +57,26 @@ function index( response, cb ) {
 
     console.log( !!rows.length );
     cb && cb( !!rows.length );
-  });   
+  });
 }
 
 function login( response ) {
 
-     response.writeHead(200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-     });
-     response.write( response.values.hash );
-     response.end();
+  response.writeHead(200, {
+    "Content-Type": "text/plain",
+    "Access-Control-Allow-Origin": "*"
+  });
+  response.write( response.values.hash );
+  response.end();
 }
 
 function logout( response ) {
-     response.writeHead(200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-     });
-     response.write( "Logged Out" );
-     response.end();
+  response.writeHead(200, {
+    "Content-Type": "text/plain",
+    "Access-Control-Allow-Origin": "*"
+  });
+  response.write( "Logged Out" );
+  response.end();
 }
 
 // Question: What is this?
@@ -89,40 +89,49 @@ function profile() {
   return "Profile";
 }
 
+// Change Password - allow current user to change his password.
 // Question: vals all correct? consistent? CHange into change password/email?
-function changePassword( response ) {
+function editAccount( response ) {
 
   var vals = response.values;
 
+  // Question: required?
   var that = this;
-  helper.query( "UPDATE USER SET PASSWORD = '" + vals.password + "' " +
-                "WHERE EMPLOYEE_ID = '" + vals.user_id + "'", 
-				function( error, rows, cols ) {
+  
+  helper.query( "UPDATE USER SET PASSWORD = '" + vals.password + "', EMAIL = '" vals.email + "' " +
+                "WHERE USER_ID = '" + vals.curUserID + "'", 
+                function( error, rows, cols ) {
 
-    if ( error ) {
-      console.log( "Error on select: " + error );
-      return;
-    }
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-	
-    response.write( "Password Successfully Changed" );
-    response.end();
-	
-	console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
-	console.log( "Changed password." );
-    helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-	              "VALUES( '" + vals.curUserID + "', 'Change', 'Changed Password.', '" + vals.curUserID + "', '" + helper.date() + "')",
-                  function( error, rows, cols ) {
 
-      if ( error ) {
-        console.log( "Error in inserting into history: " + error );
-        return;
-      }
-    });
+    if ( error ) {
+    
+      console.log( "Error on UPDATE USER: " + error );
+      response.write( "Error occured while trying to change password/email." );
+      
+    } else {
+    
+      console.log( "Changed password/email." );
+      response.write( "Password/email Successfully Changed" );
+
+      helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                    "VALUES( '" + vals.curUserID + "', 'Change', 'Changed password/email.', '" + vals.curUserID + "', '" + helper.date() + "')",
+                    function( error, rows, cols ) {
+
+        if ( error ) {
+          console.log( "Error on INSERT into USER_HISTORY: " + error );
+        }
+        
+      });
+    }
+    
+    response.end();
+    
   });
 }
 
@@ -132,21 +141,28 @@ function createUserCheckDupe( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT COUNT(USER_ID) " +
-                "FROM USER WHERE USER_ID = '" + vals.user_id + "'",
-				function( error, rows, cols ) {
-  
-    if ( error ) {
-      console.log( "Error on select: " + error );
-      return;
-    }
+  helper.query( "SELECT COUNT(USER_ID) FROM USER WHERE USER_ID = '" + vals.user_id + "'",
+                function( error, rows, cols ) {
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( JSON.stringify( rows ) ); 
+        
+    if ( error ) {
+
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( "Error on select from USER: " + error );
+      reponse.write( "Error occured while trying to create user." );
+
+    } else {
+
+      response.write( JSON.stringify( rows ) ); 
+
+    }
+
     response.end();
+
   });
 }
 
@@ -156,58 +172,69 @@ function createUser( response ) {
 
   var vals = response.values;
 
-  helper.query( "INSERT INTO USER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE ) " +
+  helper.query( "INSERT INTO USER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE, SUPPLIER_ID ) " +
                 "VALUES('" + vals.user_id + "', '" + vals.password + "', '" + vals.email +
-				"', '" + vals.employee_id + "', '" + vals.role + "')",
-				function( error, rows, cols ) {
+                "', '" + vals.employee_id + "', '" + vals.role + "', '" + vals.supplier_id + "'")",
+                function( error, rows, cols ) {
 
-    if ( error ) {
-      console.log( "Error on select: " + error );
-      return;
-    }
-
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+                
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-	
-	console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
-	console.log( "Created new user: " + vals.user_id );
-    response.write( "New user " + vals.user_id + " successfully added." );
-    response.end();
-	
-	helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-	              "VALUES( '" + vals.curUserID + "', 'Create', 'New user created: " + vals.userID + 
-				  "', '" + vals.curUserID + "', '" + helper.date() + "')",
-                  function( error, rows, cols ) {
+    
+    if ( error ) {
 
-      if ( error ) {
-        console.log( "Error in inserting into history: " + error );
-        return;
-      }
-    });
+      console.log( "Error on INSERT into USER: " + error );
+      response.write( "Error occured while trying to create user." );
+
+    } else {
+
+      console.log( "Created new user: " + vals.user_id );
+      response.write( JSON.stringify( rows ) );
+      response.write( "New user successfully created." );
+
+      helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                    "VALUES( '" + vals.user_id + "', 'Create', 'Created new user.', '" + vals.curUserID + "', '" + helper.date() + "')",
+                    function( error, rows, cols ) {
+
+        if ( error ) {
+          console.log( "Error on INSERT into USER_HISTORY: " + error );
+        }
+      });
+    }
+    
+    response.end();
+    
   });  
 }
 
-// View User  - Step 1: Returns number of users in USER table for page calculation.
+// View User - Step 1: Returns number of users in USER table for page calculation.
 function viewUsers( response ) {
 
   var vals = response.values;
 
   helper.query( "SELECT COUNT(*) FROM USER",
-				function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( "Error on select: " + error );
-      return;
-    }
+                function( error, rows, cols ) {
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( JSON.stringify( rows ) ); 
-    response.end();
+                
+    if ( error ) {
+
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( "Error on SELECT from USER: " + error );
+      response.write( "Error occured while trying to load the page." );
+
+    } else {
+
+      response.write( JSON.stringify( rows ) ); 
+      response.end();
+
+    }
   });
 }
 
@@ -218,21 +245,27 @@ function viewUsersPage( response ) {
 
   helper.query( "SELECT u.USER_ID, u.EMAIL, u.EMPLOYEE_ID, u.ROLE, s.NAME " + 
                 "FROM USER u LEFT JOIN SUPPLIER s ON u.SUPPLIER_ID = s.SUPPLIER_ID " + 
-				"ORDER BY USER_ID " +
-				"LIMIT " + (vals.pagenum-1)*20 + ", 20",
-				function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( "Error on select: " + error );
-      return;
-    }
+                "ORDER BY USER_ID " +
+                "LIMIT " + (vals.pagenum-1)*20 + ", 20",
+                function( error, rows, cols ) {
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( JSON.stringify( rows ) ); 
-    response.end();
+                
+    if ( error ) {
+
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( "Error on SELECT from USER, SUPPLIER: " + error );
+      response.write( "Error occured while trying to load the page." );
+
+    } else {
+
+      response.write( JSON.stringify( rows ) ); 
+      response.end();
+
+    }  
   });
 }
 
@@ -244,32 +277,39 @@ function editUser( response ) {
 
   helper.query( "UPDATE USER SET USER_ID = '" + vals.user_id + "', EMAIL = '" + vals.email +
                 "', EMPLOYEE_ID = '" + vals.employee_id + "', ROLE = '" + vals.role + "' " +
-				"WHERE USER_ID = '" + vals.user_id + "'",
-				function( error, rows, cols ) {
+                "WHERE USER_ID = '" + vals.user_id + "'",
+                function( error, rows, cols ) {
 
-    if ( error ) {
-      console.log( "Error on select: " + error );
-      return;
-    }
-
-	console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
-    console.log( "Changed user information: ", rows );
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+    
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( JSON.stringify( rows ) ); 
-    response.end();
-	
-	helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-	              "VALUES( '" + vals.curUserID + "', 'Change', 'Changed user information.', '" + vals.curUserID + "', '" + helper.date() + "')",
-                  function( error, rows, cols ) {
+    
+    if ( error ) {
 
-      if ( error ) {
-        console.log( "Error in inserting into history: " + error );
-        return;
-      }
-    });
+      console.log( "Error on UPDATE USER: " + error );
+      response.write( "Error occured while trying to change user information." );
+
+    } else {
+
+      console.log( "Changed user information: ", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "User information succussfully changed." );
+
+      helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                    "VALUES( '" + vals.user_id + "', 'Change', 'Changed user information.', '" + vals.curUserID + "', '" + helper.date() + "')",
+                    function( error, rows, cols ) {
+
+        if ( error ) {
+          console.log( "Error on INSERT into USER_HISTORY: " + error );
+        }
+      });
+    }
+    
+    response.end();
+    
   });
 }
 
@@ -277,34 +317,42 @@ function editUser( response ) {
 function deleteUser( response ) {
 
   var vals = response.values;
-  console.log( vals.role, vals.username, vals.email, vals.userID );
+  
+  helper.query( "DELETE FROM USER WHERE USER_ID = '" + vals.user_id + "'",
+                function( error, rows, cols ) {
 
-  helper.query( "DELETE FROM USER TABLE "+
-                "WHERE USER_ID = '" + vals.username + "'",
-				function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( "Error on select: " + error );
-      return;
-    }
-
-    console.log( "User deleted.", rows );
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+    
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( "User " + vals.userID + " successfully deleted." ); 
-    response.end();
-	
-	helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-                  "VALUES( '" + vals.username + "', 'Delete', 'Deleted " + vals.userID + ".', '" + vals.username + "', '" + helper.date() + "')",
-                  function( error, rows, cols ) {
+    
+    if ( error ) {
 
-      if ( error ) {
-        console.log( "Error in inserting into history: " + error );
-        return;
-      }
-    });
+      console.log( "Error on DELETE from USER: " + error );
+      response.write( "Error occured while trying to delete user." );
+
+    } else {
+    
+      console.log( "Deleted user: ", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "User successfully deleted." ); 
+    
+      helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                    "VALUES( '" + vals.user_id + "', 'Delete', 'Deleted user.', '" + vals.curUserID + "', '" + helper.date() + "')",
+                    function( error, rows, cols ) {
+
+        if ( error ) {
+        
+          console.log( "Error on INSERT into USER_HISTORY: " + error );
+          
+        }
+      });
+      
+      response.end();
+
+    }
   });
 }
 
@@ -314,21 +362,29 @@ function createItemCheckDupe( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT COUNT(ITEM_NAME) " +
-                "FROM ITEM WHERE LOWER(ITEM_NAME) = LOWER('" + vals.item_name + "') AND SUPPLIER_ID = " + vals.supplier_id,
-				function( error, rows, cols ) {
+  helper.query( "SELECT COUNT(*) FROM ITEM " +
+                "WHERE LOWER(ITEM_NAME) = LOWER('" + vals.item_name + "') AND SUPPLIER_ID = " + vals.supplier_id,
+                function( error, rows, cols ) {
   
-    if ( error ) {
-      console.log( "Error on select: " + error );
-      return;
-    }
-
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( JSON.stringify( rows ) ); 
+    
+    if ( error ) {
+    
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( "Error on SELECT ITEM: " + error );
+      response.write( "Error occured while trying to create item." );
+      
+    } else {
+    
+      response.write( JSON.stringify( rows ) ); 
+    
+    }
+
     response.end();
+
   });
 }
 
@@ -341,19 +397,26 @@ function createItem( response ) {
   helper.query( "INSERT INTO ITEM( DIST_CODE, ITEM_NAME, RECEIPT_NAME, CATEGORY, UNIT, ITEM_TYPE, COMMENT, SUPPLIER_ID, " +
                 "U_MINOR_REPO, U_ACTIVE_INA, U_BIZERBA, U_BRAND, U_CASE_SIZE, U_COOKING_IN, U_COUNTRY, U_DESCRIPTO, U_EXPIRY_DAT, U_INGREDIENT, U_KEYWORDS, U_NOTES, U_ORDER, U_PLU, U_PRICE, U_SILVERWARE, U_SKU, U_STORAGE, U_STORAGE_TY, U_TYPE, U_UPC_CODE, U_PRICE_PER, U_TAX, U_SCALE) " +
                 "VALUES('" + vals.dist_code + "', '" + vals.item_name + "', '" + vals.receipt_name + "', '" + vals.category + "', '" + vals.unit + "', '" + vals.item_type + "', '" + vals.comment + "', '" + vals.supplier_id +
-				"', '" + vals.u_minor_repo + "', '" + vals.u_active_ina + "', '" + vals.u_bizerba + "', '" + vals.u_brand + "', '" + vals.u_case_size + "', '" + vals.u_cooking_in + "', '" + vals.u_country + "', '" + vals.u_descripto + "', '" + vals.u_expiry_dat + "', '" + vals.u_ingredient + "', '" + vals.u_keywords + "', '" + vals.u_notes + "', '" + vals.u_order + "', '" + vals.u_plu + "', '" + vals.u_price + "', '" + vals.u_silverware + "', '" + vals.u_sku + "', '" + vals.u_storage + "', '" + vals.u_storage_ty + "', '" + vals.u_type + "', '" + vals.u_upc_code + "', '" + vals.u_price_per + "', '" + vals.u_tax + "', '" + vals.u_scale + "')",
-				function( error, rows, cols ) {
+                "', '" + vals.u_minor_repo + "', '" + vals.u_active_ina + "', '" + vals.u_bizerba + "', '" + vals.u_brand + "', '" + vals.u_case_size + "', '" + vals.u_cooking_in + "', '" + vals.u_country + "', '" + vals.u_descripto + "', '" + vals.u_expiry_dat + "', '" + vals.u_ingredient + "', '" + vals.u_keywords + "', '" + vals.u_notes + "', '" + vals.u_order + "', '" + vals.u_plu + "', '" + vals.u_price + "', '" + vals.u_silverware + "', '" + vals.u_sku + "', '" + vals.u_storage + "', '" + vals.u_storage_ty + "', '" + vals.u_type + "', '" + vals.u_upc_code + "', '" + vals.u_price_per + "', '" + vals.u_tax + "', '" + vals.u_scale + "')",
+                function( error, rows, cols ) {
 
-    if ( error ) {
-      console.log( "Error on insert: " + error );
-      return;
-    }
-
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+                
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( "Item " + vals.item_name + " successfully added." );
+        
+    if ( error ) {
+    
+      console.log( "Error on INSERT into ITEM: " + error );
+      response.write( "Error occured while trying to create item." );
+      
+    } else {
+    
+      console.log("Created new item: " + vals.item_name );
+      response.write(" JSON.stringify( row ) );
+      response.write( "new item successfully created." );
     response.end();
 	
 	// get new item ID somehow
@@ -561,7 +624,7 @@ exports.login = login;
 exports.logout = logout;
 exports.profile = profile;
 exports.logs = logs;
-exports.changePassword = changePassword;
+exports.editAccount = editAccount;
 
 exports.createUserCheckDupe = createUserCheckDupe;
 exports.createUser = createUser;
