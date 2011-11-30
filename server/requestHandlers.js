@@ -42,16 +42,18 @@ function index( response, cb ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.user + "' AND PASSWORD = '" + vals.pass + "'", function( error, rows, cols ) {
+  helper.query( "SELECT * FROM USER " +
+				"WHERE USER_ID = '" + vals.user + "' AND PASSWORD = '" + vals.pass + "'",
+				function( error, rows, cols ) {
 
     if ( error ) {
       console.log( "Error on select: " + error );
       return;
     }
 
-    vals.id = rows[ 0 ] && rows[ 0 ].EMPLOYEE_ID;
-    vals.userName = rows[ 0 ] && rows[ 0 ].USER_ID;
-    vals.role = rows[ 0 ] && rows[ 0 ].ROLE;
+    vals.curEmployeeID = rows[ 0 ] && rows[ 0 ].EMPLOYEE_ID;
+    vals.curUserID = rows[ 0 ] && rows[ 0 ].USER_ID;
+    vals.curRole = rows[ 0 ] && rows[ 0 ].ROLE;
 
     console.log( !!rows.length );
     cb && cb( !!rows.length );
@@ -93,8 +95,8 @@ function changePassword( response ) {
   var vals = response.values;
 
   var that = this;
-  helper.query( "UPDATE USER SET PASSWORD = '" + vals.pass + "' " +
-                "WHERE EMPLOYEE_ID = '" + vals.userID + "'", 
+  helper.query( "UPDATE USER SET PASSWORD = '" + vals.password + "' " +
+                "WHERE EMPLOYEE_ID = '" + vals.user_id + "'", 
 				function( error, rows, cols ) {
 
     if ( error ) {
@@ -106,11 +108,14 @@ function changePassword( response ) {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
+	
     response.write( "Password Successfully Changed" );
     response.end();
-
+	
+	console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+	console.log( "Changed password." );
     helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-	              "VALUES( '" + vals.userName + "', 'Change', 'Changed Password', '" + vals.userName + "', '" + helper.date() + "')",
+	              "VALUES( '" + vals.curUserID + "', 'Change', 'Changed Password.', '" + vals.curUserID + "', '" + helper.date() + "')",
                   function( error, rows, cols ) {
 
       if ( error ) {
@@ -128,7 +133,7 @@ function createUserCheckDupe( response ) {
   var vals = response.values;
 
   helper.query( "SELECT COUNT(USER_ID) " +
-                "FROM USER WHERE USER_ID = '" + vals.user + "'",
+                "FROM USER WHERE USER_ID = '" + vals.user_id + "'",
 				function( error, rows, cols ) {
   
     if ( error ) {
@@ -152,7 +157,8 @@ function createUser( response ) {
   var vals = response.values;
 
   helper.query( "INSERT INTO USER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE ) " +
-                "VALUES('" + vals.user + "', '" + vals.pass + "', '" + vals.email + "', '" + " " + "', '" + vals.role + "')",
+                "VALUES('" + vals.user_id + "', '" + vals.password + "', '" + vals.email +
+				"', '" + vals.employee_id + "', '" + vals.role + "')",
 				function( error, rows, cols ) {
 
     if ( error ) {
@@ -164,11 +170,15 @@ function createUser( response ) {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( "User " + vals.user + " successfully added." );
+	
+	console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+	console.log( "Created new user: " + vals.user_id );
+    response.write( "New user " + vals.user_id + " successfully added." );
     response.end();
 	
 	helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-	              "VALUES( '" + vals.userName + "', 'Create', 'New user created.', '" + vals.userName + "', '" + helper.date() + "')",
+	              "VALUES( '" + vals.curUserID + "', 'Create', 'New user created: " + vals.userID + 
+				  "', '" + vals.curUserID + "', '" + helper.date() + "')",
                   function( error, rows, cols ) {
 
       if ( error ) {
@@ -184,7 +194,8 @@ function viewUsers( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT COUNT(*) FROM USER", function( error, rows, cols ) {
+  helper.query( "SELECT COUNT(*) FROM USER",
+				function( error, rows, cols ) {
 
     if ( error ) {
       console.log( "Error on select: " + error );
@@ -208,7 +219,7 @@ function viewUsersPage( response ) {
   helper.query( "SELECT u.USER_ID, u.EMAIL, u.EMPLOYEE_ID, u.ROLE, s.NAME " + 
                 "FROM USER u LEFT JOIN SUPPLIER s ON u.SUPPLIER_ID = s.SUPPLIER_ID " + 
 				"ORDER BY USER_ID " +
-				"LIMIT " + (response.values.pagenum-1)*20 + ", 20",
+				"LIMIT " + (vals.pagenum-1)*20 + ", 20",
 				function( error, rows, cols ) {
 
     if ( error ) {
@@ -226,13 +237,14 @@ function viewUsersPage( response ) {
 }
 
 // Edit User - Update USER table with new user information for row USER_ID.
+// Question: console.log may print password?
 function editUser( response ) {
 
   var vals = response.values;
-  console.log( vals.role, vals.username, vals.email, vals.userID );
 
-  helper.query( "UPDATE USER SET USER_ID = '" + vals.username + "', EMAIL = '" + vals.email +
-                "', ROLE = '" + vals.role + "' WHERE EMPLOYEE_ID = '" + vals.userID + "'",
+  helper.query( "UPDATE USER SET USER_ID = '" + vals.user_id + "', EMAIL = '" + vals.email +
+                "', EMPLOYEE_ID = '" + vals.employee_id + "', ROLE = '" + vals.role + "' " +
+				"WHERE USER_ID = '" + vals.user_id + "'",
 				function( error, rows, cols ) {
 
     if ( error ) {
@@ -240,7 +252,8 @@ function editUser( response ) {
       return;
     }
 
-    console.log( "User information successfully changed.", rows );
+	console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+    console.log( "Changed user information: ", rows );
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
@@ -249,7 +262,7 @@ function editUser( response ) {
     response.end();
 	
 	helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-	              "VALUES( '" + vals.userName + "', 'Change', 'Changed user information.', '" + vals.username + "', '" + helper.date() + "')",
+	              "VALUES( '" + vals.curUserID + "', 'Change', 'Changed user information.', '" + vals.curUserID + "', '" + helper.date() + "')",
                   function( error, rows, cols ) {
 
       if ( error ) {
