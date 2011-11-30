@@ -200,7 +200,9 @@ function createUser( response ) {
                     function( error, rows, cols ) {
 
         if ( error ) {
-          console.log( "Error on INSERT into USER_HISTORY: " + error );
+
+        console.log( "Error on INSERT into USER_HISTORY: " + error );
+
         }
       });
     }
@@ -232,9 +234,11 @@ function viewUsers( response ) {
     } else {
 
       response.write( JSON.stringify( rows ) ); 
-      response.end();
 
     }
+    
+    response.end();
+    
   });
 }
 
@@ -263,9 +267,11 @@ function viewUsersPage( response ) {
     } else {
 
       response.write( JSON.stringify( rows ) ); 
-      response.end();
 
     }  
+
+    response.end();
+
   });
 }
 
@@ -408,64 +414,198 @@ function createItem( response ) {
     });
         
     if ( error ) {
-    
       console.log( "Error on INSERT into ITEM: " + error );
       response.write( "Error occured while trying to create item." );
-      
     } else {
     
       console.log("Created new item: " + vals.item_name );
-      response.write(" JSON.stringify( row ) );
-      response.write( "new item successfully created." );
-    response.end();
-	
-	// get new item ID somehow
-	var item_id;
-	
-	helper.query( "INSERT INTO ITEM_HISTORY( ITEM_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-	              "VALUES( '" + vals.item_id + "', 'Create', 'New item created.', '" + vals.userName + "', '" + helper.date() + "')",
-                  function( error, rows, cols ) {
+      response.write( JSON.stringify( rows ) );
+      response.write( "New item successfully created." );
+    
+	    // Question: get new item ID somehow
+      helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
+      
+        if ( error ) {
+          console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
+        } else {
+        
+          var last_id = rows["LAST_INSERT_ID()"];
+        
+          // insert price into price-history
+          
+          helper.query( "INSERT INTO PRICE_HISTORY(ITEM_ID, PRICE, AUTHOR, LOG_DATE) " +
+                        "VALUES( '" + vals.last_id + "', " + vals.price + "', " + vals.curUserID + "', '" + helper.date() "' )",
+                        function( error, rows, cols ) {
+                        
+            if ( error ) {
+              console.log( "Error on INSERT into PRICE_HISTORY: " + error );
+            }
+            
+            item_id = last_id;
+            last_id = rows["LAST_INSERT_ID()"];
+            
+            // update item with new price id
+            helper.query( "UPDATE ITEM SET LATEST_PRICE = " + last_id +
+                          "WHERE ITEM_ID = " + item_id, 
+                          function( error, rows, cols ) {
+            
+              if ( error ) {
+                console.log( "Error on INSERT into PRICE_HISTORY: " + error );
+              }
+            
+              helper.query( "INSERT INTO ITEM_HISTORY( ITEM_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                            "VALUES( '" + last_id + "', 'Create', 'New item created.', '" + vals.userName + "', '" + helper.date() + "')",
+                            function( error, rows, cols ) {
 
-      if ( error ) {
-        console.log( "Error in inserting into history: " + error );
-        return;
-      }
-    });
+                if ( error ) {
+                  console.log( "Error in inserting into history: " + error );
+                }
+              });
+            });
+          });
+        }
+      });
+    }
+    response.end();
   });  
 }
 
+// View Items - Step 1: Returns number of items in ITEM table for page calculation.
 function viewItems( response ) {
 
-  helper.query( "SELECT COUNT(*) FROM ITEM", function (error, rows, cols) {
-
-    if ( error ) {
-      console.log( error );
-    }
+  helper.query( "SELECT COUNT(*) FROM ITEM",
+                function ( error, rows, cols ) {
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
 
-    response.write( JSON.stringify( rows ) );
-    response.end();
-    });
-  }
+    if ( error ) {
+    
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( "Error on SELECT from ITEM: " + error );
+      response.write( "Error occured while trying to load page." );
+      
+    } else {
 
+      response.write( JSON.stringify( rows ) );
+      
+    }
+    
+    response.end();
+    
+  });
+}
+
+// View Items - Step 2: Returns a list of users for current page, ordered by Item_Name.
 function viewItemsPage( response) {
-  helper.query( "SELECT i.ITEM_ID, i.DIST_CODE, i.ITEM_NAME, i.RECEIPT_NAME, i.CATEGORY, i.UNIT, i.ITEM_TYPE, i.COMMENT, p.PRICE, s.NAME FROM ITEM i, SUPPLIER s, PRICE_HISTORY p WHERE i.SUPPLIER_ID = s.SUPPLIER_ID AND i.LATEST_PRICE = PRICE_ID ORDER BY i.ITEM_ID LIMIT " + (response.values.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
-
-    if ( error ) {
-        console.log( error );
-    }
+  helper.query( "SELECT i.ITEM_ID, i.DIST_CODE, i.ITEM_NAME, i.RECEIPT_NAME, i.CATEGORY, i.UNIT, i.ITEM_TYPE, i.COMMENT, p.PRICE, s.NAME " +
+                "FROM ITEM i LEFT OUTER JOIN SUPPLIER s ON i.SUPPLIER_ID = s.SUPPLIER_ID " +
+                "LEFT OUTER JOIN PRICE_HISTORY p ON i.LATEST_PRICE = PRICE_ID " +
+                "ORDER BY i.ITEM_NAME LIMIT " + (response.values.pagenum-1)*20 + ", 20",
+                function( error, rows, cols ) {
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
 
-    response.write( JSON.stringify( rows ) );
+    if ( error ) {
+    
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( "Error on SELECT from ITEM, SUPPLIER, PRICE_HISTORY: " + error );
+      response.write( "Error occured while trying to load page." );
+      
+    } else {
+    
+      response.write( JSON.stringify( rows ) );
+      
+    }
+
     response.end();
+
+  });
+}
+
+// Edit Item - Update ITEM table with new item information for row ITEM_ID.
+function editItem( response ) {
+
+  var vals = response.values;
+
+  // insert latest price first
+  helper.query( "INSERT INTO PRICE_HISTORY(ITEM_ID, PRICE, AUTHOR, LOG_DATE) " +
+                "VALUES( '" + vals.item_id + "', " + vals.price + "', " + vals.curUserID + "', '" + helper.date() "' )",
+                function( error, rows, cols ) {
+                
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");  
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });    
+
+    if ( error ) {
+
+      console.log( "Error on INSERT INTO PRICE_HISTORY: " + error );
+      response.write( "Error occured while trying to change item information." );
+      
+    } else {
+    
+      // get the new price_id
+      helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
+      
+        if ( error ) {
+
+          console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
+
+        } else {
+        
+          var last_id = rows["LAST_INSERT_ID()"];
+          console.log( "Entered new price: " + vals.price + " (" + vals.last_id + ")" );
+      
+          // update item
+          helper.query( "UPDATE ITEM SET DIST_CODE = '" + vals.dist_code + "', ITEM_NAME = '" + vals.item_name + "', RECEIPT_NAME = '" + vals.receipt_name +
+                        "', CATEGORY = '" + vals.category + "', UNIT = '" + vals.unit + "', ITEM_TYPE = '" + vals.item_type +
+                        "', COMMENT = '" + vals.comment + "', LATEST_PRICE = " vals.last_id + ", SUPPLIER_ID = '" + vals.supplier_id + "', U_MINOR_REPO = '" + vals.u_minor_repo +
+                        "', U_ACTIVE_INA = '" + vals.u_active_ina + "', U_BIZERBA = '" + vals.u_bizerba + "', U_BRAND = '" + vals.u_brand +
+                        "', U_CASE_SIZE = '" + vals.u_case_size + "', U_COOKING_IN = '" + vals.u_cooking_in + "', U_COUNTRY = '" + vals.u_country +
+                        "', U_DESCRIPTO = '" + vals.u_descripto + "', U_EXPIRY_DAT = '" + vals.u_expiry_dat + "', U_INGREDIENT = '" + vals.u_ingredient +
+                        "', U_KEYWORDS = '" + vals.u_keywords + "', U_NOTES = '" + vals.u_notes + "', U_ORDER = '" + vals.u_order +
+                        "', U_PLU = '" + vals.u_plu + "', U_PRICE = '" + vals.u_price + "', U_SILVERWARE = '" + vals.u_silverware +
+                        "', U_SKU = '" + vals.u_sku + "', U_STORAGE = '" + vals.u_storage + "', U_STORAGE_TY = '" + vals.u_storage_ty +
+                        "', U_TYPE = '" + vals.u_type + "', U_UPC_CODE = '" + vals.u_upc_code + "', U_PRICE_PER = '" + vals.u_price_per +
+                        "', U_TAX = '" + vals.u_tax + "', U_SCALE = '" + vals.u_scale + "' " +
+                        "WHERE ITEM_ID = " + vals.item_id,
+                        function( error, rows, cols ) {
+
+            if ( error ) {
+
+              console.log( "Error on UPDATE ITEM: " + error );
+              response.write( "Error occured while trying to change item information." );
+
+            } else {
+    
+              console.log( "Changed item information: ", rows );
+              response.write( JSON.stringify( rows ) );
+              response.write( "Item information succussfully changed." );
+
+              helper.query( "INSERT INTO ITEM_HISTORY( ITEM_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                            "VALUES( '" + vals.item_id + "', 'Change', 'Changed item information.', '" + vals.curUserID + "', '" + helper.date() + "')",
+                            function( error, rows, cols ) {
+
+                if ( error ) {
+                  console.log( "Error on INSERT into ITEM_HISTORY: " + error );
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+    
+    response.end();
+    
   });
 }
 
