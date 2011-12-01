@@ -38,6 +38,65 @@ var helper = {
   }
 }
 
+// create an entry in respective history log tables
+var historyLog = {
+  user: function ( vals, category, comment ) {
+  
+    helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                  "VALUES( '" + vals.user_id + "', '" + category + "', '" + comment + 
+                  "', '" + vals.curUserID + "', '" + helper.date() + "')",
+                  function( error, rows, cols ) {
+
+      if ( error ) {
+        console.log( "Error on INSERT into USER_HISTORY: " + error );
+      }
+        
+    });
+  }
+  
+  supplier: function ( vals, category, comment ) {
+  
+    helper.query( "INSERT INTO SUPPLIER_HISTORY( SUPPLIER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                  "VALUES( '" + vals.supplier_id + "', '" + category + "', '" + comment +
+                  "', '" + vals.curUserID + "', '" + helper.date() + "')",
+                  function( error, rows, cols ) {
+
+      if ( error ) {
+        console.log( "Error on INSERT into USER_HISTORY: " + error );
+      }
+
+    });
+  }
+  
+  item: function ( vals, category, comment ) {
+  
+    helper.query( "INSERT INTO ITEM_HISTORY( ITEM_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                  "VALUES( '" + vals.item_id + "', '" + category + "', '" + comment + 
+                  "', '" + vals.curUserID + "', '" + helper.date() + "')",
+                  function( error, rows, cols ) {
+
+      if ( error ) {
+        console.log( "Error on INSERT into USER_HISTORY: " + error );
+      }
+
+    });
+  }
+  
+  po: function ( vals, category, comment ) {
+  
+    helper.query( "INSERT INTO PO_HISTORY( PO_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                  "VALUES( '" + vals.po_id + "', '" + category + "', '" + comment + 
+                  "', '" + vals.curUserID + "', '" + helper.date() + "')",
+                  function( error, rows, cols ) {
+
+      if ( error ) {
+        console.log( "Error on INSERT into USER_HISTORY: " + error );
+      }
+
+    });
+  }  
+}
+
 function index( response, cb ) {
 
   var vals = response.values;
@@ -174,7 +233,7 @@ function createUser( response ) {
 
   helper.query( "INSERT INTO USER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE, SUPPLIER_ID ) " +
                 "VALUES('" + vals.user_id + "', '" + vals.password + "', '" + vals.email +
-                "', '" + vals.employee_id + "', '" + vals.role + "', '" + vals.supplier_id + "'")",
+                "', '" + vals.employee_id + "', '" + vals.role + "', '" + vals.supplier_id + "'"),
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
