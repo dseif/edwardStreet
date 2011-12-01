@@ -61,7 +61,7 @@ function start( route, handle ) {
               tempGuid = guidGenerator();
             }
 
-            tempGuid = response.values.role.substring( 0, 2 ) + tempGuid;
+            tempGuid = response.values.curRole.substring( 0, 2 ) + tempGuid;
             values.hash = response.guid = tempGuid;
             
             //  Set our time to 30mins from now, auto log out if not renewed by then

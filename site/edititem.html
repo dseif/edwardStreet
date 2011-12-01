@@ -4,33 +4,113 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui-1.8.16.custom.css" />
 <title>Edward Street</title>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
+<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
+<script type="text/javascript" src="../js/block.js"></script>
 <script type="text/javascript" src="login.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
 
+      var numItems = 0,
+          numPages = 0,
+          fired = [],
+          helper = edstHelper();
 
-        $.ajax({
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/viewitems",
+        data: {
+          hash: getCookie( "EDST_H" )
+        },
+        success: function( response, code, xhr ) {
 
-          cache: false,
+          numItems = JSON.parse( response )[ 0 ][ "COUNT(*)" ];
+          numPages = Math.round( numItems/20 );
 
-          url: "http://96.126.109.151:8080/viewItemsPage",
+          for ( var i = 1; i <= numPages; i++ ) {
 
-          data: {
- hash: getCookie( "EDST_H" ),
- pagenum:5 },
+            fired.push( false ); 
+            $( "#resultsUL" ).append( "<li id='edstTabs-" + i + "'><a href='#tabs-" + i + "'>" + i + "</a></li>" );
+            $( "#results" ).append( "<div id='tabs-" + i + "'></div>" );
+            $( "#edstTabs-" + i ).children( 0 ).click(function() {
 
-          success: function( response, code, xhr ) {
+              var page = $( this ).parent().attr( "id" ).split( "-" )[ 1 ];
+              if ( !fired[ page - 1 ] ) {
+                
+                $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
+                fired[ page - 1 ] = true;
+                $.ajax({
+                  cache: false,
+                  url: "http://96.126.109.151:8080/viewitemspage",
+                  data: {
+                    hash: getCookie( "EDST_H" ),
+                    pagenum: page 
+                  },
+                  success: function( response, code, xhr ) {
 
-console.log(response);
+                    var data = JSON.parse( response );
 
-      }
+                    console.log( data );
+                    for ( var item in data ) {
 
-    }); 
+                      $( "#tabs-" + page ).append( "<h3><a href='#'>" + data[ item ][ "ITEM_NAME" ] + "</a></h3>" + 
+                         "<div id='edstAccord-" + data[ item ][ "ITEM_ID" ] + "'></div>" );
 
+                      for ( var row in data[ item ] ) {
+                        console.log( data[ item ][ row ] );
 
+                        $( "#edstAccord-" + data[ item ][ "ITEM_ID" ] ).append( "<p>" +
+                           "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
+                      }
+                    }
+
+                    helper.setupAccordion( document.getElementById( "tabs-" + page ) );
+                    $.unblockUI();
+                  }
+                });
+              }
+            });
+          }
+
+          $( "#results" ).tabs();
+
+          $.ajax({
+
+            cache: false,
+            url: "http://96.126.109.151:8080/viewitemspage",
+            data: {
+              hash: getCookie( "EDST_H" ),
+              pagenum: 1
+            },
+            success: function( response, code, xhr ) {
+
+              $.unblockUI();
+              var data = JSON.parse( response );
+              console.log( data );
+
+              for ( var item in data ) {
+
+                $( "#tabs-1" ).append( "<h3><a href='#'>" + data[ item ][ "ITEM_NAME" ] + "</a></h3>" + 
+                   "<div id='edstAccord-" + data[ item ][ "ITEM_ID" ] + "'></div>" );
+
+                for ( var row in data[ item ] ) {
+
+                  $( "#edstAccord-" + data[ item ][ "ITEM_ID" ] ).append( "<p>" +
+                     "<b>" + row + "</b>: " + data[ item ][ row ] + "</br></p>" );
+                }
+              }
+
+              fired[ 0 ] = true;
+              helper.setupAccordion( document.getElementById( "tabs-1" ) );
+            }
+          });
+          $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
+        }
+      }); 
 
         document.getElementById("saveBtn").addEventListener("click", function (event) {
 
@@ -147,6 +227,7 @@ $(window).scroll(function () {
 </head>
 
 <body>
+  <div id="loadingOverlay" style="display:none;width:100%;height:100%;background:#121212;z-index:9999;"></div>
   <div id="header">
     <div id="logo">
       <h1 class="headings"><a href="index.html">Edward Street</a></h1>
@@ -237,36 +318,10 @@ $(window).scroll(function () {
           <br/><hr/><br/>
           Results:
           <br/><br/>
-          <table border="1" id="itemTable">
-            <tr>
-              <th width="9%">PLU</th>
-              <th width="9%">Distributor Code</th>
-              <th width="9%">Receipt Name</th>
-              <th width="9%">Item Name</th>
-              <th width="9%">Item Category</th>
-              <th width="9%">Item Type</th>
-              <th width="9%">Supplier</th>
-              <th width="9%">Price</th>
-              <th width="9%">Unit</th>
-              <th width="9%">Comments</th>
-              <th width="9%">Edit</th>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td><textarea id="commentItem" name="CommentItem" cols="5" rows="2" readonly="readonly"></textarea></td>
-              <td><input value="selectedItem" type="checkbox" name="SelectItem" id="selectItem"/></td>
-            </tr>
-          </table>
-
-          <br/><br/><hr/><br/><br/>
+          <div id="results">
+            <ul id="resultsUL"></ul>
+          </div>
+          <hr/><br/><br/>
           
           <div id="content">
             
@@ -331,6 +386,7 @@ $(window).scroll(function () {
         <br />
     </div>
   </div> <!-- Wrapper -->
+
   
 </body>
 </html> 
