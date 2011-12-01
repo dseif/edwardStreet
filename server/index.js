@@ -12,40 +12,40 @@ var handle = {};
 handle[ "/" ] = requestHandlers.index;
 handle[ "/login" ] = requestHandlers.login;
 handle[ "/logout" ] = requestHandlers.logout;
-
-//  Admin pages
-handle[ "/createuser" ] = requestHandlers.createUser;
-handle[ "/edituser" ] = requestHandlers.editUser;
-handle[ "/deleteuser" ] = requestHandlers.deleteUser;
-handle[ "/viewusers" ] = requestHandlers.viewUsers;
+handle[ "/editaccount" ] = requestHandlers.editAccount;
 handle[ "/admin/logs" ] = requestHandlers.logs;
 
-//  All logged in user pages
-handle[ "/profile" ] = requestHandlers.profile;
-handle[ "/changePassword" ] = requestHandlers.changePassword;
-
-//  Purchase Order pages
-handle[ "/purchaseorder/returnorderline" ] = requestHandlers.returnOrderLine;
-handle[ "/purchaseorder/maintainpurchaseorder" ] = requestHandlers.maintainPurchaseOrder;
-handle[ "/createpurchaseorder" ] = requestHandlers.createPurchaseOrder;
-handle[ "/purchaseorder/receivepurchaseorder" ] = requestHandlers.receivePurchaseOrder;
-handle[ "/purchaseorder/receivepurchaseorderpage" ] = requestHandlers.receivePurchaseOrderPage;
-handle[ "/viewpurchaseorder" ] = requestHandlers.viewPurchaseOrder;
-handle[ "/viewpurchaseorderpage" ] = requestHandlers.viewPurchaseOrderPage;
-handle[ "/viewactivepurchaseorders" ] = requestHandlers.viewActivePurchaseOrders;
+//  User pages
+handle[ "/createusercheckdupe" ] = requestHandlers.createUserCheckDupe;
+handle[ "/createuser" ] = requestHandlers.createUser;
+handle[ "/viewusers" ] = requestHandlers.viewUsers;
+handle[ "/viewuserspage" ] = requestHandlers.viewUsersPage;
+handle[ "/edituser" ] = requestHandlers.editUser;
+handle[ "/deleteuser" ] = requestHandlers.deleteUser;
 
 //  Item pages
-handle[ "/items/createitem" ] = requestHandlers.createItem;
-handle[ "/items/maintainitem" ] = requestHandlers.maintainItem;
+handle[ "/createitemcheckdupe" ] = requestHandlers.createItemCheckDupe;
+handle[ "/createitem" ] = requestHandlers.createItem;
 handle[ "/viewitems" ] = requestHandlers.viewItems;
 handle[ "/viewitemspage" ] = requestHandlers.viewItemsPage;
-
+handle[ "/edititem" ] = requestHandlers.editItem;
+handle[ "/deleteitem" ] = requestHandlers.deleteItem;
 
 //  Supplier Pages
-handle[ "/supplier/createsupplierprofile" ] = requestHandlers.createSupplierProfile;
-handle[ "/supplier/maintainsupplierprofile" ] = requestHandlers.maintainSupplierProfile;
-handle[ "/viewsupplier" ] = requestHandlers.viewSupplier;
-handle[ "/viewsupplierpage" ] = requestHandlers.viewSupplierpage;
+handle[ "/createsuppliercheckdupe" ] = requestHandlers.createSupplierCheckDupe;
+handle[ "/createsupplier" ] = requestHandlers.createSupplier;
+handle[ "/viewsuppliers" ] = requestHandlers.viewSuppliers;
+handle[ "/viewsupplierspage" ] = requestHandlers.viewSuppliersPage;
+handle[ "/editsupplier" ] = requestHandlers.editSupplier;
 handle[ "/deletesupplier" ] = requestHandlers.deleteSupplier;
+
+//  Purchase Order pages
+handle[ "/createpurchaseorder" ] = requestHandlers.createPurchaseOrder;
+handle[ "/viewpurchaseorder" ] = requestHandlers.viewPurchaseOrder;
+handle[ "/viewpurchaseorderpage" ] = requestHandlers.viewPurchaseOrderPage;
+handle[ "/editpurchaseorder" ] = requestHandlers.editPurchaseOrder;
+handle[ "/cancelpurchaseorder" ] = requestHandlers.cancelPurchaseOrder;
+handle[ "/receivepurchaseorder" ] = requestHandlers.receivePurchaseOrder;
+handle[ "/returnpurchaseorder" ] = requestHandlers.returnPurchaseOrder;
 
 server.start( router.route, handle );
