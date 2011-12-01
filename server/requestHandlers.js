@@ -148,8 +148,7 @@ function logs() {
   return "Logs";
 }
 
-// Change Password - allow current user to change his password.
-// Question: vals all correct? consistent? CHange into change password/email?
+// Edit Account - allow current user to change his password/email.
 function editAccount( response ) {
 
   var vals = response.values;
@@ -886,6 +885,7 @@ function editContactPerson ( response ) {
 
 // Delete Contact Person - delete a person from contact_person
 function deleteContactPerson ( response ) {
+
   var vals = response.values;
   
   helper.query( "DELETE FROM CONTACT_PERSON WHERE CONTACT_PERSON_ID = " + vals.contact_person_id,
@@ -905,27 +905,129 @@ function deleteContactPerson ( response ) {
       console.log( "Deleted contact person: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Contact person successfully deleted." ); 
-      historyLog.supplier( vals, "Delete", "Deleted contact person." );
+      historyLog.supplier( vals, "Change", "Deleted contact person." );
     }
 
     response.end();
   });
 }
 
-function createAddress ( response ) {
-  return "create address";
+// Create Supplier Address - Create a new supplier address in SUPPLIER_ADDRESS table.
+function createSupplierAddress ( response ) {
+  var vals = response.values;
+
+  helper.query( "INSERT INTO SUPPLIER_ADDRESS ( SUPPLIER_ID, ADDRESS_LINE_1, ADDRESS_LINE_2, CITY, PROV_STATE, COUNTRY, POSTAL_ZIP, PHONE_NUMBER ) " +
+                "VALUES( " + vals.supplier_id + ", '" + vals.address_line_1 + "', '" + vals.address_line_2 +
+                "', '" vals.city + "', '" + vals.prov_state + "', '" + vals.country + "', '" + vals.postal_zip +
+                "', '" + vals.phone_number + "' )",
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+                
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+
+    if ( error ) {
+      console.log( "Error on INSERT into SUPPLIER_ADDRESS: " + error );
+      response.write( "Error occured while trying to create supplier address." );
+    } else {
+      console.log("Created new supplier address: " + rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "New supplier address successfully created." );
+      historyLog.supplier( vals, "Change", "Created new supplier address." );
+    }
+    
+    response.end();
+  });  
 }
 
-function viewAddress ( response ) {
-  return "view address";
+// View Supplier Address - return a list of supplier addresses.
+function viewSupplierAddress ( response ) {
+
+  var vals = response.values;
+
+  helper.query( "SELECT ADDRESS_LINE_1, ADDRESS_LINE_2, CITY, PROV_STATE, COUNTRY, POSTAL_ZIP, PHONE_NUMBER " +
+                "FROM SUPPLIER_ADDRESS WHERE SUPPLIER_ID = " + vals.supplier_id + " ORDER BY ADDRESS_ID",
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( "Error on SELECT from SUPPLIER_ADDRESS: " + error );
+      response.write( "Error occured while trying to load supplier address(es)." );
+    } else {
+      response.write( JSON.stringify( rows ) );
+    }
+
+    response.end();
+  });
 }
 
-function editAddress ( response ) {
-  return "edit address";
+// Edit Supplier Address - Change a supplier address' information.
+function editSupplierAddress ( response ) {
+
+  var vals = response.values;
+
+  helper.query( "UPDATE SUPPLIER_ADDRESS SET ADDRESS_LINE_1 = '" + vals.address_line_1 + "', ADDRESS_LINE_2 ='" + vals.address_line_2 +
+                "', CITY = '" + vals.city + "', PROV_STATE = '" + vals.prov_state "', COUNTRY = '" + vals.country +
+                "', POSTAL_ZIP = '" + vals.postal_zip + "', PHONE_NUMBER = '" + vals.phone_number "' " + 
+                "WHERE ADDRESS_ID = " + vals.address_id,
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });    
+
+    if ( error ) {
+      console.log( "Error on UPDATE SUPPLIER_ADDRESS: " + error );
+      response.write( "Error occured while trying to change supplier address information." );
+    } else {
+      console.log( "Changed supplier address information: ", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "Supplier address information succussfully changed." );
+      historyLog.supplier( vals, "Change", "Changed supplier address information.");
+    }
+
+    response.end();
+  });
 }
 
-function deleteAddress ( response ) {
-  return "delete address";
+// Delete Supplier Address - Delete a supplier address entry in the SUPPLIER_ADDRESS table.
+function deleteSupplierAddress ( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "DELETE FROM SUPPLIER_ADDRESS WHERE ADDRESS_ID = " + vals.address_id,
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });                
+
+    if ( error ) {
+      console.log( "Error on DELETE from SUPPLIER_ADDRESS: " + error );
+      response.write( "Error occured while trying to delete supplier address." );
+    } else {
+      console.log( "Deleted supplier address: ", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "Supplier address successfully deleted." ); 
+      historyLog.supplier( vals, "Change", "Deleted supplier address." );
+    }
+
+    response.end();
+  });
 }
 
 function createPurchaseOrder( response ) {
@@ -1093,10 +1195,10 @@ exports.viewContactPerson = viewContactPerson;
 exports.editContactPerson = editContactPerson;
 exports.deleteContactPerson = deleteContactPerson;
 
-exports.createAddress = createAddress;
-exports.viewAddress = viewAddress;
-exports.editAddress = editAddress;
-exports.deleteAddress = deleteAddress;
+exports.createSupplierAddress = createSupplierAddress;
+exports.viewSupplierAddress = viewSupplierAddress;
+exports.editSupplierAddress = editSupplierAddress;
+exports.deleteSupplierAddress = deleteSupplierAddress;
 
 exports.createPurchaseOrder = createPurchaseOrder;
 exports.viewPurchaseOrders = viewPurchaseOrders;

@@ -44,10 +44,10 @@ handle[ "/supplier/createcontactperson" ] = requestHandlers.createContactPerson;
 handle[ "/supplier/viewcontactperson" ] = requestHandlers.viewContactPerson;
 handle[ "/supplier/editcontactperson" ] = requestHandlers.editContactPerson;
 handle[ "/supplier/deletecontactperson" ] = requestHandlers.deleteContactPerson;
-handle[ "/supplier/createaddress" ] = requestHandlers.createAddress;
-handle[ "/supplier/viewaddress" ] = requestHandlers.viewAddress;
-handle[ "/supplier/editaddress" ] = requestHandlers.editAddress;
-handle[ "/supplier/deleteaddress" ] = requestHandlers.deleteAddress;
+handle[ "/supplier/createsupplieraddress" ] = requestHandlers.createSupplierAddress;
+handle[ "/supplier/viewsupplieraddress" ] = requestHandlers.viewSupplierAddress;
+handle[ "/supplier/editsupplieraddress" ] = requestHandlers.editSupplierAddress;
+handle[ "/supplier/deletesupplieraddress" ] = requestHandlers.deleteSupplierAddress;
 
 //  Purchase Order pages
 handle[ "/createpurchaseorder" ] = requestHandlers.createPurchaseOrder;
