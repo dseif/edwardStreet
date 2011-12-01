@@ -80,13 +80,13 @@ function logout( response ) {
 }
 
 // Question: What is this?
-function logs() {
-  return "Logs";
+function profile() {
+  return "Profile";
 }
 
 // Question: What is this?
-function profile() {
-  return "Profile";
+function logs() {
+  return "Logs";
 }
 
 // Change Password - allow current user to change his password.
@@ -350,15 +350,11 @@ function deleteUser( response ) {
                     function( error, rows, cols ) {
 
         if ( error ) {
-        
           console.log( "Error on INSERT into USER_HISTORY: " + error );
-          
         }
       });
-      
-      response.end();
-
     }
+    response.end();
   });
 }
 
@@ -429,7 +425,7 @@ function createItem( response ) {
           console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
         } else {
         
-          var last_id = rows["LAST_INSERT_ID()"];
+          var last_id = rows[ 0 ]["LAST_INSERT_ID()"];
         
           // insert price into price-history
           
@@ -442,7 +438,7 @@ function createItem( response ) {
             }
             
             item_id = last_id;
-            last_id = rows["LAST_INSERT_ID()"];
+            last_id = rows[ 0 ]["LAST_INSERT_ID()"];
             
             // update item with new price id
             helper.query( "UPDATE ITEM SET LATEST_PRICE = " + last_id +
@@ -561,7 +557,7 @@ function editItem( response ) {
 
         } else {
         
-          var last_id = rows["LAST_INSERT_ID()"];
+          var last_id = rows[ 0 ]["LAST_INSERT_ID()"];
           console.log( "Entered new price: " + vals.price + " (" + vals.last_id + ")" );
       
           // update item
@@ -603,61 +599,254 @@ function editItem( response ) {
         }
       });
     }
-    
     response.end();
-    
   });
 }
 
-function viewSupplier( response ) {
+// Delete Item - Delete selected item from ITEM table.
+function deleteItem( response ) {
+
+  var vals = response.values;
   
-  helper.query( "SELECT * FROM SUPPLIER", function( error, rows, cols ) {
+  helper.query( "DELETE FROM ITEM WHERE ITEM_ID = '" + vals.item_id + "'",
+                function( error, rows, cols ) {
 
-    if ( error ) {
-      console.log( error );
-    }
-
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+    
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( JSON.stringify( rows ) );
-    response.end();
-  });
-}
-
-function viewSupplierPage( response ) {
-  
-  helper.query( "SELECT * FROM SUPPLIER ORDER BY NAME LIMIT " + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
-
+    
     if ( error ) {
-      console.log( error );
-    }
 
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    response.write( JSON.stringify( rows ) );
+      console.log( "Error on DELETE from ITEM: " + error );
+      response.write( "Error occured while trying to delete item." );
+      
+    } else {
+    
+      console.log( "Deleted item: ", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "Item successfully deleted." ); 
+    
+      helper.query( "INSERT INTO ITEM_HISTORY( ITEM_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                    "VALUES( '" + vals.item_id + "', 'Delete', 'Deleted item.', '" + vals.curUserID + "', '" + helper.date() + "')",
+                    function( error, rows, cols ) {
+
+        if ( error ) {
+          console.log( "Error on INSERT into ITEM_HISTORY: " + error );
+        }
+      });
+    }
     response.end();
   });
 }
 
-function deleteSupplier( response ) {
+// Create Supplier - Step 1: Checks if current supplier_name already exists. Returns COUNT of 1 if it exists, Count of 0 if not.
+function createSupplierCheckDupe( response ) {
 
   var vals = response.values;
 
-  helper.query( "DELETE FROM supplier WHERE supplier_id = '" + vals.supplierID + "'", function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( error );
-    }
+  helper.query( "SELECT COUNT(*) FROM USER WHERE LOWER(NAME) = LOWER('" + vals.user_id + "')",
+                function( error, rows, cols ) {
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( true ); 
+        
+    if ( error ) {
+
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( "Error on select from SUPPLIER: " + error );
+      reponse.write( "Error occured while trying to create supplier." );
+
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+    response.end();
+  });
+}
+
+// Create Supplier - Step 2: Insert new supplier into SUPPLIER table. Inserts log into SUPPLIER_HISTORY table.
+function createSupplier( response ) {
+
+  var vals = response.values;
+
+  helper.query( "INSERT INTO SUPPLIER( NAME, LEGAL_NAME, LEAD_TIME, SUPPLIER_COMMENT, SPECIAL_COMMENT ) " +
+                "VALUES('" + vals.name + "', '" + vals.legal_name + "', '" + vals.lead_time +
+                "', '" + vals.supplier_comment + "', '" + vals.special_comment + "')",
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")" );
+                
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( "Error on INSERT into SUPPLIER: " + error );
+      response.write( "Error occured while trying to create supplier." );
+    } else {
+
+      console.log( "Created new supplier: " + vals.user_id );
+      response.write( JSON.stringify( rows ) );
+      response.write( "New supplier successfully created." );
+
+      helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
+      
+        if ( error ) {
+          console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
+        } else {
+        
+          var last_id = rows[ 0 ]["LAST_INSERT_ID()"];
+      
+          // Insert Dates_of_delivery loop
+       
+          helper.query( "INSERT INTO SUPPLIER_HISTORY( SUPPLIER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                        "VALUES( '" + last_id + "', 'Create', 'Created new supplier.', '" + vals.curUserID + "', '" + helper.date() + "')",
+                        function( error, rows, cols ) {
+
+            if ( error ) {
+              console.log( "Error on INSERT into SUPPLIER_HISTORY: " + error );
+            }
+          });
+        }
+      });
+    }
+    response.end();
+  });
+}
+
+// View Supplier - Step 1: Return number of suppliers in SUPPLIER table for page calculation.
+function viewSuppliers( response ) {
+  
+  helper.query( "SELECT COUNT(*) FROM SUPPLIER",
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+                
+    if ( error ) {
+    
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( "Error on SELECT from SUPPLIER: " + error );
+      response.write( "Error occured while trying to load page." );
+      
+    } else {
+      response.write( JSON.stringify( rows ) );
+    }
+    response.end();
+  });
+}
+
+// View Supplier - Step 2: Returns a list of suppliers for current page, ordered by name
+function viewSuppliersPage( response ) {
+  
+  helper.query( "SELECT * FROM SUPPLIER ORDER BY NAME LIMIT " + (response.pagenum-1)*20 + ", 20", 
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+                
+    if ( error ) {
+    
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( "Error on SELECT from SUPPLIER: " + error );
+      response.write( "Error occured while trying to load page." );
+      
+    } else {
+    
+      response.write( JSON.stringify( rows ) );
+      
+    }
+
+    response.end();
+
+  });
+}
+
+// Edit Supplier - Update SUPPLIER table with new item information for row SUPPLIER_ID.
+function editSupplier( response ) {
+
+  var vals = response.values;
+
+  helper.query( "UPDATE SUPPLIER SET NAME = '" + vals.name + "', LEGAL_NAME = '" + vals.legal_name + "', LEAD_TIME = '" + vals.lead_time +
+                "', SUPPLIER_COMMENT = '" + vals.supplier_comment + "', SPECIAL_COMMENT = '" + vals.special_comment "'" +
+                "WHERE SUPPLIER_ID = " + vals.supplier_id,
+                function( error, rows, cols ) {
+  
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");  
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });    
+
+    if ( error ) {
+
+      console.log( "Error on UPDATE SUPPLIER: " + error );
+      response.write( "Error occured while trying to change supplier information." );
+      
+    } else {
+    
+      console.log( "Changed supplier information: ", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "Supplier information succussfully changed." );
+
+      helper.query( "INSERT INTO SUPPLIER_HISTORY( SUPPLIER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                    "VALUES( '" + vals.supplier_id + "', 'Change', 'Changed supplier information.', '" + vals.curUserID + "', '" + helper.date() + "')",
+                    function( error, rows, cols ) {
+
+        if ( error ) {
+          console.log( "Error on INSERT into SUPPLIER_HISTORY: " + error );
+        }
+      });
+    }
+    response.end();
+  });
+}
+
+// Delete Supplier - Delete selected supplier from SUPPLIER Table.
+function deleteSupplier( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "DELETE FROM SUPPLIER WHERE SUPPLIER_ID = '" + vals.supplier_id + "'",
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+    
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+
+      console.log( "Error on DELETE from SUPPLIER: " + error );
+      response.write( "Error occured while trying to delete supplier." );
+      
+    } else {
+    
+      console.log( "Deleted supplier: ", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "Supplier successfully deleted." ); 
+    
+      helper.query( "INSERT INTO SUPPLIER_HISTORY( SUPPLIER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
+                    "VALUES( '" + vals.supplier_id + "', 'Delete', 'Deleted item.', '" + vals.curUserID + "', '" + helper.date() + "')",
+                    function( error, rows, cols ) {
+
+        if ( error ) {
+          console.log( "Error on INSERT into SUPPLIER_HISTORY: " + error );
+        }
+      });
+    }
     response.end();
   });
 }
@@ -717,12 +906,16 @@ function viewPurchaseOrdersPage ( response ) {
   });
 }
 
-function returnOrderLine() {
-  return "Return Order Line";
+function editPurchaseOrder() {
+  return "editPurchaseOrders";
 }
 
-function maintainPurchaseOrder() {
-  return "Maintain Purchase Order";
+function cancelPurchaseOrder() {
+  return "CancelPurchaseOrder";
+}
+
+function returnPurchaseOrder() {
+  return "returnPurchaseOrder";
 }
 
 function receivePurchaseOrder( response ) {
@@ -742,8 +935,7 @@ function receivePurchaseOrder( response ) {
   });
 }
 
-function receivePurchaseOrderPage( response ) {
-  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.SUPPLIER_NAME FROM PURCHASE_ORDER po, SUPPLIER s WHERE po.SUPPLIER_ID = s.SUPPLIER_ID AND po.STATUS = 'Submitted' ORDER BY po.PO_ID LIMIT " + (response.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
+
        
     if ( error ) {
       console.log( "Error in select statement: " + error );
@@ -758,7 +950,6 @@ function receivePurchaseOrderPage( response ) {
     response.end();
   });
 }
-
 exports.index = index;
 exports.login = login;
 exports.logout = logout;
@@ -777,24 +968,23 @@ exports.createItemCheckDupe = createItemCheckDupe;
 exports.createItem = createItem;
 exports.viewItems = viewItems;
 exports.viewItemsPage = viewItemsPage;
-//exports.editItem = editItem;
-//exports.deleteItem = deleteItem;
+exports.editItem = editItem;
+exports.deleteItem = deleteItem;
 
-//exports.createSupplierCheckDupe = createSupplierCheckDupe;
-//exports.createSupplier = createSupplier;
-exports.viewSuppliers = viewSupplier;
-exports.viewSuppliersPage = viewSupplierPage;
-//exports.editSupplier = editSupplier;
+exports.createSupplierCheckDupe = createSupplierCheckDupe;
+exports.createSupplier = createSupplier;
+exports.viewSuppliers = viewSuppliers;
+exports.viewSuppliersPage = viewSuppliersPage;
+exports.editSupplier = editSupplier;
 exports.deleteSupplier = deleteSupplier;
+
+// contact_person
+// supplier_address
 
 exports.createPurchaseOrder = createPurchaseOrder;
 exports.viewPurchaseOrders = viewPurchaseOrder;
 exports.viewPurchaseOrdersPage = viewPurchaseOrderPage;
-//exports.editPurchaseOrder = editPurchaseOrder;
-
-exports.returnOrderLine = returnOrderLine;
-
+exports.editPurchaseOrder = editPurchaseOrder;
+exports.cancelPurchaseOrder = cancelPurchaseOrder;
+exports.returnPurchaseOrder = returnPurchaseOrder;
 exports.receivePurchaseOrder = receivePurchaseOrder;
-exports.receivePurchaseOrderPage = receivePurchaseOrderPage;
-
-
