@@ -550,12 +550,77 @@ function deleteItem( response ) {
   });
 }
   
+// Create Price - creates a new entry in price_history and update the item with the new price_id.
 function createPrice ( response ) {
-  return "create Price";
+
+  var vals = response.values;
+  
+  // create a new price entry
+  helper.query( "INSERT INTO PRICE_HISTORY( ITME_ID, PRICE, AUTHOR, LOG_DATE) " +
+                "VALUES ( " + vals.item_id + ", " + vals.price + ", '" + vals.curUserID + "', '" + helper.date() + "' )" +
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+  
+    if ( error ) {
+      console.log( "Error on INSERT into PRICE_HISTORY: " + error );
+      response.write( "Error occured while trying to change price." );
+    } else {
+      console.log( "Created new price." );
+    // get price_id of the price just created.
+      helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
+        if ( error ) {
+          console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
+        } else {
+          vals.price_id = rows[ 0 ]["LAST_INSERT_ID()"];
+          
+          // update item with new price_id
+          helper.query( "UPDATE ITEM SET LATEST_PRICE = " + vals.price_id + "WHERE ITEM_ID = " + vals.item_id,
+                        function( error, rows, cols ) {
+            if ( error ) {
+              console.log( "Error on UPDATE ITEM with new price: " + error );
+            } else {
+              console.log( "Price changed on item: " + vals.item_id );
+              historyLog( vals, "Change", "Changed price." );
+            }
+          });
+        }
+      });
+    }
+
+    response.end();
+  });
 }
 
+// View Price - Display list of 20 latest prices for the current item_id
 function viewPrice ( response ) {
-  return "view Price";
+
+  var vals = response.values;
+  
+  helper.query( "SELECT PRICE, LOG_DATE FROM PRICE_HISTORY WHERE ITEM_ID = " + vals.item_id +
+                "ORDERED BY LOG_DATE DESC LIMIT 20",
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( "Error on SELECT from PRICE_HISTORY: " + error );
+      response.write( "Error occured while trying to load page." );
+    } else {
+      response.write( JSON.stringify( rows ) );
+    }
+
+    response.end();
+  });
 }
 
 // Create Supplier - Step 1: Checks if current supplier_name already exists. Returns COUNT of 1 if it exists, Count of 0 if not.
