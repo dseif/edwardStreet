@@ -1114,8 +1114,35 @@ function viewPurchaseOrdersPage ( response ) {
   });
 }
 
+// Edit PO - Change information in purchase order.
 function editPurchaseOrder( response ) {
-  return "editPurchaseOrders";
+
+  var vals = response.values;
+
+  helper.query( "UPDATE PURCHASE_ORDER SET DELIVERY_DATE = '" + vals.delivery_date + "', DELIVERY_TIME = '" + vals.delivery_time +
+                "', REF_NUMBER = '" + vals.ref_number + "', COMMENT = '" + vals.comment + "', SUPPLIER_ID = " + vals.supplier_id + " "
+                "WHERE PO_ID = " + vals.po_id,
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( "Error on UPDATE PURCHASE_ORDER: " + error );
+      response.write( "Error occured while trying to change purchase order information." );
+    } else {
+      console.log( "changed purchase order information.", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "Changed purchase order." );
+      historyLog.po( vals, "Change", "Changed purchase order information.");
+    }
+
+    response.end();
+  });
 }
 
 // Submit PO - submit a purchase order.
@@ -1148,7 +1175,7 @@ function submitPurchaseOrder( response ) {
   });
 }
 
-// Cancel Purchase Order - cancel a purchase order.
+// Cancel PO - cancel a purchase order.
 function cancelPurchaseOrder( response ) {
 
   var vals = response.values;
@@ -1177,23 +1204,62 @@ function cancelPurchaseOrder( response ) {
   });
 }
 
+// Return PO - return a purchase order.
 function returnPurchaseOrder( response ) {
-  return "returnPurchaseOrder";
-}
 
-function receivePurchaseOrder( response ) {
-  helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER WHERE STATUS = 'Received'", function( error, rows, cols ) {
-       
-    if ( error ) {
-      console.log( "Error in select statement: " + error );
-      return;
-    }
+  var vals = response.values;
+
+  helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Returned' " +
+                "WHERE PO_ID = " + vals.po_id,
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( JSON.stringify( rows ) );
+    
+    if ( error ) {
+      console.log( "Error on UPDATE PURCHASE_ORDER: " + error );
+      response.write( "Error occured while trying to return purchase order." );
+    } else {
+      console.log( "Returned purchase order.", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "Returned purchase order." );
+      historyLog.po( vals, "Return", "Returned purchase order.");
+    }
+
+    response.end();
+  });
+}
+
+// Receive PO - receive a purchase order.
+function receivePurchaseOrder( response ) {
+
+  var vals = response.values;
+
+  helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Received', RECEIVE_DATE = '" + helper.date() + "' "
+                "WHERE PO_ID = " + vals.po_id,
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( "Error on UPDATE PURCHASE_ORDER: " + error );
+      response.write( "Error occured while trying to receive purchase order." );
+    } else {
+      console.log( "Received purchase order.", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "Received purchase order." );
+      historyLog.po( vals, "Receive", "Received purchase order.");
+    }
+
     response.end();
   });
 }
