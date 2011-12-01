@@ -98,11 +98,11 @@ function editAccount( response ) {
   // Question: required?
   var that = this;
   
-  helper.query( "UPDATE USER SET PASSWORD = '" + vals.password + "', EMAIL = '" vals.email + "' " +
+  helper.query( "UPDATE USER SET PASSWORD = '" + vals.password + "', EMAIL = '" + vals.email + "' " +
                 "WHERE USER_ID = '" + vals.curUserID + "'", 
                 function( error, rows, cols ) {
 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -151,7 +151,7 @@ function createUserCheckDupe( response ) {
         
     if ( error ) {
 
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on select from USER: " + error );
       reponse.write( "Error occured while trying to create user." );
 
@@ -174,10 +174,10 @@ function createUser( response ) {
 
   helper.query( "INSERT INTO USER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE, SUPPLIER_ID ) " +
                 "VALUES('" + vals.user_id + "', '" + vals.password + "', '" + vals.email +
-                "', '" + vals.employee_id + "', '" + vals.role + "', '" + vals.supplier_id + "'")",
+                "', '" + vals.employee_id + "', '" + vals.role + "', '" + vals.supplier_id + "')",
                 function( error, rows, cols ) {
 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -227,7 +227,7 @@ function viewUsers( response ) {
                 
     if ( error ) {
 
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from USER: " + error );
       response.write( "Error occured while trying to load the page." );
 
@@ -260,7 +260,7 @@ function viewUsersPage( response ) {
                 
     if ( error ) {
 
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from USER, SUPPLIER: " + error );
       response.write( "Error occured while trying to load the page." );
 
@@ -286,7 +286,7 @@ function editUser( response ) {
                 "WHERE USER_ID = '" + vals.user_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -327,7 +327,7 @@ function deleteUser( response ) {
   helper.query( "DELETE FROM USER WHERE USER_ID = '" + vals.user_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -375,7 +375,7 @@ function createItemCheckDupe( response ) {
     
     if ( error ) {
     
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on SELECT ITEM: " + error );
       response.write( "Error occured while trying to create item." );
       
@@ -402,7 +402,7 @@ function createItem( response ) {
                 "', '" + vals.u_minor_repo + "', '" + vals.u_active_ina + "', '" + vals.u_bizerba + "', '" + vals.u_brand + "', '" + vals.u_case_size + "', '" + vals.u_cooking_in + "', '" + vals.u_country + "', '" + vals.u_descripto + "', '" + vals.u_expiry_dat + "', '" + vals.u_ingredient + "', '" + vals.u_keywords + "', '" + vals.u_notes + "', '" + vals.u_order + "', '" + vals.u_plu + "', '" + vals.u_price + "', '" + vals.u_silverware + "', '" + vals.u_sku + "', '" + vals.u_storage + "', '" + vals.u_storage_ty + "', '" + vals.u_type + "', '" + vals.u_upc_code + "', '" + vals.u_price_per + "', '" + vals.u_tax + "', '" + vals.u_scale + "')",
                 function( error, rows, cols ) {
 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -430,7 +430,7 @@ function createItem( response ) {
           // insert price into price-history
           
           helper.query( "INSERT INTO PRICE_HISTORY(ITEM_ID, PRICE, AUTHOR, LOG_DATE) " +
-                        "VALUES( '" + vals.last_id + "', " + vals.price + "', " + vals.curUserID + "', '" + helper.date() "' )",
+                        "VALUES( '" + vals.last_id + "', " + vals.price + "', " + vals.curUserID + "', '" + helper.date() + "' )",
                         function( error, rows, cols ) {
                         
             if ( error ) {
@@ -479,7 +479,7 @@ function viewItems( response ) {
 
     if ( error ) {
     
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from ITEM: " + error );
       response.write( "Error occured while trying to load page." );
       
@@ -509,7 +509,7 @@ function viewItemsPage( response) {
 
     if ( error ) {
     
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from ITEM, SUPPLIER, PRICE_HISTORY: " + error );
       response.write( "Error occured while trying to load page." );
       
@@ -531,10 +531,10 @@ function editItem( response ) {
 
   // insert latest price first
   helper.query( "INSERT INTO PRICE_HISTORY(ITEM_ID, PRICE, AUTHOR, LOG_DATE) " +
-                "VALUES( '" + vals.item_id + "', " + vals.price + "', " + vals.curUserID + "', '" + helper.date() "' )",
+                "VALUES( '" + vals.item_id + "', " + vals.price + "', " + vals.curUserID + "', '" + helper.date() + "' )",
                 function( error, rows, cols ) {
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");  
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -563,7 +563,7 @@ function editItem( response ) {
           // update item
           helper.query( "UPDATE ITEM SET DIST_CODE = '" + vals.dist_code + "', ITEM_NAME = '" + vals.item_name + "', RECEIPT_NAME = '" + vals.receipt_name +
                         "', CATEGORY = '" + vals.category + "', UNIT = '" + vals.unit + "', ITEM_TYPE = '" + vals.item_type +
-                        "', COMMENT = '" + vals.comment + "', LATEST_PRICE = " vals.last_id + ", SUPPLIER_ID = '" + vals.supplier_id + "', U_MINOR_REPO = '" + vals.u_minor_repo +
+                        "', COMMENT = '" + vals.comment + "', LATEST_PRICE = " + vals.last_id + ", SUPPLIER_ID = '" + vals.supplier_id + "', U_MINOR_REPO = '" + vals.u_minor_repo +
                         "', U_ACTIVE_INA = '" + vals.u_active_ina + "', U_BIZERBA = '" + vals.u_bizerba + "', U_BRAND = '" + vals.u_brand +
                         "', U_CASE_SIZE = '" + vals.u_case_size + "', U_COOKING_IN = '" + vals.u_cooking_in + "', U_COUNTRY = '" + vals.u_country +
                         "', U_DESCRIPTO = '" + vals.u_descripto + "', U_EXPIRY_DAT = '" + vals.u_expiry_dat + "', U_INGREDIENT = '" + vals.u_ingredient +
@@ -611,7 +611,7 @@ function deleteItem( response ) {
   helper.query( "DELETE FROM ITEM WHERE ITEM_ID = '" + vals.item_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -657,7 +657,7 @@ function createSupplierCheckDupe( response ) {
         
     if ( error ) {
 
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on select from SUPPLIER: " + error );
       reponse.write( "Error occured while trying to create supplier." );
 
@@ -678,7 +678,7 @@ function createSupplier( response ) {
                 "', '" + vals.supplier_comment + "', '" + vals.special_comment + "')",
                 function( error, rows, cols ) {
 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")" );
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")" );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -732,7 +732,7 @@ function viewSuppliers( response ) {
                 
     if ( error ) {
     
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from SUPPLIER: " + error );
       response.write( "Error occured while trying to load page." );
       
@@ -756,7 +756,7 @@ function viewSuppliersPage( response ) {
                 
     if ( error ) {
     
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from SUPPLIER: " + error );
       response.write( "Error occured while trying to load page." );
       
@@ -777,11 +777,11 @@ function editSupplier( response ) {
   var vals = response.values;
 
   helper.query( "UPDATE SUPPLIER SET NAME = '" + vals.name + "', LEGAL_NAME = '" + vals.legal_name + "', LEAD_TIME = '" + vals.lead_time +
-                "', SUPPLIER_COMMENT = '" + vals.supplier_comment + "', SPECIAL_COMMENT = '" + vals.special_comment "'" +
+                "', SUPPLIER_COMMENT = '" + vals.supplier_comment + "', SPECIAL_COMMENT = '" + vals.special_comment + "'" +
                 "WHERE SUPPLIER_ID = " + vals.supplier_id,
                 function( error, rows, cols ) {
   
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");  
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -820,7 +820,7 @@ function deleteSupplier( response ) {
   helper.query( "DELETE FROM SUPPLIER WHERE SUPPLIER_ID = '" + vals.supplier_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole ")");
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -967,8 +967,8 @@ exports.deleteSupplier = deleteSupplier;
 // supplier_address
 
 exports.createPurchaseOrder = createPurchaseOrder;
-exports.viewPurchaseOrders = viewPurchaseOrder;
-exports.viewPurchaseOrdersPage = viewPurchaseOrderPage;
+exports.viewPurchaseOrders = viewPurchaseOrders;
+exports.viewPurchaseOrdersPage = viewPurchaseOrdersPage;
 exports.editPurchaseOrder = editPurchaseOrder;
 exports.cancelPurchaseOrder = cancelPurchaseOrder;
 exports.returnPurchaseOrder = returnPurchaseOrder;

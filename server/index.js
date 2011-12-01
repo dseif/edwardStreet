@@ -41,7 +41,7 @@ handle[ "/deletesupplier" ] = requestHandlers.deleteSupplier;
 
 //  Purchase Order pages
 handle[ "/createpurchaseorder" ] = requestHandlers.createPurchaseOrder;
-handle[ "/viewpurchaseorder" ] = requestHandlers.viewPurchaseOrder;
+handle[ "/viewpurchaseorders" ] = requestHandlers.viewPurchaseOrders;
 handle[ "/viewpurchaseorderpage" ] = requestHandlers.viewPurchaseOrderPage;
 handle[ "/editpurchaseorder" ] = requestHandlers.editPurchaseOrder;
 handle[ "/cancelpurchaseorder" ] = requestHandlers.cancelPurchaseOrder;
