@@ -18,6 +18,10 @@
   document.addEventListener( "DOMContentLoaded", function( event ) {
 
     viewuser = function() {
+
+      $( "#userName" ).val( "" );
+      $( "#emailAddress" ).val( "" );
+
       $.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/viewuserspage",
@@ -28,6 +32,7 @@
         success: function( response, code, xhr ) {
 
           var table = $( "#itemTable" );
+          table.find("tr:gt(0)").remove();
 
           var data = JSON.parse( response ),
               dataObj = {};
@@ -206,7 +211,7 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
          url: "http://96.126.109.151:8080/edituser",
          data: {
            hash: getCookie( "EDST_H" ),
-           "old_user_id": document.getElementById( "userName" ).attr( "edst-data" ),
+           "old_user_id": $( "#userName" ).attr( "edst-data" ),
            "user_id": document.getElementById( "userName" ).value,
            email: document.getElementById( "emailAddress" ).value,
            role: $( "#userRoleBox" ).val() 
