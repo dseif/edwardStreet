@@ -30,6 +30,8 @@ handle[ "/viewitems" ] = requestHandlers.viewItems;
 handle[ "/viewitemspage" ] = requestHandlers.viewItemsPage;
 handle[ "/edititem" ] = requestHandlers.editItem;
 handle[ "/deleteitem" ] = requestHandlers.deleteItem;
+handle[ "/item/createprice" ] = requestHandlers.createPrice;
+handle[ "/item/viewprice" ] = requestHandlers.viewPrice;
 
 //  Supplier Pages
 handle[ "/createsuppliercheckdupe" ] = requestHandlers.createSupplierCheckDupe;
@@ -38,6 +40,14 @@ handle[ "/viewsuppliers" ] = requestHandlers.viewSuppliers;
 handle[ "/viewsupplierspage" ] = requestHandlers.viewSuppliersPage;
 handle[ "/editsupplier" ] = requestHandlers.editSupplier;
 handle[ "/deletesupplier" ] = requestHandlers.deleteSupplier;
+handle[ "/supplier/createcontactperson" ] = requestHandlers.createContactPerson;
+handle[ "/supplier/viewcontactperson" ] = requestHandlers.viewContactPerson;
+handle[ "/supplier/editcontactperson" ] = requestHandlers.editContactPerson;
+handle[ "/supplier/deletecontactperson" ] = requestHandlers.deleteContactPerson;
+handle[ "/supplier/createaddress" ] = requestHandlers.createAddress;
+handle[ "/supplier/viewaddress" ] = requestHandlers.viewAddress;
+handle[ "/supplier/editaddress" ] = requestHandlers.editAddress;
+handle[ "/supplier/deleteaddress" ] = requestHandlers.deleteAddress;
 
 //  Purchase Order pages
 handle[ "/createpurchaseorder" ] = requestHandlers.createPurchaseOrder;

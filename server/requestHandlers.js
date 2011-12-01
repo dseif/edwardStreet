@@ -700,6 +700,14 @@ function deleteItem( response ) {
     response.end();
   });
 }
+  
+function createPrice ( response ) {
+  return "create Price";
+}
+
+function viewPrice ( response ) {
+  return "view Price";
+]
 
 // Create Supplier - Step 1: Checks if current supplier_name already exists. Returns COUNT of 1 if it exists, Count of 0 if not.
 function createSupplierCheckDupe( response ) {
@@ -910,6 +918,38 @@ function deleteSupplier( response ) {
   });
 }
 
+function createContactPerson ( response ) {
+  return "create contact person";
+}
+
+function viewContactPerson ( response ) {
+  return "view contact person";
+}
+
+function editContactPerson ( response ) {
+  return "edit contact person";
+}
+
+function deleteContactPerson ( response ) {
+  return "delete contact person";
+}
+
+function createAddress ( response ) {
+  return "create address";
+}
+
+function viewAddress ( response ) {
+  return "view address";
+}
+
+function editAddress ( response ) {
+  return "edit address";
+}
+
+function deleteAddress ( response ) {
+  return "delete address";
+}
+
 function createPurchaseOrder( response ) {
   var vals = response.values;
 
@@ -1030,6 +1070,9 @@ exports.viewItemsPage = viewItemsPage;
 exports.editItem = editItem;
 exports.deleteItem = deleteItem;
 
+exports.createPrice = createPrice;
+exports.viewPrice = viewPrice;
+
 exports.createSupplierCheckDupe = createSupplierCheckDupe;
 exports.createSupplier = createSupplier;
 exports.viewSuppliers = viewSuppliers;
@@ -1037,8 +1080,15 @@ exports.viewSuppliersPage = viewSuppliersPage;
 exports.editSupplier = editSupplier;
 exports.deleteSupplier = deleteSupplier;
 
-// contact_person
-// supplier_address
+exports.createContactPerson = createContactPerson;
+exports.viewContactPerson = viewContactPerson;
+exports.editContactPerson = editContactPerson;
+exports.deleteContactPerson = deleteContactPerson;
+
+exports.createAddress = createAddress;
+exports.viewAddress = viewAddress;
+exports.editAddress = editAddress;
+exports.deleteAddress = deleteAddress;
 
 exports.createPurchaseOrder = createPurchaseOrder;
 exports.viewPurchaseOrders = viewPurchaseOrder;
