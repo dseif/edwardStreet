@@ -20,9 +20,10 @@
     viewuser = function() {
       $.ajax({
         cache: false,
-        url: "http://96.126.109.151:8080/viewusers",
+        url: "http://96.126.109.151:8080/viewuserspage",
         data: {
-          hash: getCookie( "EDST_H" )
+          hash: getCookie( "EDST_H" ),
+          pagenum: 1
         },
         success: function( response, code, xhr ) {
 
@@ -67,7 +68,7 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
               url: "http://96.126.109.151:8080/deleteuser",
               data: {
                 hash: getCookie( "EDST_H" ),
-                username: document.getElementById( "userName" ).value
+                "user_id": document.getElementById( "userName" ).value
               },
               success: function( response, code, xhr ) {
 
@@ -204,12 +205,11 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
          url: "http://96.126.109.151:8080/edituser",
          data: {
            hash: getCookie( "EDST_H" ),
-           username: document.getElementById( "userName" ).value,
+           "user_id": document.getElementById( "userName" ).value,
            email: document.getElementById( "emailAddress" ).value,
            role: $( "#userRoleBox" ).val() 
          },
          success: function( response, code, xhr ) {
-
 
            viewuser();
            console.log( "user info successfully changed" );

@@ -122,12 +122,23 @@
                 }
 
 if(ok){
+  $.ajax({
+    cache: false,
+    url: "http://96.126.109.151:8080/createusercheckdupe",
+    data: {
+      user_id: document.getElementById( "userName" ).value,
+      hash: cookie
+    },
+    success: function( response, code, xhr ) {
+
+      var data = JSON.parse( response );
+      if ( data[ 0 ][ "COUNT(USER_ID)" ] !== 1 ) {
       $.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/createuser",
         data: {
-          user: document.getElementById( "userName" ).value,
-          pass: document.getElementById( "confpass" ).value,
+          user_id: document.getElementById( "userName" ).value,
+          password: document.getElementById( "confpass" ).value,
           hash: cookie,
           email: document.getElementById( "emailAddress" ).value,
           role: document.getElementById( "userRoleBox" ).value
@@ -136,7 +147,13 @@ if(ok){
 
           console.log( response );
         }
-      });}
+        });
+      } else {
+        alert( "USER NAME ALREADY EXISTS, PLEASE CHOOSE ANOTHER" );
+      }
+    }
+  });
+      }
     }, false );
   }, false );
 
