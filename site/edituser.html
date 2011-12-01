@@ -41,6 +41,7 @@
             $( "#" + data[ i ][ "USER_ID" ] ).click(function() {
 
               $( "#userName" ).val( dataObj[ $( this ).attr( "id" ) ][ "USER_ID" ] );
+              $( "#userName" ).attr( "edst-data", dataObj[ $( this ).attr( "id" ) ][ "USER_ID" ] );
               $( "#emailAddress" ).val( dataObj[ $( this ).attr( "id" ) ][ "EMAIL" ] );
               $( "#userRoleBox" ).val( String.prototype.toLowerCase.apply( dataObj[ $( this ).attr( "id" ) ][ "ROLE" ] ) );
             });
@@ -205,12 +206,14 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
          url: "http://96.126.109.151:8080/edituser",
          data: {
            hash: getCookie( "EDST_H" ),
+           "old_user_id": document.getElementById( "userName" ).attr( "edst-data" ),
            "user_id": document.getElementById( "userName" ).value,
            email: document.getElementById( "emailAddress" ).value,
            role: $( "#userRoleBox" ).val() 
          },
          success: function( response, code, xhr ) {
 
+           console.log( "ASDASDADS", response );
            viewuser();
            console.log( "user info successfully changed" );
          }
