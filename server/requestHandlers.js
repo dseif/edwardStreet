@@ -393,7 +393,7 @@ function createItem( response ) {
                 "', '" + vals.u_notes + "', '" + vals.u_order + "', '" + vals.u_plu + "', '" + vals.u_price +
                 "', '" + vals.u_silverware + "', '" + vals.u_sku + "', '" + vals.u_storage +
                 "', '" + vals.u_storage_ty + "', '" + vals.u_type + "', '" + vals.u_upc_code +
-                "', '" + vals.u_price_per + "', '" + vals.u_tax + "', '" + vals.u_scale + "')",
+                "', '" + vals.u_price_per + "', '" + vals.u_tax + "', '" + vals.u_scale + "' )",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -402,6 +402,7 @@ function createItem( response ) {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
+
     if ( error ) {
       console.log( "Error on INSERT into ITEM: " + error );
       response.write( "Error occured while trying to create item." );
@@ -526,7 +527,7 @@ function deleteItem( response ) {
 
   var vals = response.values;
   
-  helper.query( "DELETE FROM ITEM WHERE ITEM_ID = '" + vals.item_id + "'",
+  helper.query( "DELETE FROM ITEM WHERE ITEM_ID = " + vals.item_id +,
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -795,20 +796,120 @@ function deleteSupplier( response ) {
   });
 }
 
+// Create Contact Person - create a new contact person
 function createContactPerson ( response ) {
-  return "create contact person";
+
+  var vals = response.values;
+
+  helper.query( "INSERT INTO CONTACT_PERSON ( SUPPLIER_ID, LAST_NAME, FIRST_NAME, PHONE_NUMBER, EMAIL ) " +
+                "VALUES( " + vals.supplier_id + ", '" + vals.last_name + "', '" + vals.first_name +
+                "', '" vals.phone_number + "', '" + vals.email "' )",
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+                
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+
+    if ( error ) {
+      console.log( "Error on INSERT into CONTACT_PERSON: " + error );
+      response.write( "Error occured while trying to create contact person." );
+    } else {
+      console.log("Created new contact person: " + rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "New contact person successfully created." );
+      historyLog.supplier( vals, "Change", "Created new contact person." );
+    }
+    
+    response.end();
+  });  
 }
 
+// View Contact Person - return info of contact person(s) for supplier_id
 function viewContactPerson ( response ) {
-  return "view contact person";
+
+  var vals = response.values;
+
+  helper.query( "SELECT LAST_NAME, FIRST_NAME, PHONE_NUMBER, EMAIL FROM CONTACT_PERSON " +
+                "WHERE SUPPLIER_ID = " + vals.supplier_id + " ORDER BY LAST_NAME",
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( "Error on SELECT from CONTACT_PERSON: " + error );
+      response.write( "Error occured while trying to load contact person(s)." );
+    } else {
+      response.write( JSON.stringify( rows ) );
+    }
+
+    response.end();
+  });
 }
 
+// Edit Contact Person - change a contact person's information.
 function editContactPerson ( response ) {
-  return "edit contact person";
+
+  var vals = response.values;
+
+  helper.query( "UPDATE CONTACT_PERSON SET LAST_NAME = '" + vals.last_name + "', FIRST_NAME ='" + vals.first_name +
+                "', PHONE_NUMBER = '" + vals.phone_number + "', EMAIL = '" + vals.email "' " +
+                "WHERE CONTACT_PERSON_ID = " + vals.contact_person_id,
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });    
+
+    if ( error ) {
+      console.log( "Error on UPDATE CONTACT_PERSON: " + error );
+      response.write( "Error occured while trying to change contact person information." );
+    } else {
+      console.log( "Changed contact person information: ", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "Contact person information succussfully changed." );
+      historyLog.supplier( vals, "Change", "Changed contact person information.");
+    }
+
+    response.end();
+  });
 }
 
+// Delete Contact Person - delete a person from contact_person
 function deleteContactPerson ( response ) {
-  return "delete contact person";
+  var vals = response.values;
+  
+  helper.query( "DELETE FROM CONTACT_PERSON WHERE CONTACT_PERSON_ID = " + vals.contact_person_id,
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });                
+
+    if ( error ) {
+      console.log( "Error on DELETE from CONTACT_PERSON: " + error );
+      response.write( "Error occured while trying to delete contact person." );
+    } else {
+      console.log( "Deleted contact person: ", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "Contact person successfully deleted." ); 
+      historyLog.supplier( vals, "Delete", "Deleted contact person." );
+    }
+
+    response.end();
+  });
 }
 
 function createAddress ( response ) {
@@ -906,8 +1007,33 @@ function editPurchaseOrder() {
   return "editPurchaseOrders";
 }
 
-function cancelPurchaseOrder() {
-  return "CancelPurchaseOrder";
+// Cancel Purchase Order - cancel a purchase order.
+function cancelPurchaseOrder( response ) {
+
+  var vals = response.values;
+
+  helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Cancelled' WHERE PO_ID = " + vals.po_id,
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( "Error on UPDATE PURCHASE_ORDER: " + error );
+      response.write( "Error occured while trying to cancel purchase order." );
+    } else {
+      console.log( "Cancelled purchase order.", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "Cancelled purchase order." );
+      historyLog.po( vals, "Change", "Cancelled purchase order.");
+    }
+
+    response.end();
+  });
 }
 
 function returnPurchaseOrder() {
