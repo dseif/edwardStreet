@@ -54,8 +54,14 @@ handle[ "/createpurchaseorder" ] = requestHandlers.createPurchaseOrder;
 handle[ "/viewpurchaseorders" ] = requestHandlers.viewPurchaseOrders;
 handle[ "/viewpurchaseorderspage" ] = requestHandlers.viewPurchaseOrdersPage;
 handle[ "/editpurchaseorder" ] = requestHandlers.editPurchaseOrder;
+handle[ "/submitpurchaseorder" ] = requestHandlers.submitPurchaseOrder;
 handle[ "/cancelpurchaseorder" ] = requestHandlers.cancelPurchaseOrder;
 handle[ "/receivepurchaseorder" ] = requestHandlers.receivePurchaseOrder;
 handle[ "/returnpurchaseorder" ] = requestHandlers.returnPurchaseOrder;
+handle[ "/po/createorderline" ] = requestHandlers.createOrderLine;
+handle[ "/po/vieworderline" ] = requestHandlers.viewOrderLine;
+handle[ "/po/editorderline" ] = requestHandlers.editOrderLine;
+handle[ "/po/receiveorderline" ] = requestHandlers.receiveOrderLine;
+handle[ "/po/createreturnline" ] = requestHandlers.createReturnLine;
 
 server.start( router.route, handle );

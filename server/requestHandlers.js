@@ -1030,24 +1030,33 @@ function deleteSupplierAddress ( response ) {
   });
 }
 
+// Create Purchase Order - Creates a new purchase order in queue status in PURCHASE_ORDER table.
 function createPurchaseOrder( response ) {
+
   var vals = response.values;
-
-  helper.query( "INSERT INTO PURCHASE_ORDER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE ) " +
-                "VALUES('" + vals.user + "', '" + vals.pass + "', '" + vals.email + "', '" + " " +
-                "', '" + vals.role + "')",
+  
+  helper.query( "INSERT INTO PURCHASE_ORDER( STATUS, CREATE_DATE, DELIVERY_DATE, DELIVER_TIME, REF_NUMBER, COMMENT, SUPPLIER_ID )" +
+                "VALUES( 'Queued', '" + helper.date() + "', '" + vals.delivery_date + "', '" + vals.delivery_time +
+                "', '" + vals.ref_number + "', '" + vals.comment + "', " + vals.supplier_id " )",
                 function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( "Error on select: " + error );
-      return;
-    }
-
+                
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+                
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( "User successfully added" );
+    
+    if ( error ) {
+      console.log( "Error on INSERT into PURCHASE_ORDER: " + error );
+      response.write( "Error occured while trying to create purchase order." );
+    } else {
+      console.log("Created new purchase order: " + rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "New purchase successfully created." );
+      historyLog.po( vals, "Create", "Created new purchase order." );
+    }
+    
     response.end();
   });
 }
@@ -1105,8 +1114,38 @@ function viewPurchaseOrdersPage ( response ) {
   });
 }
 
-function editPurchaseOrder() {
+function editPurchaseOrder( response ) {
   return "editPurchaseOrders";
+}
+
+// Submit PO - submit a purchase order.
+function submitPurchaseOrder( response ) {
+
+  var vals = response.values;
+
+  helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Submitted', SUBMIT_DATE = '" + helper.date() + "' "
+                "WHERE PO_ID = " + vals.po_id,
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( "Error on UPDATE PURCHASE_ORDER: " + error );
+      response.write( "Error occured while trying to submit purchase order." );
+    } else {
+      console.log( "Submitted purchase order.", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "Submitted purchase order." );
+      historyLog.po( vals, "Submit", "Submitted purchase order.");
+    }
+
+    response.end();
+  });
 }
 
 // Cancel Purchase Order - cancel a purchase order.
@@ -1131,14 +1170,14 @@ function cancelPurchaseOrder( response ) {
       console.log( "Cancelled purchase order.", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Cancelled purchase order." );
-      historyLog.po( vals, "Change", "Cancelled purchase order.");
+      historyLog.po( vals, "Cancel", "Cancelled purchase order.");
     }
 
     response.end();
   });
 }
 
-function returnPurchaseOrder() {
+function returnPurchaseOrder( response ) {
   return "returnPurchaseOrder";
 }
 
@@ -1157,6 +1196,26 @@ function receivePurchaseOrder( response ) {
     response.write( JSON.stringify( rows ) );
     response.end();
   });
+}
+
+function createOrderLine( response ) {
+  return "createOrderLine";
+}
+
+function viewOrderLine( response ) {
+  return "createOrderLine";
+}
+
+function editOrderLine( response ) {
+  return "createOrderLine";
+}
+
+function receiveOrderLine( response ) {
+  return "createOrderLine";
+}
+
+function createReturnLine( response ) {
+  return "createOrderLine";
 }
 
 exports.index = index;
@@ -1204,6 +1263,14 @@ exports.createPurchaseOrder = createPurchaseOrder;
 exports.viewPurchaseOrders = viewPurchaseOrders;
 exports.viewPurchaseOrdersPage = viewPurchaseOrdersPage;
 exports.editPurchaseOrder = editPurchaseOrder;
+exports.submitPurchaseOrder = submitPurchaseOrder;
 exports.cancelPurchaseOrder = cancelPurchaseOrder;
 exports.returnPurchaseOrder = returnPurchaseOrder;
 exports.receivePurchaseOrder = receivePurchaseOrder;
+
+exports.createOrderLine = createOrderLine;
+exports.viewOrderLine = viewOrderLine;
+exports.editOrderLine = editOrderLine;
+exports.receiveOrderLine = receiveOrderLine;
+
+exports.createReturnLine = createReturnLine;
