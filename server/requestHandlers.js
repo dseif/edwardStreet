@@ -935,21 +935,6 @@ function receivePurchaseOrder( response ) {
   });
 }
 
-
-       
-    if ( error ) {
-      console.log( "Error in select statement: " + error );
-      return;
-    }
-
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    response.write( JSON.stringify( rows ) );
-    response.end();
-  });
-}
 exports.index = index;
 exports.login = login;
 exports.logout = logout;
