@@ -153,12 +153,10 @@ function logs() {
 function editAccount( response ) {
 
   var vals = response.values;
-
-  // Question: required?
-  var that = this;
+  vals.user_id = vals.curUserID;
   
   helper.query( "UPDATE USER SET PASSWORD = '" + vals.password + "', EMAIL = '" + vals.email + "' " +
-                "WHERE USER_ID = '" + vals.curUserID + "'", 
+                "WHERE USER_ID = '" + vals.use_id + "'", 
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -169,38 +167,24 @@ function editAccount( response ) {
     });
 
     if ( error ) {
-    
       console.log( "Error on UPDATE USER: " + error );
       response.write( "Error occured while trying to change password/email." );
-      
     } else {
-    
       console.log( "Changed password/email." );
       response.write( "Password/email Successfully Changed" );
-
-      helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-                    "VALUES( '" + vals.curUserID + "', 'Change', 'Changed password/email.', '" + vals.curUserID + "', '" + helper.date() + "')",
-                    function( error, rows, cols ) {
-
-        if ( error ) {
-          console.log( "Error on INSERT into USER_HISTORY: " + error );
-        }
-        
-      });
+      historyLog.user( vals, "Change", "Changed password/email.");
     }
-    
+
     response.end();
-    
   });
 }
 
 // Create User - Step 1: Checks if current user_id already exists. Returns COUNT of 1 if it exists, Count of 0 if not.
-// Question: vals.user correct? different vals? vals correct? May require standardization of vals across pages
 function createUserCheckDupe( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT COUNT(USER_ID) FROM USER WHERE USER_ID = '" + vals.user_id + "'",
+  helper.query( "SELECT COUNT(*) FROM USER WHERE USER_ID = '" + vals.user_id + "'",
                 function( error, rows, cols ) {
 
     response.writeHead( 200, {
@@ -209,24 +193,18 @@ function createUserCheckDupe( response ) {
     });
         
     if ( error ) {
-
       console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on select from USER: " + error );
       reponse.write( "Error occured while trying to create user." );
-
     } else {
-
       response.write( JSON.stringify( rows ) ); 
-
     }
-
+    
     response.end();
-
   });
 }
 
 // Create User - Step 2: Insert new user into USER table. Inserts log into USER_HISTORY table.
-// Question: vals correct? May require standardization of vals across pages
 function createUser( response ) {
 
   var vals = response.values;
@@ -244,30 +222,16 @@ function createUser( response ) {
     });
     
     if ( error ) {
-
       console.log( "Error on INSERT into USER: " + error );
       response.write( "Error occured while trying to create user." );
-
     } else {
-
       console.log( "Created new user: " + vals.user_id );
       response.write( JSON.stringify( rows ) );
       response.write( "New user successfully created." );
-
-      helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-                    "VALUES( '" + vals.user_id + "', 'Create', 'Created new user.', '" + vals.curUserID + "', '" + helper.date() + "')",
-                    function( error, rows, cols ) {
-
-        if ( error ) {
-
-        console.log( "Error on INSERT into USER_HISTORY: " + error );
-
-        }
-      });
+      historyLog.user( vals, "Create", "Created new user." );
     }
     
     response.end();
-    
   });  
 }
 
@@ -285,19 +249,14 @@ function viewUsers( response ) {
     });
                 
     if ( error ) {
-
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
       console.log( "Error on SELECT from USER: " + error );
       response.write( "Error occured while trying to load the page." );
-
     } else {
-
       response.write( JSON.stringify( rows ) ); 
-
     }
     
-    response.end();
-    
+    response.end();    
   });
 }
 
@@ -318,19 +277,14 @@ function viewUsersPage( response ) {
     });
                 
     if ( error ) {
-
       console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from USER, SUPPLIER: " + error );
       response.write( "Error occured while trying to load the page." );
-
     } else {
-
       response.write( JSON.stringify( rows ) ); 
-
     }  
 
     response.end();
-
   });
 }
 
@@ -353,28 +307,16 @@ function editUser( response ) {
     });
     
     if ( error ) {
-
       console.log( "Error on UPDATE USER: " + error );
       response.write( "Error occured while trying to change user information." );
-
     } else {
-
       console.log( "Changed user information: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "User information succussfully changed." );
-
-      helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-                    "VALUES( '" + vals.user_id + "', 'Change', 'Changed user information.', '" + vals.curUserID + "', '" + helper.date() + "')",
-                    function( error, rows, cols ) {
-
-        if ( error ) {
-          console.log( "Error on INSERT into USER_HISTORY: " + error );
-        }
-      });
+      historyLog.user( vals, "Change", "Changed user information." );      
     }
     
     response.end();
-    
   });
 }
 
@@ -394,31 +336,20 @@ function deleteUser( response ) {
     });
     
     if ( error ) {
-
       console.log( "Error on DELETE from USER: " + error );
       response.write( "Error occured while trying to delete user." );
-
     } else {
-    
       console.log( "Deleted user: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "User successfully deleted." ); 
-    
-      helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-                    "VALUES( '" + vals.user_id + "', 'Delete', 'Deleted user.', '" + vals.curUserID + "', '" + helper.date() + "')",
-                    function( error, rows, cols ) {
-
-        if ( error ) {
-          console.log( "Error on INSERT into USER_HISTORY: " + error );
-        }
-      });
+      historyLog.user( vals, "Delete", "Deleted user." );
     }
+
     response.end();
   });
 }
 
 // Create Item - Step 1: Checks if current itemname+supplier already exists. Returns COUNT of 1 if it exists, Count of 0 if not.
-// Question: vals.supplier_id? check on that
 function createItemCheckDupe( response ) {
 
   var vals = response.values;
@@ -433,32 +364,36 @@ function createItemCheckDupe( response ) {
     });
     
     if ( error ) {
-    
       console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on SELECT ITEM: " + error );
       response.write( "Error occured while trying to create item." );
-      
     } else {
-    
       response.write( JSON.stringify( rows ) ); 
-    
     }
 
     response.end();
-
   });
 }
 
 // Create Item - Step 2: Insert new item into ITEM table. Inserts log into ITEM_HISTORY table.
-// Question: vals correct? May require standardization of vals across pages
 function createItem( response ) {
 
   var vals = response.values;
 
   helper.query( "INSERT INTO ITEM( DIST_CODE, ITEM_NAME, RECEIPT_NAME, CATEGORY, UNIT, ITEM_TYPE, COMMENT, SUPPLIER_ID, " +
-                "U_MINOR_REPO, U_ACTIVE_INA, U_BIZERBA, U_BRAND, U_CASE_SIZE, U_COOKING_IN, U_COUNTRY, U_DESCRIPTO, U_EXPIRY_DAT, U_INGREDIENT, U_KEYWORDS, U_NOTES, U_ORDER, U_PLU, U_PRICE, U_SILVERWARE, U_SKU, U_STORAGE, U_STORAGE_TY, U_TYPE, U_UPC_CODE, U_PRICE_PER, U_TAX, U_SCALE) " +
-                "VALUES('" + vals.dist_code + "', '" + vals.item_name + "', '" + vals.receipt_name + "', '" + vals.category + "', '" + vals.unit + "', '" + vals.item_type + "', '" + vals.comment + "', '" + vals.supplier_id +
-                "', '" + vals.u_minor_repo + "', '" + vals.u_active_ina + "', '" + vals.u_bizerba + "', '" + vals.u_brand + "', '" + vals.u_case_size + "', '" + vals.u_cooking_in + "', '" + vals.u_country + "', '" + vals.u_descripto + "', '" + vals.u_expiry_dat + "', '" + vals.u_ingredient + "', '" + vals.u_keywords + "', '" + vals.u_notes + "', '" + vals.u_order + "', '" + vals.u_plu + "', '" + vals.u_price + "', '" + vals.u_silverware + "', '" + vals.u_sku + "', '" + vals.u_storage + "', '" + vals.u_storage_ty + "', '" + vals.u_type + "', '" + vals.u_upc_code + "', '" + vals.u_price_per + "', '" + vals.u_tax + "', '" + vals.u_scale + "')",
+                "U_MINOR_REPO, U_ACTIVE_INA, U_BIZERBA, U_BRAND, U_CASE_SIZE, U_COOKING_IN, U_COUNTRY, U_DESCRIPTO, " +
+                "U_EXPIRY_DAT, U_INGREDIENT, U_KEYWORDS, U_NOTES, U_ORDER, U_PLU, U_PRICE, U_SILVERWARE, U_SKU, U_STORAGE, " +
+                "U_STORAGE_TY, U_TYPE, U_UPC_CODE, U_PRICE_PER, U_TAX, U_SCALE) " +
+                "VALUES('" + vals.dist_code + "', '" + vals.item_name + "', '" + vals.receipt_name +
+                "', '" + vals.category + "', '" + vals.unit + "', '" + vals.item_type + "', '" + vals.comment +
+                "', '" + vals.supplier_id + "', '" + vals.u_minor_repo + "', '" + vals.u_active_ina +
+                "', '" + vals.u_bizerba + "', '" + vals.u_brand + "', '" + vals.u_case_size +
+                "', '" + vals.u_cooking_in + "', '" + vals.u_country + "', '" + vals.u_descripto +
+                "', '" + vals.u_expiry_dat + "', '" + vals.u_ingredient + "', '" + vals.u_keywords +
+                "', '" + vals.u_notes + "', '" + vals.u_order + "', '" + vals.u_plu + "', '" + vals.u_price +
+                "', '" + vals.u_silverware + "', '" + vals.u_sku + "', '" + vals.u_storage +
+                "', '" + vals.u_storage_ty + "', '" + vals.u_type + "', '" + vals.u_upc_code +
+                "', '" + vals.u_price_per + "', '" + vals.u_tax + "', '" + vals.u_scale + "')",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -467,66 +402,33 @@ function createItem( response ) {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-        
     if ( error ) {
       console.log( "Error on INSERT into ITEM: " + error );
       response.write( "Error occured while trying to create item." );
     } else {
-    
       console.log("Created new item: " + vals.item_name );
       response.write( JSON.stringify( rows ) );
       response.write( "New item successfully created." );
     
-	    // Question: get new item ID somehow
+	    // Get item_id of the item just created.
       helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
-      
         if ( error ) {
           console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
         } else {
-        
-          var last_id = rows[ 0 ]["LAST_INSERT_ID()"];
-        
-          // insert price into price-history
-          
-          helper.query( "INSERT INTO PRICE_HISTORY(ITEM_ID, PRICE, AUTHOR, LOG_DATE) " +
-                        "VALUES( '" + vals.last_id + "', " + vals.price + "', " + vals.curUserID + "', '" + helper.date() + "' )",
-                        function( error, rows, cols ) {
-                        
-            if ( error ) {
-              console.log( "Error on INSERT into PRICE_HISTORY: " + error );
-            }
-            
-            item_id = last_id;
-            last_id = rows[ 0 ]["LAST_INSERT_ID()"];
-            
-            // update item with new price id
-            helper.query( "UPDATE ITEM SET LATEST_PRICE = " + last_id +
-                          "WHERE ITEM_ID = " + item_id, 
-                          function( error, rows, cols ) {
-            
-              if ( error ) {
-                console.log( "Error on INSERT into PRICE_HISTORY: " + error );
-              }
-            
-              helper.query( "INSERT INTO ITEM_HISTORY( ITEM_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-                            "VALUES( '" + last_id + "', 'Create', 'New item created.', '" + vals.userName + "', '" + helper.date() + "')",
-                            function( error, rows, cols ) {
-
-                if ( error ) {
-                  console.log( "Error in inserting into history: " + error );
-                }
-              });
-            });
-          });
+          vals.item_id = rows[ 0 ]["LAST_INSERT_ID()"];
+          historyLog.item( vals, "Create", "Created new item." );
         }
       });
     }
+    
     response.end();
   });  
 }
 
 // View Items - Step 1: Returns number of items in ITEM table for page calculation.
 function viewItems( response ) {
+
+  var vals = response.values;
 
   helper.query( "SELECT COUNT(*) FROM ITEM",
                 function ( error, rows, cols ) {
@@ -537,28 +439,27 @@ function viewItems( response ) {
     });
 
     if ( error ) {
-    
       console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from ITEM: " + error );
       response.write( "Error occured while trying to load page." );
-      
     } else {
-
       response.write( JSON.stringify( rows ) );
-      
     }
     
     response.end();
-    
   });
 }
 
 // View Items - Step 2: Returns a list of users for current page, ordered by Item_Name.
 function viewItemsPage( response) {
-  helper.query( "SELECT i.ITEM_ID, i.DIST_CODE, i.ITEM_NAME, i.RECEIPT_NAME, i.CATEGORY, i.UNIT, i.ITEM_TYPE, i.COMMENT, p.PRICE, s.NAME " +
+
+  var vals = response.values;
+
+  helper.query( "SELECT i.ITEM_ID, i.DIST_CODE, i.ITEM_NAME, i.RECEIPT_NAME, i.CATEGORY, i.UNIT, i.ITEM_TYPE, " +
+                "i.COMMENT, p.PRICE, s.NAME " +
                 "FROM ITEM i LEFT OUTER JOIN SUPPLIER s ON i.SUPPLIER_ID = s.SUPPLIER_ID " +
                 "LEFT OUTER JOIN PRICE_HISTORY p ON i.LATEST_PRICE = PRICE_ID " +
-                "ORDER BY i.ITEM_NAME LIMIT " + (response.values.pagenum-1)*20 + ", 20",
+                "ORDER BY i.ITEM_NAME LIMIT " + (vals.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
 
     response.writeHead( 200, {
@@ -567,19 +468,14 @@ function viewItemsPage( response) {
     });
 
     if ( error ) {
-    
       console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from ITEM, SUPPLIER, PRICE_HISTORY: " + error );
       response.write( "Error occured while trying to load page." );
-      
     } else {
-    
       response.write( JSON.stringify( rows ) );
-      
     }
 
     response.end();
-
   });
 }
 
@@ -588,11 +484,22 @@ function editItem( response ) {
 
   var vals = response.values;
 
-  // insert latest price first
-  helper.query( "INSERT INTO PRICE_HISTORY(ITEM_ID, PRICE, AUTHOR, LOG_DATE) " +
-                "VALUES( '" + vals.item_id + "', " + vals.price + "', " + vals.curUserID + "', '" + helper.date() + "' )",
+  helper.query( "UPDATE ITEM SET DIST_CODE = '" + vals.dist_code + "', ITEM_NAME = '" + vals.item_name +
+                "', RECEIPT_NAME = '" + vals.receipt_name + "', CATEGORY = '" + vals.category +"', UNIT = '" + vals.unit +
+                "', ITEM_TYPE = '" + vals.item_type + "', COMMENT = '" + vals.comment + ", SUPPLIER_ID = '" + vals.supplier_id +
+                "', U_MINOR_REPO = '" + vals.u_minor_repo + "', U_ACTIVE_INA = '" + vals.u_active_ina +
+                "', U_BIZERBA = '" + vals.u_bizerba + "', U_BRAND = '" + vals.u_brand + "', U_CASE_SIZE = '" + vals.u_case_size +
+                "', U_COOKING_IN = '" + vals.u_cooking_in + "', U_COUNTRY = '" + vals.u_country +
+                "', U_DESCRIPTO = '" + vals.u_descripto + "', U_EXPIRY_DAT = '" + vals.u_expiry_dat +
+                "', U_INGREDIENT = '" + vals.u_ingredient + "', U_KEYWORDS = '" + vals.u_keywords +
+                "', U_NOTES = '" + vals.u_notes + "', U_ORDER = '" + vals.u_order + "', U_PLU = '" + vals.u_plu +
+                "', U_PRICE = '" + vals.u_price + "', U_SILVERWARE = '" + vals.u_silverware + "', U_SKU = '" + vals.u_sku +
+                "', U_STORAGE = '" + vals.u_storage + "', U_STORAGE_TY = '" + vals.u_storage_ty +
+                "', U_TYPE = '" + vals.u_type + "', U_UPC_CODE = '" + vals.u_upc_code + "', U_PRICE_PER = '" + vals.u_price_per +
+                "', U_TAX = '" + vals.u_tax + "', U_SCALE = '" + vals.u_scale + "' " +
+                "WHERE ITEM_ID = " + vals.item_id,
                 function( error, rows, cols ) {
-                
+
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
 
     response.writeHead( 200, {
@@ -601,63 +508,15 @@ function editItem( response ) {
     });    
 
     if ( error ) {
-
-      console.log( "Error on INSERT INTO PRICE_HISTORY: " + error );
+      console.log( "Error on UPDATE ITEM: " + error );
       response.write( "Error occured while trying to change item information." );
-      
     } else {
-    
-      // get the new price_id
-      helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
-      
-        if ( error ) {
-
-          console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
-
-        } else {
-        
-          var last_id = rows[ 0 ]["LAST_INSERT_ID()"];
-          console.log( "Entered new price: " + vals.price + " (" + vals.last_id + ")" );
-      
-          // update item
-          helper.query( "UPDATE ITEM SET DIST_CODE = '" + vals.dist_code + "', ITEM_NAME = '" + vals.item_name + "', RECEIPT_NAME = '" + vals.receipt_name +
-                        "', CATEGORY = '" + vals.category + "', UNIT = '" + vals.unit + "', ITEM_TYPE = '" + vals.item_type +
-                        "', COMMENT = '" + vals.comment + "', LATEST_PRICE = " + vals.last_id + ", SUPPLIER_ID = '" + vals.supplier_id + "', U_MINOR_REPO = '" + vals.u_minor_repo +
-                        "', U_ACTIVE_INA = '" + vals.u_active_ina + "', U_BIZERBA = '" + vals.u_bizerba + "', U_BRAND = '" + vals.u_brand +
-                        "', U_CASE_SIZE = '" + vals.u_case_size + "', U_COOKING_IN = '" + vals.u_cooking_in + "', U_COUNTRY = '" + vals.u_country +
-                        "', U_DESCRIPTO = '" + vals.u_descripto + "', U_EXPIRY_DAT = '" + vals.u_expiry_dat + "', U_INGREDIENT = '" + vals.u_ingredient +
-                        "', U_KEYWORDS = '" + vals.u_keywords + "', U_NOTES = '" + vals.u_notes + "', U_ORDER = '" + vals.u_order +
-                        "', U_PLU = '" + vals.u_plu + "', U_PRICE = '" + vals.u_price + "', U_SILVERWARE = '" + vals.u_silverware +
-                        "', U_SKU = '" + vals.u_sku + "', U_STORAGE = '" + vals.u_storage + "', U_STORAGE_TY = '" + vals.u_storage_ty +
-                        "', U_TYPE = '" + vals.u_type + "', U_UPC_CODE = '" + vals.u_upc_code + "', U_PRICE_PER = '" + vals.u_price_per +
-                        "', U_TAX = '" + vals.u_tax + "', U_SCALE = '" + vals.u_scale + "' " +
-                        "WHERE ITEM_ID = " + vals.item_id,
-                        function( error, rows, cols ) {
-
-            if ( error ) {
-
-              console.log( "Error on UPDATE ITEM: " + error );
-              response.write( "Error occured while trying to change item information." );
-
-            } else {
-    
-              console.log( "Changed item information: ", rows );
-              response.write( JSON.stringify( rows ) );
-              response.write( "Item information succussfully changed." );
-
-              helper.query( "INSERT INTO ITEM_HISTORY( ITEM_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-                            "VALUES( '" + vals.item_id + "', 'Change', 'Changed item information.', '" + vals.curUserID + "', '" + helper.date() + "')",
-                            function( error, rows, cols ) {
-
-                if ( error ) {
-                  console.log( "Error on INSERT into ITEM_HISTORY: " + error );
-                }
-              });
-            }
-          });
-        }
-      });
+      console.log( "Changed item information: ", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "Item information succussfully changed." );
+      historyLog.item( vals, "Change", "Changed item information.");
     }
+
     response.end();
   });
 }
@@ -678,25 +537,15 @@ function deleteItem( response ) {
     });
     
     if ( error ) {
-
       console.log( "Error on DELETE from ITEM: " + error );
       response.write( "Error occured while trying to delete item." );
-      
     } else {
-    
       console.log( "Deleted item: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Item successfully deleted." ); 
-    
-      helper.query( "INSERT INTO ITEM_HISTORY( ITEM_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-                    "VALUES( '" + vals.item_id + "', 'Delete', 'Deleted item.', '" + vals.curUserID + "', '" + helper.date() + "')",
-                    function( error, rows, cols ) {
-
-        if ( error ) {
-          console.log( "Error on INSERT into ITEM_HISTORY: " + error );
-        }
-      });
+      historyLog.item( vals, "Delete", "Deleted item." );
     }
+
     response.end();
   });
 }
@@ -707,7 +556,7 @@ function createPrice ( response ) {
 
 function viewPrice ( response ) {
   return "view Price";
-]
+}
 
 // Create Supplier - Step 1: Checks if current supplier_name already exists. Returns COUNT of 1 if it exists, Count of 0 if not.
 function createSupplierCheckDupe( response ) {
@@ -723,14 +572,13 @@ function createSupplierCheckDupe( response ) {
     });
         
     if ( error ) {
-
       console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on select from SUPPLIER: " + error );
       reponse.write( "Error occured while trying to create supplier." );
-
     } else {
       response.write( JSON.stringify( rows ) ); 
     }
+
     response.end();
   });
 }
@@ -756,32 +604,21 @@ function createSupplier( response ) {
       console.log( "Error on INSERT into SUPPLIER: " + error );
       response.write( "Error occured while trying to create supplier." );
     } else {
-
       console.log( "Created new supplier: " + vals.user_id );
       response.write( JSON.stringify( rows ) );
       response.write( "New supplier successfully created." );
 
       helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
-      
+
         if ( error ) {
           console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
         } else {
-        
-          var last_id = rows[ 0 ]["LAST_INSERT_ID()"];
-      
-          // Insert Dates_of_delivery loop
-       
-          helper.query( "INSERT INTO SUPPLIER_HISTORY( SUPPLIER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-                        "VALUES( '" + last_id + "', 'Create', 'Created new supplier.', '" + vals.curUserID + "', '" + helper.date() + "')",
-                        function( error, rows, cols ) {
-
-            if ( error ) {
-              console.log( "Error on INSERT into SUPPLIER_HISTORY: " + error );
-            }
-          });
+          vals.supplier_id = rows[ 0 ]["LAST_INSERT_ID()"];
+          historyLog.supplier( vals, "Create", "Created new supplier." );
         }
       });
     }
+
     response.end();
   });
 }
@@ -798,14 +635,13 @@ function viewSuppliers( response ) {
     });
                 
     if ( error ) {
-    
       console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from SUPPLIER: " + error );
       response.write( "Error occured while trying to load page." );
-      
     } else {
       response.write( JSON.stringify( rows ) );
     }
+
     response.end();
   });
 }
@@ -822,19 +658,14 @@ function viewSuppliersPage( response ) {
     });
                 
     if ( error ) {
-    
       console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from SUPPLIER: " + error );
       response.write( "Error occured while trying to load page." );
-      
     } else {
-    
       response.write( JSON.stringify( rows ) );
-      
     }
 
     response.end();
-
   });
 }
 
@@ -843,8 +674,9 @@ function editSupplier( response ) {
 
   var vals = response.values;
 
-  helper.query( "UPDATE SUPPLIER SET NAME = '" + vals.name + "', LEGAL_NAME = '" + vals.legal_name + "', LEAD_TIME = '" + vals.lead_time +
-                "', SUPPLIER_COMMENT = '" + vals.supplier_comment + "', SPECIAL_COMMENT = '" + vals.special_comment + "'" +
+  helper.query( "UPDATE SUPPLIER SET NAME = '" + vals.name + "', LEGAL_NAME = '" + vals.legal_name +
+                "', LEAD_TIME = '" + vals.lead_time + "', SUPPLIER_COMMENT = '" + vals.supplier_comment +
+                "', SPECIAL_COMMENT = '" + vals.special_comment + "'" +
                 "WHERE SUPPLIER_ID = " + vals.supplier_id,
                 function( error, rows, cols ) {
   
@@ -856,25 +688,15 @@ function editSupplier( response ) {
     });    
 
     if ( error ) {
-
       console.log( "Error on UPDATE SUPPLIER: " + error );
       response.write( "Error occured while trying to change supplier information." );
-      
     } else {
-    
       console.log( "Changed supplier information: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Supplier information succussfully changed." );
-
-      helper.query( "INSERT INTO SUPPLIER_HISTORY( SUPPLIER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-                    "VALUES( '" + vals.supplier_id + "', 'Change', 'Changed supplier information.', '" + vals.curUserID + "', '" + helper.date() + "')",
-                    function( error, rows, cols ) {
-
-        if ( error ) {
-          console.log( "Error on INSERT into SUPPLIER_HISTORY: " + error );
-        }
-      });
+      historyLog.supplier( vals, "Change", "Changed supplier information." );
     }
+
     response.end();
   });
 }
@@ -895,25 +717,15 @@ function deleteSupplier( response ) {
     });
     
     if ( error ) {
-
       console.log( "Error on DELETE from SUPPLIER: " + error );
       response.write( "Error occured while trying to delete supplier." );
-      
     } else {
-    
       console.log( "Deleted supplier: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Supplier successfully deleted." ); 
-    
-      helper.query( "INSERT INTO SUPPLIER_HISTORY( SUPPLIER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
-                    "VALUES( '" + vals.supplier_id + "', 'Delete', 'Deleted item.', '" + vals.curUserID + "', '" + helper.date() + "')",
-                    function( error, rows, cols ) {
-
-        if ( error ) {
-          console.log( "Error on INSERT into SUPPLIER_HISTORY: " + error );
-        }
-      });
+      historyLog.supplier( vals, "Delete", "Deleted supplier." );
     }
+
     response.end();
   });
 }
@@ -953,8 +765,10 @@ function deleteAddress ( response ) {
 function createPurchaseOrder( response ) {
   var vals = response.values;
 
-  helper.query( "INSERT INTO PURCHASE_ORDER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE ) VALUES('" + vals.user + "', '" + vals.pass +
-                 "', '" + vals.email + "', '" + " " + "', '" + vals.role + "')", function( error, rows, cols ) {
+  helper.query( "INSERT INTO PURCHASE_ORDER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE ) " +
+                "VALUES('" + vals.user + "', '" + vals.pass + "', '" + vals.email + "', '" + " " +
+                "', '" + vals.role + "')",
+                function( error, rows, cols ) {
 
     if ( error ) {
       console.log( "Error on select: " + error );
@@ -970,37 +784,55 @@ function createPurchaseOrder( response ) {
   });
 }
 
+// View PO - Step 1: Returns number of POs in Purchase_order table for page calculation.
 function viewPurchaseOrders( response ) {
 
-  helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER", function( error, rows, cols ) {
-       
-    if ( error ) {
-      console.log( "Error in select statement: " + error );
-      return;
-    }
+  var vals = response.values;
+
+  helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER WHERE STATUS = '" + vals.status + "'",
+                function( error, rows, cols ) {
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
-    });
-    response.write( JSON.stringify( rows ) );
+    });  
+                
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( "Error on SELECT from PURCHASE_ORDER: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+
     response.end();
   });
 }
 
+// View PO - Step 2: Returns a list of POs for current page, ordered by PO_ID.
 function viewPurchaseOrdersPage ( response ) {
-  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.NAME FROM PURCHASE_ORDER po, SUPPLIER s WHERE po.SUPPLIER_ID = s.SUPPLIER_ID ORDER BY po.PO_ID LIMIT " + (response.values.pagenum-1)*20 + ", 20", function( error, rows, cols ) {
-       
-    if ( error ) {
-      console.log( "Error in select statement: " + error );
-      return;
-    }
 
+  var vals = response.values;
+
+  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, " +
+                "po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.NAME FROM PURCHASE_ORDER po " + 
+                "LFET OUTER JOIN SUPPLIER s ON po.SUPPLIER_ID = s.SUPPLIER_ID " +
+                "ORDER BY po.PO_ID LIMIT " + (response.values.pagenum-1)*20 + ", 20",
+                function( error, rows, cols ) {
+       
     response.writeHead( 200, {
       "Content-Type": "text/plain",
       "Access-Control-Allow-Origin": "*"
     });
-    response.write( JSON.stringify( rows ) );
+                
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( "Error on SELECT from PURCHASE_ORDER, SUPPLIER: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }  
+
     response.end();
   });
 }
