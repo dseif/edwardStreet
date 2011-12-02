@@ -1030,7 +1030,7 @@ function deleteSupplierAddress ( response ) {
   });
 }
 
-// Create Purchase Order - Creates a new purchase order in queue status in PURCHASE_ORDER table.
+// Create PO - Creates a new purchase order in queue status in PURCHASE_ORDER table.
 function createPurchaseOrder( response ) {
 
   var vals = response.values;
@@ -1264,24 +1264,125 @@ function receivePurchaseOrder( response ) {
   });
 }
 
+// Create PO Line - Create a new pO line.
 function createOrderLine( response ) {
-  return "createOrderLine";
+
+  var vals = response.values;
+  
+  helper.query( "INSERT INTO PO_LINE( PO_ID, PO_LINE_ID, ITEM_ID, QTY_ORDERED, COMMENT, AUTHOR, PRICE_ID) " +
+                "VALUES( '" + vals.po_id + "', " + vals.po_line + "', '" + vals.item_id + "', '" + vals.qty_ordered +
+                "', '" + vals.comment + "', '" + vals.curUserID + "', '" + vals.price_id + "' ) " +
+                function( error, rows, cols ) {
+    
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+
+    if ( error ) {
+      console.log( "Error on INSERT into PO_LINE: " + error );
+      response.write( "Error occured while trying to create PO line." );
+    } else {
+      console.log("Created new PO line: " + rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "New PO line successfully created." );
+      historyLog.po( vals, "Change", "Created new PO line." );
+    }
+    
+    response.end();
+  });
 }
 
+// View PO Line - view all PO Lines of a particular PO.
 function viewOrderLine( response ) {
-  return "createOrderLine";
+
+  var vals = response.values;
+
+  helper.query( "SELECT p.PO_LINE_ID, i.ITEM_NAME, p.QTY_ORDERED, p.QTY_RECEIVED, p.COMMENT, p.AUTHOR, ph.PRICE " +
+                "FROM PO_LINE p LEFT OUTER JOIN ITEM i ON p.ITEM_ID = i.ITEM_ID " +
+                "LEFT OUTER JOIN PRICE_HISTORY ph ON p.PRICE_ID = ph.PRICE_ID WHERE PO_ID = '" + vals.po_id "' " + 
+                "ORDER BY PO_LINE_ID",
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( "Error on SELECT from PO_LINE: " + error );
+      response.write( "Error occured while trying to load PO lines." );
+    } else {
+      response.write( JSON.stringify( rows ) );
+    }
+
+    response.end();
+  });
 }
 
+// Edit PO Line - change PO line information.
 function editOrderLine( response ) {
-  return "createOrderLine";
+  var vals = response.values;
+
+  helper.query( "UPDATE PO_LINE SET ITEM_ID = '" + vals.item_id + "', QTY_ORDERED ='" + vals.qty_ordered +
+                "', QTY_RECEIVED = '" + vals.qty_received + "', COMMENT = '" + vals.comment "', AUTHOR = '" + vals.curUserID +
+                "', PRICE_ID = '" + vals.price_id + "' " + 
+                "WHERE PO_ID = '" + vals.po_id + "' AND PO_LINE_ID = '" + vals.po_line_id "'",
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });    
+
+    if ( error ) {
+      console.log( "Error on UPDATE PO_LINE: " + error );
+      response.write( "Error occured while trying to change PO line information." );
+    } else {
+      console.log( "Changed PO line information: ", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "PO line information succussfully changed." );
+      historyLog.supplier( vals, "Change", "Changed PO line information.");
+    }
+
+    response.end();
+  });
 }
 
-function receiveOrderLine( response ) {
-  return "createOrderLine";
-}
-
+// Create Return line - create a new return line.
 function createReturnLine( response ) {
-  return "createOrderLine";
+
+  var vals = response.values;
+  
+  helper.query( "INSERT INTO RETURN_LINE( PO_ID, RETURN_LINE_ID, PO_LINE_ID, RETURN_DATE, QTY_RETURNED, CREDIT_MEMO_NUM, COMMENT, AUTHOR) " +
+                "VALUES( '" + vals.po_id + "', '" + vals.return_line_id + "', '" + vals.po_line_id + "', '" + vals.return_date +
+                "', '" + vals.qty_returned + "', '" + vals.credit_memo_num + "', '" + vals.comment + "', '" + vals.curUserID + "' ) " +
+                function( error, rows, cols ) {
+    
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+
+    if ( error ) {
+      console.log( "Error on INSERT into RETURN_LINE: " + error );
+      response.write( "Error occured while trying to create return line." );
+    } else {
+      console.log("Created new return line: " + rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "New return line successfully created." );
+      historyLog.po( vals, "Change", "Created new return line." );
+    }
+    
+    response.end();
+  });
 }
 
 exports.index = index;
@@ -1337,6 +1438,5 @@ exports.receivePurchaseOrder = receivePurchaseOrder;
 exports.createOrderLine = createOrderLine;
 exports.viewOrderLine = viewOrderLine;
 exports.editOrderLine = editOrderLine;
-exports.receiveOrderLine = receiveOrderLine;
 
 exports.createReturnLine = createReturnLine;
