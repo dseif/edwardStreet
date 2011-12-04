@@ -287,6 +287,28 @@ function viewUsersPage( response ) {
   });
 }
 
+// Get User - Get information of a single user from USER Table.
+function getUser ( response ) {
+
+  var vals = response.values;
+
+  helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.user_id + "'",
+                function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on UPDATE USER: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+      
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }  
+  });
+}
+
 // Edit User - Update USER table with new user information for row USER_ID.
 // Question: console.log may print password?
 function editUser( response ) {
@@ -739,6 +761,29 @@ function viewSuppliersPage( response ) {
   });
 }
 
+// Get Supplier - Get information of a single supplier from SUPPLIER Table.
+function getUser ( response ) {
+
+  var vals = response.values;
+
+  helper.query( "SELECT * FROM SUPPLIER WHERE SUPPLIER_ID = '" + vals.supplier_id + "'",
+                function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on SELCT FROM SUPPLIER: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+      
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }  
+  });
+}
+
+
 // Edit Supplier - Update SUPPLIER table with new item information for row SUPPLIER_ID.
 function editSupplier( response ) {
 
@@ -1130,8 +1175,8 @@ function editPurchaseOrder( response ) {
   var vals = response.values;
 
   helper.query( "UPDATE PURCHASE_ORDER SET DELIVERY_DATE = '" + vals.delivery_date + "', DELIVERY_TIME = '" + vals.delivery_time +
-                "', REF_NUMBER = '" + vals.ref_number + "', COMMENT = '" + vals.comment + "', SUPPLIER_ID = " + vals.supplier_id +
-                " WHERE PO_ID = " + vals.po_id,
+                "', REF_NUMBER = '" + vals.ref_number + "', COMMENT = '" + vals.comment + "', SUPPLIER_ID = '" + vals.supplier_id + "' " +
+                "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -1161,7 +1206,7 @@ function submitPurchaseOrder( response ) {
   var vals = response.values;
 
   helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Submitted', SUBMIT_DATE = '" + helper.date() + "' " +
-                "WHERE PO_ID = " + vals.po_id + "",
+                "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -1190,7 +1235,7 @@ function cancelPurchaseOrder( response ) {
 
   var vals = response.values;
 
-  helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Cancelled' WHERE PO_ID = " + vals.po_id,
+  helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Cancelled' WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -1220,7 +1265,7 @@ function returnPurchaseOrder( response ) {
   var vals = response.values;
 
   helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Returned' " +
-                "WHERE PO_ID = " + vals.po_id,
+                "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -1250,7 +1295,7 @@ function receivePurchaseOrder( response ) {
   var vals = response.values;
 
   helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Received', RECEIVE_DATE = '" + helper.date() + "' " +
-                "WHERE PO_ID = " + vals.po_id + "",
+                "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -1407,7 +1452,13 @@ function getSupplierList( response ) {
     if ( error ) {
       console.log( "Error on SELECT from SUPPLIER: " + error );
     } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+      
       response.write( JSON.stringify( rows ) );
+      response.end();
     }
   });
 }
@@ -1423,7 +1474,13 @@ function getCategoryList( response ) {
     if ( error ) {
       console.log( "Error on SELECT from ITEM_CATEGORY: " + error );
     } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+    
       response.write( JSON.stringify( rows ) );
+      response.end();
     }
   });
 }
@@ -1439,6 +1496,7 @@ exports.createUserCheckDupe = createUserCheckDupe;
 exports.createUser = createUser;
 exports.viewUsers = viewUsers;
 exports.viewUsersPage = viewUsersPage;
+exports.getUser = getUser;
 exports.editUser = editUser;
 exports.deleteUser = deleteUser;
 
@@ -1446,6 +1504,7 @@ exports.createItemCheckDupe = createItemCheckDupe;
 exports.createItem = createItem;
 exports.viewItems = viewItems;
 exports.viewItemsPage = viewItemsPage;
+//exports.getItem = getItem;
 exports.editItem = editItem;
 exports.deleteItem = deleteItem;
 
@@ -1456,22 +1515,26 @@ exports.createSupplierCheckDupe = createSupplierCheckDupe;
 exports.createSupplier = createSupplier;
 exports.viewSuppliers = viewSuppliers;
 exports.viewSuppliersPage = viewSuppliersPage;
+exports.getSupplier = getSupplier;
 exports.editSupplier = editSupplier;
 exports.deleteSupplier = deleteSupplier;
 
 exports.createContactPerson = createContactPerson;
 exports.viewContactPerson = viewContactPerson;
+//exports.getContactPerson = getContactPerson;
 exports.editContactPerson = editContactPerson;
 exports.deleteContactPerson = deleteContactPerson;
 
 exports.createSupplierAddress = createSupplierAddress;
 exports.viewSupplierAddress = viewSupplierAddress;
+//exports.getSupplierAddress = getSupplierAddress;
 exports.editSupplierAddress = editSupplierAddress;
 exports.deleteSupplierAddress = deleteSupplierAddress;
 
 exports.createPurchaseOrder = createPurchaseOrder;
 exports.viewPurchaseOrders = viewPurchaseOrders;
 exports.viewPurchaseOrdersPage = viewPurchaseOrdersPage;
+//exports.getPurchaseOrder = getPurchaseOrder;
 exports.editPurchaseOrder = editPurchaseOrder;
 exports.submitPurchaseOrder = submitPurchaseOrder;
 exports.cancelPurchaseOrder = cancelPurchaseOrder;
@@ -1480,6 +1543,7 @@ exports.receivePurchaseOrder = receivePurchaseOrder;
 
 exports.createOrderLine = createOrderLine;
 exports.viewOrderLine = viewOrderLine;
+//exports.getOrderLine = getOrderLine;
 exports.editOrderLine = editOrderLine;
 
 exports.createReturnLine = createReturnLine;
