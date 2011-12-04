@@ -874,7 +874,7 @@ function createSupplierCheckDupe( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT COUNT(*) FROM USER WHERE LOWER(NAME) = LOWER('" + vals.user_id + "')",
+  helper.query( "SELECT COUNT(*) FROM SUPPLIER WHERE LOWER(NAME) = LOWER('" + vals.["name"] + "')",
                 function( error, rows, cols ) {
 
     response.writeHead( 200, {
