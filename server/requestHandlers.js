@@ -194,7 +194,7 @@ function createUserCheckDupe( response ) {
     if ( error ) {
       console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on select from USER: " + error );
-      reponse.write( "Error occured while trying to create user." );
+      response.write( "Error occured while trying to create user." );
     } else {
       response.write( JSON.stringify( rows ) ); 
     }
@@ -652,7 +652,8 @@ function createSupplierCheckDupe( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT COUNT(*) FROM USER WHERE LOWER(NAME) = LOWER('" + vals.user_id + "')",
+  console.log( "THIS IS THE NAME", vals[ "name" ] );
+  helper.query( "SELECT COUNT(*) FROM SUPPLIER WHERE LOWER(NAME) = LOWER('" + vals[ "name" ] + "')",
                 function( error, rows, cols ) {
 
     response.writeHead( 200, {
@@ -663,7 +664,7 @@ function createSupplierCheckDupe( response ) {
     if ( error ) {
       console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
       console.log( "Error on select from SUPPLIER: " + error );
-      reponse.write( "Error occured while trying to create supplier." );
+      response.write( "Error occured while trying to create supplier." );
     } else {
       response.write( JSON.stringify( rows ) ); 
     }
@@ -738,10 +739,11 @@ function viewSuppliers( response ) {
 // View Supplier - Step 2: Returns a list of suppliers for current page, ordered by name
 function viewSuppliersPage( response ) {
   
+  var vals = response.values;
   helper.query( "SELECT NAME 'Supplier Name', LEGAL_NAME 'Legal Name', " + 
                 "LEAD_TIME 'Lead Time', SUPPLIER_COMMENT 'Supplier Comments', " +
                 "SPECIAL_COMMENT 'Special Comments' " + 
-                "FROM SUPPLIER ORDER BY NAME LIMIT " + (response.pagenum-1)*20 + ", 20", 
+                "FROM SUPPLIER ORDER BY NAME LIMIT " + (vals.pagenum-1)*20 + ", 20", 
                 function( error, rows, cols ) {
 
     response.writeHead( 200, {
