@@ -21,7 +21,55 @@
         pagenum: 1
       },
       success: function (response, code, xhr) {
-      console.log( "testing" );
+      console.log( "testing user history" );
+        console.log( JSON.parse( response ) );
+      }
+    });
+  }, false);
+  
+    document.addEventListener("DOMContentLoaded", function (event) {
+
+    $.ajax({
+      cache: false,
+      url: "http://96.126.109.151:8080/viewitemhistorypage",
+      data: {
+        hash: getCookie("EDST_H"),
+        pagenum: 1
+      },
+      success: function (response, code, xhr) {
+      console.log( "testing item history" );
+        console.log( JSON.parse( response ) );
+      }
+    });
+  }, false);
+  
+    document.addEventListener("DOMContentLoaded", function (event) {
+
+    $.ajax({
+      cache: false,
+      url: "http://96.126.109.151:8080/viewsupplierhistorypage",
+      data: {
+        hash: getCookie("EDST_H"),
+        pagenum: 1
+      },
+      success: function (response, code, xhr) {
+      console.log( "testing supplier history" );
+        console.log( JSON.parse( response ) );
+      }
+    });
+  }, false);
+  
+    document.addEventListener("DOMContentLoaded", function (event) {
+
+    $.ajax({
+      cache: false,
+      url: "http://96.126.109.151:8080/viewpohistorypage",
+      data: {
+        hash: getCookie("EDST_H"),
+        pagenum: 1
+      },
+      success: function (response, code, xhr) {
+      console.log( "testing po history" );
         console.log( JSON.parse( response ) );
       }
     });
