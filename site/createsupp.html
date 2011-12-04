@@ -173,18 +173,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
       if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
-        $("#menu").css("position", "fixed");
-        $("#menu").css("right", $(document).width() / 24);
-        $("#menu").css("top", 156);
       }
       // Revert back to normal
       if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
         $("#header").css("position", "relative");
         $("#header").css("top", $(".scrollTrigger").offset);
-        $("#menu").css("position", "relative");
-        $("#menu").css("top", $(".scrollTrigger").offset);
-        $("#menu").css("left", 0);
-        $("#menu").css("top", 0);
       }
     });
 </script>
@@ -216,7 +209,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
       <ul>
         <li class="blacklink"><a href="createuser.html">Create User</a></li>
         <li class="blacklink"><a href="edituser.html">Edit User</a></li>
-        <li class="blacklink"><a href="changepassword.html">Change Password</a></li>
+        <li class="blacklink"><a href="editaccount.html">Change Password</a></li>
       </ul>
       <div class="clear"></div>
     </li>
