@@ -30,6 +30,8 @@ handle[ "/viewitems" ] = requestHandlers.viewItems;
 handle[ "/viewitemspage" ] = requestHandlers.viewItemsPage;
 handle[ "/edititem" ] = requestHandlers.editItem;
 handle[ "/deleteitem" ] = requestHandlers.deleteItem;
+handle[ "/item/createprice" ] = requestHandlers.createPrice;
+handle[ "/item/viewprice" ] = requestHandlers.viewPrice;
 
 //  Supplier Pages
 handle[ "/createsuppliercheckdupe" ] = requestHandlers.createSupplierCheckDupe;
@@ -38,14 +40,27 @@ handle[ "/viewsuppliers" ] = requestHandlers.viewSuppliers;
 handle[ "/viewsupplierspage" ] = requestHandlers.viewSuppliersPage;
 handle[ "/editsupplier" ] = requestHandlers.editSupplier;
 handle[ "/deletesupplier" ] = requestHandlers.deleteSupplier;
+handle[ "/supplier/createcontactperson" ] = requestHandlers.createContactPerson;
+handle[ "/supplier/viewcontactperson" ] = requestHandlers.viewContactPerson;
+handle[ "/supplier/editcontactperson" ] = requestHandlers.editContactPerson;
+handle[ "/supplier/deletecontactperson" ] = requestHandlers.deleteContactPerson;
+handle[ "/supplier/createsupplieraddress" ] = requestHandlers.createSupplierAddress;
+handle[ "/supplier/viewsupplieraddress" ] = requestHandlers.viewSupplierAddress;
+handle[ "/supplier/editsupplieraddress" ] = requestHandlers.editSupplierAddress;
+handle[ "/supplier/deletesupplieraddress" ] = requestHandlers.deleteSupplierAddress;
 
 //  Purchase Order pages
 handle[ "/createpurchaseorder" ] = requestHandlers.createPurchaseOrder;
 handle[ "/viewpurchaseorders" ] = requestHandlers.viewPurchaseOrders;
-handle[ "/viewpurchaseorderpage" ] = requestHandlers.viewPurchaseOrderPage;
+handle[ "/viewpurchaseorderspage" ] = requestHandlers.viewPurchaseOrdersPage;
 handle[ "/editpurchaseorder" ] = requestHandlers.editPurchaseOrder;
+handle[ "/submitpurchaseorder" ] = requestHandlers.submitPurchaseOrder;
 handle[ "/cancelpurchaseorder" ] = requestHandlers.cancelPurchaseOrder;
 handle[ "/receivepurchaseorder" ] = requestHandlers.receivePurchaseOrder;
 handle[ "/returnpurchaseorder" ] = requestHandlers.returnPurchaseOrder;
+handle[ "/po/createorderline" ] = requestHandlers.createOrderLine;
+handle[ "/po/vieworderline" ] = requestHandlers.viewOrderLine;
+handle[ "/po/editorderline" ] = requestHandlers.editOrderLine;
+handle[ "/po/createreturnline" ] = requestHandlers.createReturnLine;
 
 server.start( router.route, handle );
