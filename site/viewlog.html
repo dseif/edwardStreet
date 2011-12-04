@@ -14,28 +14,20 @@
   document.addEventListener("DOMContentLoaded", function (event) {
 
   
-//    $.ajax({
-//      cache: false,
-//      url: "http://96.126.109.151:8080/viewuserhistorypage",
-//      data: {
-//        hash: getCookie("EDST_H"),
-//        pagenum: 1
-//      },
-//      success: function (response, code, xhr) {
-//      console.log( "testing user history" );
-//        console.log( JSON.parse( response ) );
-//      }
-//    });
-
-
-
-
+    $.ajax({
+      cache: false,
+      url: "http://96.126.109.151:8080/viewsupplierhistorypage",
+      data: {
+        hash: getCookie("EDST_H"),
+        pagenum: 1
+      },
+      success: function (response, code, xhr) {
+        console.log( "testing user history" );
+       console.log( JSON.parse( response ) );
+      }
+    });
 
   }, false);
-
-
-
-
   
     document.addEventListener("DOMContentLoaded", function (event) {
 

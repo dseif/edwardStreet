@@ -169,7 +169,7 @@ function viewUserHistoryPage( response ) {
   var vals = response.values;
   
   helper.query( "SELECT USER_ID 'User Account', CATEGORY 'Action Type', COMMENT 'Comment', " +
-                "AUTHOR 'Action By', LOG_DATE 'Date' " +
+                "AUTHOR 'Action By', LOG_DATE 'Date' FROM USER_HISTORY" +
                 "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
   
