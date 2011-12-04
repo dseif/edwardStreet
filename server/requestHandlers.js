@@ -138,9 +138,214 @@ function logout( response ) {
   response.end();
 }
 
-// Question: What is this?
-function logs() {
-  return "Logs";
+// View User History - Step 1: Returns number of entries in USER_HISTORY table for page calculation.
+function viewUserHistory( response ) {
+  
+  var vals = response.values;
+  
+  helper.query( "SELECT COUNT(*) FROM USER_HISTORY",
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( "Error on SELECT from USER_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+    
+    response.end();   
+  });
+}
+
+// View User History Step 2: Returns a list of entries for current page, starting with latest action.
+function viewUserHistoryPage( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT USER_ID 'User Account', CATEGORY 'Action Type', COMMENT 'comment', " +
+                "AUTHOR 'Action By', LOG_DATE 'Date' " +
+                "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
+                function( error, rows, cols ) {
+  
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+                
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( "Error on SELECT from USER_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+  
+    response.end();
+  });
+}
+
+// View Item History - Step 1: Returns number of entries in ITEM_HISTORY table for page calculation.
+function viewItemHistory( response ) {
+  
+  var vals = response.values;
+  
+  helper.query( "SELECT COUNT(*) FROM ITEM_HISTORY",
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( "Error on SELECT from ITEM_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+    
+    response.end();   
+  });
+}
+
+// View Item History Step 2: Returns a list of entries for current page, starting with latest action.
+function viewItemHistoryPage( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT h.ITEM_ID 'Item ID', i.ITEM_NAME 'Item Name', h.CATEGORY 'Action Type', h.COMMENT 'comment', " +
+                "AUTHOR 'Action By', LOG_DATE 'Date' FROM ITEM_HISTORY h" +
+                "LEFT OUTER JOIN ITEM i ON h.ITEM_ID = i.ITEM_ID " +
+                "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
+                function( error, rows, cols ) {
+  
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+                
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( "Error on SELECT from USER_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+  
+    response.end();
+  });
+}
+
+// View Supplier History - Step 1: Returns number of entries in SUPPLIER_HISTORY table for page calculation.
+function viewSupplierHistory( response ) {
+  
+  var vals = response.values;
+  
+  helper.query( "SELECT COUNT(*) FROM SUPPLIER_HISTORY",
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( "Error on SELECT from SUPPLIER_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+    
+    response.end();   
+  });
+}
+
+// View Supplier History Step 2: Returns a list of entries for current page, starting with latest action.
+function viewSupplierHistoryPage( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT h.SUPPLIER_ID 'Supplier ID', s.NAME 'Supplier Name', h.CATEGORY 'Action Type', h.COMMENT 'comment', " +
+                "h.AUTHOR 'Action By', h.LOG_DATE 'Date' FROM SUPPLIER_HISTORY h " +
+                "LEFT OUTER JOIN SUPPLIER s ON h.SUPPLIER_ID = s.SUPPLIER_ID " +
+                "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
+                function( error, rows, cols ) {
+  
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+                
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( "Error on SELECT from SUPPLIER_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+  
+    response.end();
+  });
+}
+
+// View PO History - Step 1: Returns number of entries in PO_HISTORY table for page calculation.
+function viewPOHistory( response ) {
+  
+  var vals = response.values;
+  
+  helper.query( "SELECT COUNT(*) FROM PO_HISTORY",
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( "Error on SELECT from PO_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+    
+    response.end();   
+  });
+}
+
+// View Supplier History Step 2: Returns a list of entries for current page, starting with latest action.
+function viewPOHistoryPage( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT PO_ID 'PO ID', CATEGORY 'Action Type', COMMENT 'comment', " +
+                "AUTHOR 'Action By', LOG_DATE 'Date' FROM PO_HISTORY " +
+                "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
+                function( error, rows, cols ) {
+  
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+                
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( "Error on SELECT from PO_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+  
+    response.end();
+  });
 }
 
 // Edit Account - allow current user to change his password/email.
@@ -1621,7 +1826,15 @@ function getCategoryList( response ) {
 exports.index = index;
 exports.login = login;
 exports.logout = logout;
-exports.logs = logs;
+exports.viewUserHistory = viewUserHistory;
+exports.viewUserHistoryPage = viewUserHistoryPage;
+exports.viewItemHistory = viewItemHistory;
+exports.viewItemHistoryPage = viewItemHistoryPage;
+exports.viewSupplierHistory = viewSupplierHistory;
+exports.viewSupplierHistoryPage = viewSupplierHistoryPage;
+exports.viewPOHistory = viewPOHistory;
+exports.viewPOHistoryPage = viewPOHistoryPage;
+
 exports.editAccount = editAccount;
 
 exports.createUserCheckDupe = createUserCheckDupe;

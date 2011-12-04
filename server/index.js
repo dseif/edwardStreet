@@ -13,7 +13,17 @@ handle[ "/" ] = requestHandlers.index;
 handle[ "/login" ] = requestHandlers.login;
 handle[ "/logout" ] = requestHandlers.logout;
 handle[ "/editaccount" ] = requestHandlers.editAccount;
-handle[ "/logs" ] = requestHandlers.logs;
+
+//  Log pages
+handle [ "/viewuserhistory" ] = requestHandlers.viewUserHistory;
+handle [ "/viewuserhistorypage" ] = requestHandlers.viewUserHistoryPage;
+handle [ "/viewitemhistory" ] = requestHandlers.viewItemHistory;
+handle [ "/viewitemhistorypage" ] = requestHandlers.viewItemHistoryPage;
+handle [ "/viewsupplierhistory" ] = requestHandlers.viewSupplierHistory;
+handle [ "/viewsupplierhistorypage" ] = requestHandlers.viewSupplierHistoryPage;
+handle [ "/viewpohistory" ] = requestHandlers.viewPOHistory;
+handle [ "/viewpohistorypage" ] = requestHandlers.viewPOHistoryPage;
+
 
 //  User pages
 handle[ "/createusercheckdupe" ] = requestHandlers.createUserCheckDupe;
