@@ -51,8 +51,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     validation3 = window.edwardValidationPassOne;
 
     // used for individual validation
-    var usrField = $("#user").val();
-    var pwField = $("#pass").val();
+    var usrField = $("#curUserID").val();
+    var pwField = $("#curPassword").val();
 
     // array for storing fields that are empty
     var getBadArray = [];
@@ -105,8 +105,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
         cache: false,
         url: "http://96.126.109.151:8080/",
         data: {
-          user: document.getElementById("user").value,
-          pass: document.getElementById("pass").value,
+          curUserID: document.getElementById("curUserID").value,
+          curPassword: document.getElementById("curPassword").value,
           hash: document.getElementById("response").innerHTML
         },
         success: function (response, code, xhr) {
@@ -157,10 +157,10 @@ $(window).scroll(function () {
     <div id="page">
 	<h1>Log in</h1><br/>
 	
-    <label for="user">username</label> <input type="text" value="" name="userName" id="user"/><br/><br />
+    <label for="curUserID">username</label> <input type="text" value="" name="userName" id="curUserID"/><br/><br />
 	<div id="usrValid" ></div>
 
-    <label for="pass">password</label> <input type="password" value="" name="password" id="pass"/><br/>
+    <label for="curPassword">password</label> <input type="password" value="" name="password" id="curPassword"/><br/>
 	<div id="passValid" ></div>
     </div>
     <input class="submitbutton" type="submit" value="Login" name="LoginButton" id="loginBtn" />

@@ -32,10 +32,10 @@
 
           $("#" + data[i]["USER_ID"]).click(function () {
 
-            console.log($(this).attr("id"), dataObj[$(this).attr("id")]["USER_ID"], $("#userName"));
-            $("#userName").val(dataObj[$(this).attr("id")]["USER_ID"]);
-            $("#emailAddress").val(dataObj[$(this).attr("id")]["EMAIL"]);
-            $("#userRoleBox").val(String.prototype.toLowerCase.apply(dataObj[$(this).attr("id")]["ROLE"]));
+            console.log($(this).attr("id"), dataObj[$(this).attr("id")]["USER_ID"], $("#curUserID"));
+            $("#curUserID").val(dataObj[$(this).attr("id")]["USER_ID"]);
+            $("#curEmail").val(dataObj[$(this).attr("id")]["EMAIL"]);
+            $("#curRole").val(String.prototype.toLowerCase.apply(dataObj[$(this).attr("id")]["ROLE"]));
           });
         }
       }
@@ -46,14 +46,14 @@
     document.getElementById("deleteBtn").addEventListener("click", function () {
       console.log("HERE BITCH");
 
-      if ($("#userName").val() !== "") {
+      if ($("#curUserID").val() !== "") {
 
         $.ajax({
           cache: false,
           url: "http://96.126.109.151:8080/deleteuser",
           data: {
             hash: getCookie("EDST_H"),
-            username: document.getElementById("userName").value
+            username: document.getElementById("curUserID").value
           },
           success: function (response, code, xhr) {
 
@@ -119,8 +119,8 @@
       validation3 = window.edwardValidationEmail;
 
       // used for individual validation
-      var loginName = $("#userName").val();
-      var emailAddress = $("#emailAddress").val();
+      var loginName = $("#curUserID").val();
+      var curEmail = $("#curEmail").val();
 
       // array for storing fields that are empty
       var getBadArray = [];
@@ -161,7 +161,7 @@
       }
 
       // Validate the email address
-      if (validation3.validateEmail(emailAddress)) {
+      if (validation3.validateEmail(curEmail)) {
         $('#emailValid').html("Email is valid");
       } else {
         $('#emailValid').html("Email not valid!");
@@ -175,9 +175,9 @@
           url: "http://96.126.109.151:8080/edituser",
           data: {
             hash: getCookie("EDST_H"),
-            username: document.getElementById("userName").value,
-            email: document.getElementById("emailAddress").value,
-            role: $("#userRoleBox").val()
+            username: document.getElementById("curUserID").value,
+            email: document.getElementById("curEmail").value,
+            role: $("#curRole").val()
           },
           success: function (response, code, xhr) {
 
@@ -296,9 +296,9 @@
             
             By:
               <select name="searchDetails" id="searchDetails">
-                <option value="userName" selected="selected">User Name</option>
+                <option value="curUserID" selected="selected">User Name</option>
                 <option value="userRole">User Role</option>
-                <option value="emailAddress">Email Address</option>
+                <option value="curEmail">Email Address</option>
               </select><br />
 
             <input class="submitbutton" value="Search" type="submit" name="SubmitButton" id="submitBtn"/>OR
@@ -322,14 +322,14 @@
             
             <table id="editUserTable">
                         
-                <label for="userName">User Name:</label> <input type="text" value="" name="UserName" id="userName"/></td>
+                <label for="curUserID">User Name:</label> <input type="text" value="" name="UserName" id="curUserID"/></td>
                 <div id="userValid"></div>
                 
-                <label for="emailAddress">Email Address:</label> <input id="emailAddress" type="text" value="" name="EmailAddress"/></td>
+                <label for="curEmail">Email Address:</label> <input id="curEmail" type="text" value="" name="EmailAddress"/></td>
                 <div id="emailValid"></div>
                 
-                <label for="userRoleBox">User Role:</label> <!-- Auto Populated -->
-                <select name="UserRole" id="userRoleBox">
+                <label for="curRole">User Role:</label> <!-- Auto Populated -->
+                <select name="UserRole" id="curRole">
                   <option value="admin">Admin</option>
                   <option value="buyer">Buyer</option>
                   <option value="receiver">Receiver</option>
