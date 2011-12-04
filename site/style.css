@@ -164,6 +164,7 @@ margin-left: 4.5em;
 	background-repeat:repeat-x;
 	background-position:left top;
 	width: 1920px;
+	z-index: 900;
 }
 
 /* Menu */
