@@ -18,6 +18,19 @@ $( function() {
           localStorage.removeItem( "shoppingCart" );
           cart = {};
         },
+        //update the cart on page change
+        populateCart: function() {
+
+          var cart = this.cart();
+
+          for ( var prop in cart ) {
+            $( "#scBox" ).append( "<div edst-data='" + cart[ prop ][ "ITEM_NAME" ] +
+              "' id='shoppingCart-" + cart[ prop ][ "ITEM_ID" ] + "'>" +
+              "<div style='display:inline-block'>" + cart[ prop ][ "ITEM_NAME" ] + "</div>" +
+              "<div style='display:inline-block'>Qty: " + cart[ prop ].qty +
+            "</div></div>" );
+          }
+        },
         // add item to the shopping cart
         addItem: function( obj ) {
 
@@ -31,8 +44,10 @@ $( function() {
 
           var children = $( "#scBox" ).children();
 
+          console.log( "CHILDS PLAY", children );
           for ( var i = 0, l = children.length; i < l; i++ ) {
-            if ( children[ i ][ "edst-data" ] === obj[ "ITEM_NAME" ] ) {
+            console.log( $( children[ i ] ).attr( "edst-data" ) );
+            if ( $( children[ i ] ).attr( "edst-data" ) === obj[ "ITEM_NAME" ] ) {
               children[ i ].children[ 1 ].innerHTML = "Qty: " + cart[ id ].qty;
             }
           }
