@@ -6,42 +6,16 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street - Create Supplier</title>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
-<script>
-// Add a listenter for the submit button
-document.addEventListener("DOMContentLoaded", function (event) {
-
-  var button = document.getElementById("savBtn");
-  button.addEventListener("click", function (event) {
-
-    $.ajax({
-      cache: false,
-      url: "http://96.126.109.151:8080/addsupplier",
-      data: {
-        suppName: document.getElementById("suppName").value,
-        leglName: document.getElementById("leglName").value,
-        addrs: document.getElementById("addrs").value,
-        contctNumber: document.getElementById("contctNumber").value,
-        leadTime: document.getElementById("leadTime").value,
-
-        // Is this valid? getElementByName
-        DeliveryDates: document.getElementByName("DeliveryDates").value,
-        SupplierComments: document.getElementByName("SupplierComments").value,
-        SpecialComments: document.getElementByName("SpecialComments").value,
-
-        loginID: document.getElementById("loginID").value,
-        pwd: document.getElementById("pwd").value,
-        emailAddr: document.getElementById("emailAddr").value
-      },
-      success: function (response, code, xhr) {
-
-        // The supplier has been added successfully
-      }
-    });
-  }, false);
-}, false);
-</script>
 <script type="text/javascript" src="js/validation.js"></script>
+<script type="text/javascript" src="login.js"></script>
 <script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function (event) {
+    var cookie = window.cookie;
+    if (cookie.substring(0, 2).toLowerCase() !== "ad") {
+
+      window.location = "login.html";
+    } // Cookie business
+
     document.addEventListener("DOMContentLoaded", function (event) {
 
       document.getElementById("savBtn").addEventListener("click", function (event) {
@@ -133,26 +107,38 @@ document.addEventListener("DOMContentLoaded", function (event) {
           $('#leadTimeValid').html("Date not valid!");
         }
 
-        // Validate the user id
-        if (validation4.validateUserName(loginID) {
-          $('#userValid').html("Login ID is valid");
-        } else {
-          $('#userValid').html("Login ID is not valid!");
-        }
+if(ok){
+  $.ajax({
+    cache: false,
+    url: "http://96.126.109.151:8080/createsuppliercheckdupe",
+    data: {
+      supplier_id: document.getElementById( "suppName" ).value,
+      hash: cookie
+    },
+    success: function( response, code, xhr ) {
 
-        // Validate the password
-        if (validation5.validatePassOne(pass)) {
-          $('#passValid').html("Password is valid");
-        } else {
-          $('#passValid').html("password is not valid!");
-        }
+      var data = JSON.parse( response );
+      if ( data[ 0 ][ "COUNT(SUPPLIER_ID)" ] !== 1 ) {
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/createsupplier",
+        data: {
+          user_id: document.getElementById( "suppName" ).value,
+          password: document.getElementById( "confpass" ).value,
+          hash: cookie,
+          email: document.getElementById( "emailAddress" ).value,
+          role: document.getElementById( "userRoleBox" ).value
+        },
+        success: function( response, code, xhr ) {
 
-        // Validate the email
-        if (validation6.validateEmail(emailAddr)) {
-          $('#emailValid').html("Email is valid");
-        } else {
-          $('#emailValid').html("Email is not valid!");
+          console.log( response );
         }
+        });
+      } else {
+        alert( "Supplier NAME ALREADY EXISTS, PLEASE CHOOSE ANOTHER" );
+      }
+    }
+});
 
         }, false);
 
@@ -256,29 +242,23 @@ document.addEventListener("DOMContentLoaded", function (event) {
 				<label for="legName">Legal Name</label> <input type="text" value="" name="LegalName" id="legName"/><br/>
 				<div id="legNamValid"></div>
 				
-				<label for="addrs">Address</label> <input type="text" value="" name="Address" id="addrs"/><br/>
-				<div id="addrValid"></div>
-				
-				<label for="cntctNumber">Contact Number</label> <input type="text" value="" name="ContactNumber" id="cntctNumber"/><br/>
-				<div id="phNumValid"></div>
 				
 				<label for="leadTime">Lead Time</label> <input type="text" value="" name="LeadTime" id="leadTime"/><br/>
 				<div id="leadTimeValid"></div>
 
-                <label for="delivDates">Delivary Dates</label> <textarea id="delivDates" rows="3" cols="20" name="DeliveryDates"></textarea><br/>
-                <div id="delivdatevalid"></div>
+        <label for="deliveryDate">Delivery Dates</label> <br/>
+        <label for="delSunday">Sunday:</label>  <input type="checkbox" name="Sunday" value="Sunday"  /><br/>
+        <label for="delMonday">Monday:</label>  <input type="checkbox" name="Monday" value="Monday"  /><br/>
+        <label for="delTuesday">Tuesday:</label> <input type="checkbox" name="Tuesday" value="Tuesday"  /><br/>
+        <label for="delWednesday">Wednesday:</label> <input type="checkbox" name="Wednesday" value="Wednesday"  /><br/>
+        <label for="delThursday">Thursday:</label>  <input type="checkbox" name="Thursday" value="Thursday"  /><br/>
+        <label for="delFriday">Friday:</label> <input type="checkbox" name="Friday" value="Friday"  /><br/>
+        <label for="delSaturday">Saturday:</label>  <input type="checkbox" name="Saturday" value="Saturday"  /><br/>
+				<div id="deliveryDateValid"></div>
 
-                <label for="loginID">Login ID</label> <input type="text" value="" name="LoginID" id="loginID"/><br/>
-				<div id="userValid"></div>
-
-                <label for="pwd">Password</label> <input type="password" value="" name="Pass" id="pwd"/><br/>
-				<div id="passValid"></div>
-
-                <label for="emailAddr">Email address</label> <input type="text" value="" name="EmailAddress" id="emailAddr"/><br/>			
-				<div id="emailValid"></div>
 			</div>
 			
-				<label for="suppComm">Supplier Comments</label> <textarea id="suppComm" rows="3" cols="20" name="SupplierComments"></textarea><br/>
+        <label for="supplierComm">Supplier Comments</label> <textarea id="supplierComm" rows="3" cols="20" name="SupplierComments"></textarea><br/>
 				<label for="otherComm">Other Comments</label> <textarea id="otherComm" rows="3" cols="20" name="SpecialComments"></textarea><br/>
 			
       <div id="content">

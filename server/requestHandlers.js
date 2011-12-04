@@ -210,7 +210,7 @@ function createUser( response ) {
 
   helper.query( "INSERT INTO USER( USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE, SUPPLIER_ID ) " +
                 "VALUES('" + vals.user_id + "', '" + vals.password + "', '" + vals.email +
-                "', '" + vals.employee_id + "', '" + vals.role + "', '" + vals.supplier_id + "')",
+                "', '" + vals.employee_id + "', '" + vals.role + "', '" + vals.supplier_id + "' )",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -264,7 +264,7 @@ function viewUsersPage( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT u.USER_ID, u.EMAIL, u.EMPLOYEE_ID, u.ROLE, s.NAME " + 
+  helper.query( "SELECT u.USER_ID 'User Login', u.EMAIL 'Email Address', u.EMPLOYEE_ID 'Employee ID', u.ROLE 'Role', s.NAME 'Associated Supplier'" + 
                 "FROM USER u LEFT JOIN SUPPLIER s ON u.SUPPLIER_ID = s.SUPPLIER_ID " + 
                 "ORDER BY USER_ID " +
                 "LIMIT " + (vals.pagenum-1)*20 + ", 20",
@@ -284,6 +284,28 @@ function viewUsersPage( response ) {
     }  
 
     response.end();
+  });
+}
+
+// Get User - Get information of a single user from USER Table.
+function getUser ( response ) {
+
+  var vals = response.values;
+
+  helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.user_id + "'",
+                function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on UPDATE USER: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+      
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }  
   });
 }
 
@@ -354,7 +376,7 @@ function createItemCheckDupe( response ) {
   var vals = response.values;
 
   helper.query( "SELECT COUNT(*) FROM ITEM " +
-                "WHERE LOWER(ITEM_NAME) = LOWER('" + vals.item_name + "') AND SUPPLIER_ID = " + vals.supplier_id,
+                "WHERE LOWER(ITEM_NAME) = LOWER('" + vals.item_name + "') AND SUPPLIER_ID = '" + vals.supplier_id + "'",
                 function( error, rows, cols ) {
   
     response.writeHead( 200, {
@@ -455,8 +477,10 @@ function viewItemsPage( response) {
 
   var vals = response.values;
 
-  helper.query( "SELECT i.ITEM_ID, i.DIST_CODE, i.ITEM_NAME, i.RECEIPT_NAME, i.CATEGORY, i.UNIT, i.ITEM_TYPE, " +
-                "i.COMMENT, p.PRICE, s.NAME " +
+  helper.query( "SELECT i.ITEM_ID 'Item ID', i.DIST_CODE 'Distribution Code', " +
+                "i.ITEM_NAME 'Item Name', i.RECEIPT_NAME 'Receipt Name', " +
+                "i.CATEGORY 'Item Category', i.UNIT 'Sale Unit', i.ITEM_TYPE 'Department', " +
+                "i.COMMENT 'Comments', p.PRICE 'Latest Price', s.NAME 'Supplier' " +
                 "FROM ITEM i LEFT OUTER JOIN SUPPLIER s ON i.SUPPLIER_ID = s.SUPPLIER_ID " +
                 "LEFT OUTER JOIN PRICE_HISTORY p ON i.LATEST_PRICE = PRICE_ID " +
                 "ORDER BY i.ITEM_NAME LIMIT " + (vals.pagenum-1)*20 + ", 20",
@@ -497,7 +521,7 @@ function editItem( response ) {
                 "', U_STORAGE = '" + vals.u_storage + "', U_STORAGE_TY = '" + vals.u_storage_ty +
                 "', U_TYPE = '" + vals.u_type + "', U_UPC_CODE = '" + vals.u_upc_code + "', U_PRICE_PER = '" + vals.u_price_per +
                 "', U_TAX = '" + vals.u_tax + "', U_SCALE = '" + vals.u_scale + "' " +
-                "WHERE ITEM_ID = " + vals.item_id,
+                "WHERE ITEM_ID = '" + vals.item_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
@@ -557,7 +581,7 @@ function createPrice ( response ) {
   
   // create a new price entry
   helper.query( "INSERT INTO PRICE_HISTORY( ITME_ID, PRICE, AUTHOR, LOG_DATE) " +
-                "VALUES ( " + vals.item_id + ", " + vals.price + ", '" + vals.curUserID + "', '" + helper.date() + "' )" +
+                "VALUES ( '" + vals.item_id + "', " + vals.price + ", '" + vals.curUserID + "', '" + helper.date() + "' )" +
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -602,7 +626,7 @@ function viewPrice ( response ) {
 
   var vals = response.values;
   
-  helper.query( "SELECT PRICE, LOG_DATE FROM PRICE_HISTORY WHERE ITEM_ID = " + vals.item_id +
+  helper.query( "SELECT PRICE, LOG_DATE FROM PRICE_HISTORY WHERE ITEM_ID = '" + vals.item_id + "' " +
                 "ORDERED BY LOG_DATE DESC LIMIT 20",
                 function( error, rows, cols ) {
 
@@ -714,7 +738,10 @@ function viewSuppliers( response ) {
 // View Supplier - Step 2: Returns a list of suppliers for current page, ordered by name
 function viewSuppliersPage( response ) {
   
-  helper.query( "SELECT * FROM SUPPLIER ORDER BY NAME LIMIT " + (response.pagenum-1)*20 + ", 20", 
+  helper.query( "SELECT NAME 'Supplier Name', LEGAL_NAME 'Legal Name', " + 
+                "LEAD_TIME 'Lead Time', SUPPLIER_COMMENT 'Supplier Comments', " +
+                "SPECIAL_COMMENT 'Special Comments' " + 
+                "FROM SUPPLIER ORDER BY NAME LIMIT " + (response.pagenum-1)*20 + ", 20", 
                 function( error, rows, cols ) {
 
     response.writeHead( 200, {
@@ -734,6 +761,29 @@ function viewSuppliersPage( response ) {
   });
 }
 
+// Get Supplier - Get information of a single supplier from SUPPLIER Table.
+function getUser ( response ) {
+
+  var vals = response.values;
+
+  helper.query( "SELECT * FROM SUPPLIER WHERE SUPPLIER_ID = '" + vals.supplier_id + "'",
+                function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on SELCT FROM SUPPLIER: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+      
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }  
+  });
+}
+
+
 // Edit Supplier - Update SUPPLIER table with new item information for row SUPPLIER_ID.
 function editSupplier( response ) {
 
@@ -742,7 +792,7 @@ function editSupplier( response ) {
   helper.query( "UPDATE SUPPLIER SET NAME = '" + vals.name + "', LEGAL_NAME = '" + vals.legal_name +
                 "', LEAD_TIME = '" + vals.lead_time + "', SUPPLIER_COMMENT = '" + vals.supplier_comment +
                 "', SPECIAL_COMMENT = '" + vals.special_comment + "'" +
-                "WHERE SUPPLIER_ID = " + vals.supplier_id,
+                "WHERE SUPPLIER_ID = '" + vals.supplier_id + "'",
                 function( error, rows, cols ) {
   
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
@@ -801,7 +851,7 @@ function createContactPerson ( response ) {
   var vals = response.values;
 
   helper.query( "INSERT INTO CONTACT_PERSON ( SUPPLIER_ID, LAST_NAME, FIRST_NAME, PHONE_NUMBER, EMAIL ) " +
-                "VALUES( " + vals.supplier_id + ", '" + vals.last_name + "', '" + vals.first_name +
+                "VALUES( '" + vals.supplier_id + "', '" + vals.last_name + "', '" + vals.first_name +
                 "', '" + vals.phone_number + "', '" + vals.email + "' )",
                 function( error, rows, cols ) {
 
@@ -831,8 +881,9 @@ function viewContactPerson ( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT LAST_NAME, FIRST_NAME, PHONE_NUMBER, EMAIL FROM CONTACT_PERSON " +
-                "WHERE SUPPLIER_ID = " + vals.supplier_id + " ORDER BY LAST_NAME",
+  helper.query( "SELECT LAST_NAME 'Last Name', FIRST_NAME 'First Name', " +
+                "PHONE_NUMBER 'Phone Number', EMAIL 'Email Address' FROM CONTACT_PERSON " +
+                "WHERE SUPPLIER_ID = '" + vals.supplier_id + "' ORDER BY LAST_NAME",
                 function( error, rows, cols ) {
 
     response.writeHead( 200, {
@@ -859,7 +910,7 @@ function editContactPerson ( response ) {
 
   helper.query( "UPDATE CONTACT_PERSON SET LAST_NAME = '" + vals.last_name + "', FIRST_NAME ='" + vals.first_name +
                 "', PHONE_NUMBER = '" + vals.phone_number + "', EMAIL = '" + vals.email + "' " +
-                "WHERE CONTACT_PERSON_ID = " + vals.contact_person_id,
+                "WHERE CONTACT_PERSON_ID = '" + vals.contact_person_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
@@ -888,7 +939,7 @@ function deleteContactPerson ( response ) {
 
   var vals = response.values;
   
-  helper.query( "DELETE FROM CONTACT_PERSON WHERE CONTACT_PERSON_ID = " + vals.contact_person_id,
+  helper.query( "DELETE FROM CONTACT_PERSON WHERE CONTACT_PERSON_ID = '" + vals.contact_person_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -917,7 +968,7 @@ function createSupplierAddress ( response ) {
   var vals = response.values;
 
   helper.query( "INSERT INTO SUPPLIER_ADDRESS ( SUPPLIER_ID, ADDRESS_LINE_1, ADDRESS_LINE_2, CITY, PROV_STATE, COUNTRY, POSTAL_ZIP, PHONE_NUMBER ) " +
-                "VALUES( " + vals.supplier_id + ", '" + vals.address_line_1 + "', '" + vals.address_line_2 +
+                "VALUES( '" + vals.supplier_id + "', '" + vals.address_line_1 + "', '" + vals.address_line_2 +
                 "', '" + vals.city + "', '" + vals.prov_state + "', '" + vals.country + "', '" + vals.postal_zip +
                 "', '" + vals.phone_number + "' )",
                 function( error, rows, cols ) {
@@ -948,8 +999,10 @@ function viewSupplierAddress ( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT ADDRESS_LINE_1, ADDRESS_LINE_2, CITY, PROV_STATE, COUNTRY, POSTAL_ZIP, PHONE_NUMBER " +
-                "FROM SUPPLIER_ADDRESS WHERE SUPPLIER_ID = " + vals.supplier_id + " ORDER BY ADDRESS_ID",
+  helper.query( "SELECT ADDRESS_LINE_1 'Address Line 1', ADDRESS_LINE_2 'Address Line 2', " +
+                "CITY 'City', PROV_STATE 'Province/State', COUNTRY 'Country', " +
+                "POSTAL_ZIP 'Postal/Zip Code', PHONE_NUMBER 'Phone Number' " +
+                "FROM SUPPLIER_ADDRESS WHERE SUPPLIER_ID = '" + vals.supplier_id + "' ORDER BY ADDRESS_ID",
                 function( error, rows, cols ) {
 
     response.writeHead( 200, {
@@ -977,7 +1030,7 @@ function editSupplierAddress ( response ) {
   helper.query( "UPDATE SUPPLIER_ADDRESS SET ADDRESS_LINE_1 = '" + vals.address_line_1 + "', ADDRESS_LINE_2 ='" + vals.address_line_2 +
                 "', CITY = '" + vals.city + "', PROV_STATE = '" + vals.prov_state + "', COUNTRY = '" + vals.country +
                 "', POSTAL_ZIP = '" + vals.postal_zip + "', PHONE_NUMBER = '" + vals.phone_number + "' " + 
-                "WHERE ADDRESS_ID = " + vals.address_id,
+                "WHERE ADDRESS_ID = '" + vals.address_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
@@ -1006,7 +1059,7 @@ function deleteSupplierAddress ( response ) {
 
   var vals = response.values;
   
-  helper.query( "DELETE FROM SUPPLIER_ADDRESS WHERE ADDRESS_ID = " + vals.address_id,
+  helper.query( "DELETE FROM SUPPLIER_ADDRESS WHERE ADDRESS_ID = '" + vals.address_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -1037,7 +1090,7 @@ function createPurchaseOrder( response ) {
   
   helper.query( "INSERT INTO PURCHASE_ORDER( STATUS, CREATE_DATE, DELIVERY_DATE, DELIVER_TIME, REF_NUMBER, COMMENT, SUPPLIER_ID )" +
                 "VALUES( 'Queued', '" + helper.date() + "', '" + vals.delivery_date + "', '" + vals.delivery_time +
-                "', '" + vals.ref_number + "', '" + vals.comment + "', " + vals.supplier_id + " )",
+                "', '" + vals.ref_number + "', '" + vals.comment + "', '" + vals.supplier_id + "' )",
                 function( error, rows, cols ) {
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -1091,9 +1144,11 @@ function viewPurchaseOrdersPage ( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT po.PO_ID, po.STATUS, po.CREATE_DATE, po.SUBMIT_DATE, po.DELIVERY_DATE, po.DELIVERY_TIME, " +
-                "po.RECEIVE_DATE, po.REF_NUMBER, po.COMMENT, s.NAME FROM PURCHASE_ORDER po " + 
-                "LFET OUTER JOIN SUPPLIER s ON po.SUPPLIER_ID = s.SUPPLIER_ID " +
+  helper.query( "SELECT po.PO_ID 'PO Number', po.STATUS 'Current Status', po.CREATE_DATE 'Date Created', " +
+                "po.SUBMIT_DATE 'Date Submitted', po.DELIVERY_DATE 'Delivery Date', " +
+                "po.DELIVERY_TIME 'Delivery Time', po.RECEIVE_DATE 'Date Received', " +
+                "po.REF_NUMBER 'Reference Number', po.COMMENT 'Comments', s.NAME 'Supplier' " +
+                "FROM PURCHASE_ORDER po LFET OUTER JOIN SUPPLIER s ON po.SUPPLIER_ID = s.SUPPLIER_ID " +
                 "ORDER BY po.PO_ID LIMIT " + (response.values.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
        
@@ -1120,8 +1175,8 @@ function editPurchaseOrder( response ) {
   var vals = response.values;
 
   helper.query( "UPDATE PURCHASE_ORDER SET DELIVERY_DATE = '" + vals.delivery_date + "', DELIVERY_TIME = '" + vals.delivery_time +
-                "', REF_NUMBER = '" + vals.ref_number + "', COMMENT = '" + vals.comment + "', SUPPLIER_ID = " + vals.supplier_id +
-                " WHERE PO_ID = " + vals.po_id,
+                "', REF_NUMBER = '" + vals.ref_number + "', COMMENT = '" + vals.comment + "', SUPPLIER_ID = '" + vals.supplier_id + "' " +
+                "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -1151,7 +1206,7 @@ function submitPurchaseOrder( response ) {
   var vals = response.values;
 
   helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Submitted', SUBMIT_DATE = '" + helper.date() + "' " +
-                "WHERE PO_ID = " + vals.po_id + "",
+                "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -1180,7 +1235,7 @@ function cancelPurchaseOrder( response ) {
 
   var vals = response.values;
 
-  helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Cancelled' WHERE PO_ID = " + vals.po_id,
+  helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Cancelled' WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -1210,7 +1265,7 @@ function returnPurchaseOrder( response ) {
   var vals = response.values;
 
   helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Returned' " +
-                "WHERE PO_ID = " + vals.po_id,
+                "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -1240,7 +1295,7 @@ function receivePurchaseOrder( response ) {
   var vals = response.values;
 
   helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Received', RECEIVE_DATE = '" + helper.date() + "' " +
-                "WHERE PO_ID = " + vals.po_id + "",
+                "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -1300,7 +1355,8 @@ function viewOrderLine( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT p.PO_LINE_ID, i.ITEM_NAME, p.QTY_ORDERED, p.QTY_RECEIVED, p.COMMENT, p.AUTHOR, ph.PRICE " +
+  helper.query( "SELECT p.PO_LINE_ID 'Line', i.ITEM_NAME 'Item Name', p.QTY_ORDERED 'Qty Ordered', " +
+                "p.QTY_RECEIVED 'Qty Received', p.COMMENT 'Comments', p.AUTHOR 'Created By', ph.PRICE 'Latest Price' " +
                 "FROM PO_LINE p LEFT OUTER JOIN ITEM i ON p.ITEM_ID = i.ITEM_ID " +
                 "LEFT OUTER JOIN PRICE_HISTORY ph ON p.PRICE_ID = ph.PRICE_ID WHERE PO_ID = '" + vals.po_id + "' " + 
                 "ORDER BY PO_LINE_ID",
@@ -1385,6 +1441,54 @@ function createReturnLine( response ) {
   });
 }
 
+// Get Supplier List - get full list of supplier with names and ID.
+function getSupplierList( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT NAME, SUPPLIER_ID FROM SUPPLIER",
+                function( error, rows, cols ) {
+    
+    if ( error ) {
+      console.log( "Error on SELECT from SUPPLIER: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+      
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }
+  });
+}
+
+function getSupplier( response ) {
+
+}
+
+// Get Category List - get full list of category with names.
+function getCategoryList( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT CAT_NAME FROM ITEM_CATEGORY",
+                function( error, rows, cols ) {
+    
+    if ( error ) {
+      console.log( "Error on SELECT from ITEM_CATEGORY: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+    
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }
+  });
+}
+
 exports.index = index;
 exports.login = login;
 exports.logout = logout;
@@ -1396,6 +1500,7 @@ exports.createUserCheckDupe = createUserCheckDupe;
 exports.createUser = createUser;
 exports.viewUsers = viewUsers;
 exports.viewUsersPage = viewUsersPage;
+exports.getUser = getUser;
 exports.editUser = editUser;
 exports.deleteUser = deleteUser;
 
@@ -1403,6 +1508,7 @@ exports.createItemCheckDupe = createItemCheckDupe;
 exports.createItem = createItem;
 exports.viewItems = viewItems;
 exports.viewItemsPage = viewItemsPage;
+//exports.getItem = getItem;
 exports.editItem = editItem;
 exports.deleteItem = deleteItem;
 
@@ -1413,22 +1519,26 @@ exports.createSupplierCheckDupe = createSupplierCheckDupe;
 exports.createSupplier = createSupplier;
 exports.viewSuppliers = viewSuppliers;
 exports.viewSuppliersPage = viewSuppliersPage;
+exports.getSupplier = getSupplier;
 exports.editSupplier = editSupplier;
 exports.deleteSupplier = deleteSupplier;
 
 exports.createContactPerson = createContactPerson;
 exports.viewContactPerson = viewContactPerson;
+//exports.getContactPerson = getContactPerson;
 exports.editContactPerson = editContactPerson;
 exports.deleteContactPerson = deleteContactPerson;
 
 exports.createSupplierAddress = createSupplierAddress;
 exports.viewSupplierAddress = viewSupplierAddress;
+//exports.getSupplierAddress = getSupplierAddress;
 exports.editSupplierAddress = editSupplierAddress;
 exports.deleteSupplierAddress = deleteSupplierAddress;
 
 exports.createPurchaseOrder = createPurchaseOrder;
 exports.viewPurchaseOrders = viewPurchaseOrders;
 exports.viewPurchaseOrdersPage = viewPurchaseOrdersPage;
+//exports.getPurchaseOrder = getPurchaseOrder;
 exports.editPurchaseOrder = editPurchaseOrder;
 exports.submitPurchaseOrder = submitPurchaseOrder;
 exports.cancelPurchaseOrder = cancelPurchaseOrder;
@@ -1437,6 +1547,10 @@ exports.receivePurchaseOrder = receivePurchaseOrder;
 
 exports.createOrderLine = createOrderLine;
 exports.viewOrderLine = viewOrderLine;
+//exports.getOrderLine = getOrderLine;
 exports.editOrderLine = editOrderLine;
 
 exports.createReturnLine = createReturnLine;
+
+exports.getSupplierList = getSupplierList;
+exports.getCategoryList = getCategoryList;
