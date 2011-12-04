@@ -324,12 +324,12 @@
 
     // While user is scrolling down, the shopping cart banner and the menu follows
     $(window).scroll(function () {
-      if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
+      if ($(window).scrollTop() > $(".scrollTrigger").offset().top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
       }
       // Revert back to normal
-      if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
+      if ($(window).scrollTop() <= $(".scrollTrigger").offset().top) {
         $("#header").css("position", "relative");
         $("#header").css("top", $(".scrollTrigger").offset);
       }
