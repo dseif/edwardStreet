@@ -14,6 +14,22 @@
 <script type="text/javascript" src="../js/helper.js"></script>
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
+      
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/getsupplierlist",
+        data: {
+          hash: getCookie( "EDST_H" )
+        },
+        success: function( response, code, xhr ) {
+
+          var data = JSON.parse( response );
+
+          console.log( data );
+        }
+      });
+
+      $( "#iSupplierBox" )
 
       var numItems = 0,
           numPages = 0,
@@ -199,6 +215,8 @@
                           var respObj = data[ $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) ];
                           $( "#itemName" ).val( respObj[ "ITEM_NAME" ] );
                           $( "#receiptName" ).val( respObj[ "RECEIPT_NAME" ] );
+                          $( "#iCategoryBox" ).val( String.prototype.toLowerCase.apply( respObj[ "CATEGORY" ] ) );
+                          $( "#iTypeBox" ).val( String.prototype.toLowerCase.apply( respObj[ "ITEM_TYPE" ] ) );
                         });
 
                       for ( var row in data[ item ] ) {
@@ -448,9 +466,6 @@
               <tr>
                 <td>Supplier:</td> <!-- Auto populated -->
                 <td><select name="itemSupplier" id="iSupplierBox">
-                    <option value="supp1">SupplierA</option>
-                    <option value="supp2">SupplierB</option>
-                    <option value="supp3">SupplierC</option>
                     </select>
                 </td>
               </tr>
