@@ -139,11 +139,6 @@ function logout( response ) {
 }
 
 // Question: What is this?
-function profile() {
-  return "Profile";
-}
-
-// Question: What is this?
 function logs() {
   return "Logs";
 }
@@ -504,7 +499,7 @@ function viewItemsPage( response) {
 }
 
 // Get Item - Get information of a single item  from ITEM Table.
-function getSupplier ( response ) {
+function getItem ( response ) {
 
   var vals = response.values;
 
@@ -512,7 +507,7 @@ function getSupplier ( response ) {
                 function( error, rows, cols ) {
 
     if ( error ) {
-      console.log( "Error on SELCT FROM ITEM: " + error );
+      console.log( "Error on SELECT FROM ITEM: " + error );
     } else {
       response.writeHead( 200, {
         "Content-Type": "text/plain",
@@ -792,7 +787,7 @@ function getSupplier ( response ) {
                 function( error, rows, cols ) {
 
     if ( error ) {
-      console.log( "Error on SELCT FROM SUPPLIER: " + error );
+      console.log( "Error on SELECT FROM SUPPLIER: " + error );
     } else {
       response.writeHead( 200, {
         "Content-Type": "text/plain",
@@ -1074,7 +1069,7 @@ function getSupplierAddress ( response ) {
                 function( error, rows, cols ) {
 
     if ( error ) {
-      console.log( "Error on SELCT FROM SUPPLIER: " + error );
+      console.log( "Error on SELECT FROM SUPPLIER_ADDRESS: " + error );
     } else {
       response.writeHead( 200, {
         "Content-Type": "text/plain",
@@ -1471,11 +1466,11 @@ function getOrderLine ( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT * FROM PO_LINE WHERE PO_ID = '" + vals.po_id "'",
+  helper.query( "SELECT * FROM PO_LINE WHERE PO_ID = '" + vals.po_id "' AND PO_LINE_ID = '" + vals.po_line_id "'",
                 function( error, rows, cols ) {
 
     if ( error ) {
-      console.log( "Error on SELECT FROM PURCHASE_ORDER: " + error );
+      console.log( "Error on SELECT FROM PO_LINE: " + error );
     } else {
       response.writeHead( 200, {
         "Content-Type": "text/plain",
@@ -1572,10 +1567,6 @@ function getSupplierList( response ) {
   });
 }
 
-function getSupplier( response ) {
-
-}
-
 // Get Category List - get full list of category with names.
 function getCategoryList( response ) {
 
@@ -1601,7 +1592,6 @@ function getCategoryList( response ) {
 exports.index = index;
 exports.login = login;
 exports.logout = logout;
-exports.profile = profile;
 exports.logs = logs;
 exports.editAccount = editAccount;
 
@@ -1617,7 +1607,7 @@ exports.createItemCheckDupe = createItemCheckDupe;
 exports.createItem = createItem;
 exports.viewItems = viewItems;
 exports.viewItemsPage = viewItemsPage;
-//exports.getItem = getItem;
+exports.getItem = getItem;
 exports.editItem = editItem;
 exports.deleteItem = deleteItem;
 
@@ -1634,20 +1624,20 @@ exports.deleteSupplier = deleteSupplier;
 
 exports.createContactPerson = createContactPerson;
 exports.viewContactPerson = viewContactPerson;
-//exports.getContactPerson = getContactPerson;
+exports.getContactPerson = getContactPerson;
 exports.editContactPerson = editContactPerson;
 exports.deleteContactPerson = deleteContactPerson;
 
 exports.createSupplierAddress = createSupplierAddress;
 exports.viewSupplierAddress = viewSupplierAddress;
-//exports.getSupplierAddress = getSupplierAddress;
+exports.getSupplierAddress = getSupplierAddress;
 exports.editSupplierAddress = editSupplierAddress;
 exports.deleteSupplierAddress = deleteSupplierAddress;
 
 exports.createPurchaseOrder = createPurchaseOrder;
 exports.viewPurchaseOrders = viewPurchaseOrders;
 exports.viewPurchaseOrdersPage = viewPurchaseOrdersPage;
-//exports.getPurchaseOrder = getPurchaseOrder;
+exports.getPurchaseOrder = getPurchaseOrder;
 exports.editPurchaseOrder = editPurchaseOrder;
 exports.submitPurchaseOrder = submitPurchaseOrder;
 exports.cancelPurchaseOrder = cancelPurchaseOrder;
@@ -1656,7 +1646,7 @@ exports.receivePurchaseOrder = receivePurchaseOrder;
 
 exports.createOrderLine = createOrderLine;
 exports.viewOrderLine = viewOrderLine;
-//exports.getOrderLine = getOrderLine;
+exports.getOrderLine = getOrderLine;
 exports.editOrderLine = editOrderLine;
 
 exports.createReturnLine = createReturnLine;
