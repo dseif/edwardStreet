@@ -6,18 +6,22 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street - View Logs</title>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
+<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
+<script type="text/javascript" src="login.js"></script>
 <script type="text/javascript">
 
   document.addEventListener("DOMContentLoaded", function (event) {
 
     $.ajax({
       cache: false,
-      url: "http://96.126.109.151:8080/viewuserspage",
+      url: "http://96.126.109.151:8080/viewuserhistorypage",
       data: {
-        //hash: getCookie("EDST_H"),
+        hash: getCookie("EDST_H"),
         pagenum: 1
       },
       success: function (response, code, xhr) {
+      console.log( "testing" );
         console.log( JSON.parse( response ) );
       }
     });
