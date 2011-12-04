@@ -28,9 +28,10 @@ function setCookie( c_name, value, exdays ) {
 document.addEventListener( "DOMContentLoaded", function( event ) {
 
   window.cookie = getCookie( "EDST_H" ); 
-  if ( window.location.href !== "login.html" ) {
+  var pathname = window.location.pathname.split( "/" )
+  if ( pathname[ pathname.length ] === "login.html" ) {
     if ( !cookie ) { 
-      window.location = "login.html";
+      //window.location = "login.html";
     } else {
 
       var tmpCookie = cookie.substring( 0, 2 ).toLowerCase();
