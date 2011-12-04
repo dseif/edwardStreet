@@ -28,9 +28,9 @@ function setCookie( c_name, value, exdays ) {
 document.addEventListener( "DOMContentLoaded", function( event ) {
 
   window.cookie = getCookie( "EDST_H" ); 
-  if ( window.location.href !== "http://localhost/~dseif/edwardStreet/site/login.html" ) {
+  if ( window.location.href !== "login.html" ) {
     if ( !cookie ) { 
-      window.location = "http://localhost/~dseif/edwardStreet/site/login.html";
+      window.location = "login.html";
     } else {
 
       var tmpCookie = cookie.substring( 0, 2 ).toLowerCase();
