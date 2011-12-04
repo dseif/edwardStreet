@@ -168,7 +168,7 @@ function viewUserHistoryPage( response ) {
 
   var vals = response.values;
   
-  helper.query( "SELECT USER_ID 'User Account', CATEGORY 'Action Type', COMMENT 'comment', " +
+  helper.query( "SELECT USER_ID 'User Account', CATEGORY 'Action Type', COMMENT 'Comment', " +
                 "AUTHOR 'Action By', LOG_DATE 'Date' " +
                 "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
@@ -220,7 +220,7 @@ function viewItemHistoryPage( response ) {
 
   var vals = response.values;
   
-  helper.query( "SELECT h.ITEM_ID 'Item ID', i.ITEM_NAME 'Item Name', h.CATEGORY 'Action Type', h.COMMENT 'comment', " +
+  helper.query( "SELECT h.ITEM_ID 'Item ID', i.ITEM_NAME 'Item Name', h.CATEGORY 'Action Type', h.COMMENT 'Comment', " +
                 "AUTHOR 'Action By', LOG_DATE 'Date' FROM ITEM_HISTORY h" +
                 "LEFT OUTER JOIN ITEM i ON h.ITEM_ID = i.ITEM_ID " +
                 "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
@@ -273,7 +273,7 @@ function viewSupplierHistoryPage( response ) {
 
   var vals = response.values;
   
-  helper.query( "SELECT h.SUPPLIER_ID 'Supplier ID', s.NAME 'Supplier Name', h.CATEGORY 'Action Type', h.COMMENT 'comment', " +
+  helper.query( "SELECT h.SUPPLIER_ID 'Supplier ID', s.NAME 'Supplier Name', h.CATEGORY 'Action Type', h.COMMENT 'Comment', " +
                 "h.AUTHOR 'Action By', h.LOG_DATE 'Date' FROM SUPPLIER_HISTORY h " +
                 "LEFT OUTER JOIN SUPPLIER s ON h.SUPPLIER_ID = s.SUPPLIER_ID " +
                 "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",

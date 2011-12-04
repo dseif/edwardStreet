@@ -7,6 +7,22 @@
 <title>Edward Street - View Logs</title>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
 <script type="text/javascript">
+
+  document.addEventListener("DOMContentLoaded", function (event) {
+
+    $.ajax({
+      cache: false,
+      url: "http://96.126.109.151:8080/viewuserspage",
+      data: {
+        //hash: getCookie("EDST_H"),
+        pagenum: 1
+      },
+      success: function (response, code, xhr) {
+        console.log( JSON.parse( response ) );
+      }
+    });
+  }, false);
+
     document.addEventListener("DOMContentLoaded", function (event) {
 
       document.getElementById("searchBtn").addEventListener("click", function (event) {
@@ -41,6 +57,8 @@
         $("#header").css("top", $(".scrollTrigger").offset);
       }
     });
+    
+    
 </script>
 </head>
 
