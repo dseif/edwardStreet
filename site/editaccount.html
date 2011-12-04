@@ -163,18 +163,11 @@
         if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
           $("#header").css("position", "fixed");
           $("#header").css("top", "0");
-          $("#menu").css("position", "fixed");
-          $("#menu").css("right", $(document).width() / 24);
-          $("#menu").css("top", 156);
         }
         // Revert back to normal
         if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
           $("#header").css("position", "relative");
           $("#header").css("top", $(".scrollTrigger").offset);
-          $("#menu").css("position", "relative");
-          $("#menu").css("top", $(".scrollTrigger").offset);
-          $("#menu").css("left", 0);
-          $("#menu").css("top", 0);
         }
       });
 

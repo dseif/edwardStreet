@@ -100,14 +100,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
     }
 
     if (ok) {
-      console.log("ASDASDA");
+
+      console.log( getCookie( "EDST_H" ) );
       $.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/",
         data: {
-          curUserID: document.getElementById("curUserID").value,
-          curPassword: document.getElementById("curPassword").value,
-          hash: document.getElementById("response").innerHTML
+          user: document.getElementById("curUserID").value,
+          pass: document.getElementById("curPassword").value,
         },
         success: function (response, code, xhr) {
           console.log(response);
