@@ -296,7 +296,7 @@ function getUser ( response ) {
                 function( error, rows, cols ) {
 
     if ( error ) {
-      console.log( "Error on UPDATE USER: " + error );
+      console.log( "Error on SELECT FROM  USER: " + error );
     } else {
       response.writeHead( 200, {
         "Content-Type": "text/plain",
@@ -762,7 +762,7 @@ function viewSuppliersPage( response ) {
 }
 
 // Get Supplier - Get information of a single supplier from SUPPLIER Table.
-function getUser ( response ) {
+function getSupplier ( response ) {
 
   var vals = response.values;
 
