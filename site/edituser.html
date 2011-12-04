@@ -18,28 +18,29 @@
 
     $.ajax({
       cache: false,
-      url: "http://96.126.109.151:8080/viewusers",
+      url: "http://96.126.109.151:8080/viewuserspage",
       data: {
-        hash: getCookie("EDST_H")
+        hash: getCookie("EDST_H"),
+        pagenum: 1
       },
       success: function (response, code, xhr) {
 
+      console.log( JSON.parse( response ) );
         var table = $("#itemTable");
 
         var data = JSON.parse(response),
           dataObj = {};
         for (var i = 0, l = data.length; i < l; i++) {
 
-          dataObj[data[i]["USER_ID"]] = data[i];
+          dataObj[data[i]["User Login"]] = data[i];
 
-          table.append("<tr><td><b>" + data[i]["USER_ID"] + "</b></td><td>" + data[i]["ROLE"] + "</td>" + "<td>" + data[i]["EMAIL"] + "</td><td><button id='" + data[i]["USER_ID"] + "'>Edit</button></td></tr>");
+          table.append("<tr><td><b>" + data[i]["User Login"] + "</b></td><td>" + data[i]["Role"] + "</td>" + "<td>" + data[i]["Email Address"] + "</td><td><button id='" + data[i]["User Login"] + "'>Edit</button></td></tr>");
 
-          $("#" + data[i]["USER_ID"]).click(function () {
+          $("#" + data[i]["User Login"]).click(function () {
 
-            console.log($(this).attr("id"), dataObj[$(this).attr("id")]["USER_ID"], $("#curUserID"));
-            $("#curUserID").val(dataObj[$(this).attr("id")]["USER_ID"]);
-            $("#curEmail").val(dataObj[$(this).attr("id")]["EMAIL"]);
-            $("#curRole").val(String.prototype.toLowerCase.apply(dataObj[$(this).attr("id")]["ROLE"]));
+            $("#curUserID").val(dataObj[$(this).attr("id")]["User Login"]);
+            $("#curEmail").val(dataObj[$(this).attr("id")]["Email Address"]);
+            $("#curRole").val(String.prototype.toLowerCase.apply(dataObj[$(this).attr("id")]["Role"]));
           });
         }
       }
@@ -48,7 +49,6 @@
   document.addEventListener("DOMContentLoaded", function (event) {
 
     document.getElementById("deleteBtn").addEventListener("click", function () {
-      console.log("HERE BITCH");
 
       if ($("#curUserID").val() !== "") {
 
@@ -157,7 +157,6 @@
 
       }
                 
-    }            
                 // Validate the user name
                 if (validation2.validateUserName(loginName)) {
                     $('#userValid').html("User name is valid");
