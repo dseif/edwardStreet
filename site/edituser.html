@@ -14,175 +14,147 @@
 <script type="text/javascript" src="login.js"></script>
 <script type="text/javascript">
 
-  var viewuser;
-  document.addEventListener( "DOMContentLoaded", function( event ) {
+  document.addEventListener("DOMContentLoaded", function (event) {
 
-    viewuser = function() {
+    $.ajax({
+      cache: false,
+      url: "http://96.126.109.151:8080/viewusers",
+      data: {
+        hash: getCookie("EDST_H")
+      },
+      success: function (response, code, xhr) {
 
-      $( "#userName" ).val( "" );
-      $( "#emailAddress" ).val( "" );
+        var table = $("#itemTable");
 
-      $.ajax({
-        cache: false,
-        url: "http://96.126.109.151:8080/viewuserspage",
-        data: {
-          hash: getCookie( "EDST_H" ),
-          pagenum: 1
-        },
-        success: function( response, code, xhr ) {
+        var data = JSON.parse(response),
+          dataObj = {};
+        for (var i = 0, l = data.length; i < l; i++) {
 
-          var table = $( "#itemTable" );
-          table.find("tr:gt(0)").remove();
+          dataObj[data[i]["USER_ID"]] = data[i];
 
-          var data = JSON.parse( response ),
-              dataObj = {};
-          for ( var i = 0, l = data.length; i < l; i++ ) {
+          table.append("<tr><td><b>" + data[i]["USER_ID"] + "</b></td><td>" + data[i]["ROLE"] + "</td>" + "<td>" + data[i]["EMAIL"] + "</td><td><button id='" + data[i]["USER_ID"] + "'>Edit</button></td></tr>");
 
-            dataObj[ data[ i ][ "USER_ID" ] ] = data[ i ];
+          $("#" + data[i]["USER_ID"]).click(function () {
 
-            table.append( "<tr><td><b>" + data[ i ][ "USER_ID" ] + "</b></td><td>" + data[ i ][ "ROLE" ] + "</td>" + 
-              "<td>" + data[ i ][ "EMAIL" ] + "</td><td><button id='" + data[ i ][ "USER_ID" ] + "'>Edit</button></td></tr>" );
-
-            $( "#" + data[ i ][ "USER_ID" ] ).click(function() {
-
-              $( "#userName" ).val( dataObj[ $( this ).attr( "id" ) ][ "USER_ID" ] );
-              $( "#userName" ).attr( "edst-data", dataObj[ $( this ).attr( "id" ) ][ "USER_ID" ] );
-              $( "#emailAddress" ).val( dataObj[ $( this ).attr( "id" ) ][ "EMAIL" ] );
-              $( "#userRoleBox" ).val( String.prototype.toLowerCase.apply( dataObj[ $( this ).attr( "id" ) ][ "ROLE" ] ) );
-            });
-          }
+            console.log($(this).attr("id"), dataObj[$(this).attr("id")]["USER_ID"], $("#curUserID"));
+            $("#curUserID").val(dataObj[$(this).attr("id")]["USER_ID"]);
+            $("#curEmail").val(dataObj[$(this).attr("id")]["EMAIL"]);
+            $("#curRole").val(String.prototype.toLowerCase.apply(dataObj[$(this).attr("id")]["ROLE"]));
+          });
         }
-      }); 
-    };
-    viewuser();
-  }, false );
-    document.addEventListener("DOMContentLoaded", function (event) {
+      }
+    });
+  }, false);
+  document.addEventListener("DOMContentLoaded", function (event) {
 
-document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
+    document.getElementById("deleteBtn").addEventListener("click", function () {
+      console.log("HERE BITCH");
 
-    if( $( "#userName" ).val() !== "" ) {
+      if ($("#curUserID").val() !== "") {
 
-    $( "#dialog-confirm" ).dialog({
-        resizable: false,
-        height:160,
-        modal: true,
-        buttons: {
-          "Delete": function() {
-
-            $.ajax({
-              cache: false,
-              url: "http://96.126.109.151:8080/deleteuser",
-              data: {
-                hash: getCookie( "EDST_H" ),
-                "user_id": document.getElementById( "userName" ).value
-              },
-              success: function( response, code, xhr ) {
-
-                $( "#userName" ).val( " " );
-                $( "#emailAddress" ).val(  " " );
-                $( "userRoleBox" ).val( " " );
-                $( "#itemTable" ).find( "tr:gt(0)" ).remove();
-                viewuser();
-              }
-            });
-            $( this ).dialog( "close" );
+        $.ajax({
+          cache: false,
+          url: "http://96.126.109.151:8080/deleteuser",
+          data: {
+            hash: getCookie("EDST_H"),
+            username: document.getElementById("curUserID").value
           },
-          Cancel: function() {
-            
-            $( this ).dialog( "close" );
+          success: function (response, code, xhr) {
+
+            console.log(JSON.parse(response));
+            alert("User Successfully deleted!");
           }
+        });
+      }
+    }, false);
+
+
+    document.getElementById("submitBtn").addEventListener("click", function (event) {
+
+      if ($("#searchText").val() == "") {
+        alert("Field must not be empty");
+      }
+
+    }, false);
+
+    document.getElementById("viewAllBtn").addEventListener("click", function (event) {
+
+      if ($("#searchText").val() == "") {
+        alert("Field must not be empty");
+      }
+
+    }, false);
+
+    document.getElementById("saveBtn").addEventListener("click", function (event) {
+
+      var ok = true;
+      // input elements
+      var $inputs = $('#content :input');
+      // div space for message
+      var $msgs = $('#content').children("div");
+      // array holding $inputs 
+      var values = [];
+      // array holding $msgs
+      var displays = [];
+      // initializing string for use in .each for $msgs and $inputs
+      var string1, string2;
+      // int variables used to iterate in .each for $msgs and $inputs 
+      var i = 0;
+      var j = 0;
+
+      // gets each $msg element and pushes to array called displays
+      $msgs.each(function () {
+
+        string2 = $msgs.get(j).tagName;
+        j = j + 1;
+        var text2 = $(this).attr('id');
+        displays.push(text2);
+      });
+
+      //            $inputs.each(function () {
+      //                string1 = $inputs.get(i).tagName;
+      //                i = i + 1;
+      //                var text = $(this).attr('id');
+      //                values.push(text);
+      //            });
+      // each validation to validate certain rules
+      validation = window.edwardValidationRequired;
+      validation2 = window.edwardValidationUser;
+      validation3 = window.edwardValidationEmail;
+
+      // used for individual validation
+      var loginName = $("#curUserID").val();
+      var curEmail = $("#curEmail").val();
+
+      // array for storing fields that are empty
+      var getBadArray = [];
+
+      // Gets each $inputs element and pushes to array called values
+      // Aslo, it adds each input element that is empty
+      // to an array that stores inputs that are empty
+      $inputs.each(function () {
+        string1 = $inputs.get(i).tagName;
+        i = i + 1;
+        var text = $(this).attr('id');
+        values.push(text);
+        if ($(this).val().length == 0) {
+          txt = $(this).attr('id');
+          getBadArray.push(txt);
+
         }
       });
-      
-    }
-  }, false);
 
+      // For loop to determine each input box by calling validateGeneral
+      // and checking each input box whether it is part of the array that
+      // holds empty textboxes 
+      for (var i = 0; i < displays.length; i++) {
+        if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
+          $('#' + displays[i]).html("RIGHT");
+        } else {
+          $('#' + displays[i]).html("Missing required field");
+          ok = false;
+        }
 
-     document.getElementById("submitBtn").addEventListener("click", function (event) {
-
-            if ($("#searchText").val() == "") {
-                alert("Field must not be empty");
-            }
-
-        }, false);
-
-        document.getElementById("viewAllBtn").addEventListener("click", function (event) {
-
-            if ($("#searchText").val() == "") {
-                alert("Field must not be empty");
-            }
-
-        }, false);
-        
-         document.getElementById("saveBtn").addEventListener("click", function (event) {
-
-            var ok = true;
-            // input elements
-            var $inputs = $('#content :input');
-            // div space for message
-            var $msgs = $('#content').children("div");
-            // array holding $inputs 
-            var values = [];
-            // array holding $msgs
-            var displays = [];
-            // initializing string for use in .each for $msgs and $inputs
-            var string1, string2;
-            // int variables used to iterate in .each for $msgs and $inputs 
-            var i = 0;
-            var j = 0;
-
-            // gets each $msg element and pushes to array called displays
-            $msgs.each(function () {
-
-                string2 = $msgs.get(j).tagName;
-                j = j + 1;
-                var text2 = $(this).attr('id');
-                displays.push(text2);
-            });
-            
-//            $inputs.each(function () {
-//                string1 = $inputs.get(i).tagName;
-//                i = i + 1;
-//                var text = $(this).attr('id');
-//                values.push(text);
-//            });
-
-            // each validation to validate certain rules
-            validation = window.edwardValidationRequired;
-            validation2 = window.edwardValidationUser;
-            validation3 = window.edwardValidationEmail;
-
-            // used for individual validation
-            var loginName = $("#userName").val();
-            var emailAddress = $("#emailAddress").val();
-
-            // array for storing fields that are empty
-            var getBadArray = [];
-
-            // Gets each $inputs element and pushes to array called values
-            // Aslo, it adds each input element that is empty
-            // to an array that stores inputs that are empty
-            $inputs.each(function () {
-                string1 = $inputs.get(i).tagName;
-                i = i + 1;
-                var text = $(this).attr('id');
-                values.push(text);
-                if ($(this).val().length == 0) {
-                    txt = $(this).attr('id');
-                    getBadArray.push(txt);
-
-                }
-            });
-
-// For loop to determine each input box by calling validateGeneral
-// and checking each input box whether it is part of the array that
-// holds empty textboxes 
-    for (var i = 0; i < displays.length; i++) {
-      if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
-                      $('#' + displays[i]).html("RIGHT");}
-      else {
-                      $('#' + displays[i]).html("Missing required field");
-                      ok = false;
       }
                 
     }            
@@ -249,18 +221,18 @@ $(window).scroll(function () {
         $("#menu").css("position", "fixed");
         $("#menu").css("left", "379px");
         $("#menu").css("bottom", "470px");
-    }
+   }
     // Revert back to normal
-    if ($(window).scrollTop() <= $(".scrollTrigger").offset({ scroll: false }).top) {
-        $("#header").css("position", "relative");
-        $("#header").css("top", $(".scrollTrigger").offset);
-        $("#menu").css("position", "relative");
-        $("#menu").css("top", $(".scrollTrigger").offset);
-        $("#menu").css("left", "0px");
-        $("#menu").css("bottom", "0px");
+    if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
+      $("#header").css("position", "relative");
+      $("#header").css("top", $(".scrollTrigger").offset);
+      $("#menu").css("position", "relative");
+      $("#menu").css("top", $(".scrollTrigger").offset);
+      $("#menu").css("left", 0);
+      $("#menu").css("top", 0);
     }
-});
-	</script>
+  });
+</script>
 </head>
 
 <body>
@@ -334,9 +306,9 @@ $(window).scroll(function () {
             
             By:
               <select name="searchDetails" id="searchDetails">
-                <option value="userName" selected="selected">User Name</option>
+                <option value="curUserID" selected="selected">User Name</option>
                 <option value="userRole">User Role</option>
-                <option value="emailAddress">Email Address</option>
+                <option value="curEmail">Email Address</option>
               </select><br />
 
             <input class="submitbutton" value="Search" type="submit" name="SubmitButton" id="submitBtn"/>OR
@@ -360,14 +332,14 @@ $(window).scroll(function () {
             
             <table id="editUserTable">
                         
-                <label for="userName">User Name:</label> <input type="text" value="" name="UserName" id="userName"/></td>
+                <label for="curUserID">User Name:</label> <input type="text" value="" name="UserName" id="curUserID"/></td>
                 <div id="userValid"></div>
                 
-                <label for="emailAddress">Email Address:</label> <input id="emailAddress" type="text" value="" name="EmailAddress"/></td>
+                <label for="curEmail">Email Address:</label> <input id="curEmail" type="text" value="" name="EmailAddress"/></td>
                 <div id="emailValid"></div>
                 
-                <label for="userRoleBox">User Role:</label> <!-- Auto Populated -->
-                <select name="UserRole" id="userRoleBox">
+                <label for="curRole">User Role:</label> <!-- Auto Populated -->
+                <select name="UserRole" id="curRole">
                   <option value="admin">Admin</option>
                   <option value="buyer">Buyer</option>
                   <option value="receiver">Receiver</option>

@@ -11,222 +11,214 @@
 <script>
 // Show all suppliers, also modify selected supplier
 // Selection is not implemented yet
+document.addEventListener("DOMContentLoaded", function (event) {
 
-  document.addEventListener( "DOMContentLoaded", function( event ) {
+  $.ajax({
+    cache: false,
+    url: "http://96.126.109.151:8080/viewsupplier",
+    data: {
+      hash: getCookie("EDST_H")
+    },
+    success: function (response, code, xhr) {
 
-    $.ajax({
-      cache: false,
-      url: "http://96.126.109.151:8080/viewsupplier",
-      data: {
-        hash: getCookie( "EDST_H" )
-      },
-      success: function( response, code, xhr ) {
+      var table = document.getElementById("suppTable");
 
-        var table = document.getElementById( "suppTable" );
+      response = JSON.parse(response);
 
-        response = JSON.parse( response );
+      var addRow = function (count) {
+          var row = table.insertRow(count + 1),
+            data = response[count],
+            count = 0;
 
-        var addRow = function( count ) {
-          var row = table.insertRow( count + 1 ),
-          data = response[ count ],
-          count = 0;
-
-          for( var item in data ) {
-            row.insertCell( count ).innerHTML = data[ item ];
+          for (var item in data) {
+            row.insertCell(count).innerHTML = data[item];
           }
         }
 
-        for( var i = 0, len = response.length; i < len; i ++ ) {
-          addRow( i );
-        }
+      for (var i = 0, len = response.length; i < len; i++) {
+        addRow(i);
       }
-    });
-    
-    // Edit the selected supplier
-    var button = document.getElementById( "savBtn" );
-    button.addEventListener( "click", function( event ) {
+    }
+  });
+
+  // Edit the selected supplier
+  var button = document.getElementById("savBtn");
+  button.addEventListener("click", function (event) {
 
     $.ajax({
       cache: false,
       url: "http://96.126.109.151:8080/addsupplier",
       data: {
-        usrName: document.getElementById( "usrName" ).value,
-        roleBox: document.getElementById( "roleBox" ).value,
-        suppName: document.getElementById( "suppName" ).value,
-        leglName: document.getElementById( "leglName" ).value,
-        addrs: document.getElementById( "addrs" ).value,
-        contact: document.getElementById( "contact" ).value,
-        leadTime: document.getElementById( "leadTime" ).value,
-        datesofdelivery: document.getElementById( "datesofdelivery" ).value,
-        
+        usrName: document.getElementById("usrName").value,
+        roleBox: document.getElementById("roleBox").value,
+        suppName: document.getElementById("suppName").value,
+        leglName: document.getElementById("leglName").value,
+        addrs: document.getElementById("addrs").value,
+        contact: document.getElementById("contact").value,
+        leadTime: document.getElementById("leadTime").value,
+        datesofdelivery: document.getElementById("datesofdelivery").value,
+
         // Is this valid? getElementByName
-        suppComment: document.getElementByName( "suppComment" ).value,
-        otherComments: document.getElementByName( "otherComment" ).value,
-        
+        suppComment: document.getElementByName("suppComment").value,
+        otherComments: document.getElementByName("otherComment").value,
+
       },
-      success: function( response, code, xhr ) {
+      success: function (response, code, xhr) {
 
         // The supplier has been added successfully
       }
     });
-    
-  }, false );
+
+  }, false);
 </script>
 
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
 
-        document.getElementById("savBtn").addEventListener("click", function (event) {
+      document.getElementById("savBtn").addEventListener("click", function (event) {
 
-            // input elements
-            var $inputs = $('#page :input');
-            // div space for message
-            var $msgs = $('#page').children("div");
-            // array holding $inputs 
-            var values = [];
-            // array holding $msgs
-            var displays = [];
-            // initializing string for use in .each for $msgs and $inputs
-            var string1, string2;
-            // int variables used to iterate in .each for $msgs and $inputs 
-            var i = 0;
-            var j = 0;
+        // input elements
+        var $inputs = $('#page :input');
+        // div space for message
+        var $msgs = $('#page').children("div");
+        // array holding $inputs 
+        var values = [];
+        // array holding $msgs
+        var displays = [];
+        // initializing string for use in .each for $msgs and $inputs
+        var string1, string2;
+        // int variables used to iterate in .each for $msgs and $inputs 
+        var i = 0;
+        var j = 0;
 
-            // gets each $msg element and pushes to array called displays
-            $msgs.each(function () {
+        // gets each $msg element and pushes to array called displays
+        $msgs.each(function () {
 
-                string2 = $msgs.get(j).tagName;
-                j = j + 1;
-                var text2 = $(this).attr('id');
-                displays.push(text2);
-            });
-            
-//            $inputs.each(function () {
-//                string1 = $inputs.get(i).tagName;
-//                i = i + 1;
-//                var text = $(this).attr('id');
-//                values.push(text);
-//            });
+          string2 = $msgs.get(j).tagName;
+          j = j + 1;
+          var text2 = $(this).attr('id');
+          displays.push(text2);
+        });
 
-            // each validation to validate certain rules
-            validation = window.edwardValidationRequired;
-            validation2 = window.edwardValidationPhoneNum;
-            validation3 = window.edwardValidationDate;
-            validation4 = window.edwardValidationUser;
-            validation5 = window.edwardValidationPassOne;
-            validation6 = window.edwardValidationEmail;
-            
-            // used for individual validation
-            var phoneNumber = $("#cntctNumber").val();
-            var leadTime = $("#leadTime").val();
-            var loginName = $("#logID").val();
-            var pass1 = $("#pwd").val();
-            var emailAddress = $("#emailAddr").val();
-            
-            // array for storing fields that are empty
-            var getBadArray = [];
+        //            $inputs.each(function () {
+        //                string1 = $inputs.get(i).tagName;
+        //                i = i + 1;
+        //                var text = $(this).attr('id');
+        //                values.push(text);
+        //            });
+        // each validation to validate certain rules
+        validation = window.edwardValidationRequired;
+        validation2 = window.edwardValidationPhoneNum;
+        validation3 = window.edwardValidationDate;
+        validation4 = window.edwardValidationUser;
+        validation5 = window.edwardValidationPassOne;
+        validation6 = window.edwardValidationEmail;
 
-            // Gets each $inputs element and pushes to array called values
-            // Aslo, it adds each input element that is empty
-            // to an array that stores inputs that are empty
-            $inputs.each(function () {
-                string1 = $inputs.get(i).tagName;
-                i = i + 1;
-                var text = $(this).attr('id');
-                values.push(text);
-                if ($(this).val().length == 0) {
-                    txt = $(this).attr('id');
-                    getBadArray.push(txt);
+        // used for individual validation
+        var phoneNumber = $("#cntctNumber").val();
+        var leadTime = $("#leadTime").val();
+        var loginName = $("#logID").val();
+        var pass1 = $("#pwd").val();
+        var emailAddress = $("#emailAddr").val();
 
-                }
-            });
+        // array for storing fields that are empty
+        var getBadArray = [];
 
-// For loop to determine each input box by calling validateGeneral
-// and checking each input box whether it is part of the array that
-// holds empty textboxes
-    for (var i = 0; i < displays.length; i++) {
-      if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
-                      $('#' + displays[i]).html("RIGHT");}
-      else {
-                      $('#' + displays[i]).html("Missing required field");
-      }
-                
-    }            
-                // Validate the phone number
-                if (validation2.validatePhoneNum(phoneNumber)) {
-                    $('#phNumValid').html("valid phone number");
-                }
-                else {
-                    $('#phNumValid').html("Not a valid phone number!");
-                }
-                
-                // Validate the date
-                if (validation3.validateDate(leadTime)) {
-                    $('#leadTimeValid').html("Date is valid");
-                }
-                else {
-                    $('#leadTimeValid').html("Date not valid!");
-                }
-                
-                // Validate the login ID
-                if (validation4.validateUserName(loginName)) {
-                    $('#loginValid').html("Login ID is valid");
-                }
-                else {
-                    $('#loginValid').html("Invalid Login ID!");
-                }
-                
-                // Validate the password
-                if (validation5.validatePassOne(pass1)) {
-                    $('#passValid').html("Password is valid");
-                }
-                else {
-                    $('#passValid').html("Password not valid!");
-                }
-                
-                // Validate the email address
-                if (validation6.validateEmail(emailAddress)) {
-                    $('#emailValid').html("Email is valid");
-                }
-                else {
-                    $('#emailValid').html("Email not valid!");
-                }
-                
-        }, false);
+        // Gets each $inputs element and pushes to array called values
+        // Aslo, it adds each input element that is empty
+        // to an array that stores inputs that are empty
+        $inputs.each(function () {
+          string1 = $inputs.get(i).tagName;
+          i = i + 1;
+          var text = $(this).attr('id');
+          values.push(text);
+          if ($(this).val().length == 0) {
+            txt = $(this).attr('id');
+            getBadArray.push(txt);
 
-        $('#nav li').hover(
-		function () {
-		    //show its submenu
-		    $('ul', this).show();
-		},
-		function () {
-		    //hide its submenu
-		    $('ul', this).hide();
-		}
-	);
+          }
+        });
 
-}, false);
+        // For loop to determine each input box by calling validateGeneral
+        // and checking each input box whether it is part of the array that
+        // holds empty textboxes
+        for (var i = 0; i < displays.length; i++) {
+          if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
+            $('#' + displays[i]).html("RIGHT");
+          } else {
+            $('#' + displays[i]).html("Missing required field");
+          }
 
-// While user is scrolling down, the shopping cart banner and the menu follows
-$(window).scroll(function () {
-    if ($(window).scrollTop() > $(".scrollTrigger").offset({ scroll: false }).top) {
+        }
+        // Validate the phone number
+        if (validation2.validatePhoneNum(phoneNumber)) {
+          $('#phNumValid').html("valid phone number");
+        } else {
+          $('#phNumValid').html("Not a valid phone number!");
+        }
+
+        // Validate the date
+        if (validation3.validateDate(leadTime)) {
+          $('#leadTimeValid').html("Date is valid");
+        } else {
+          $('#leadTimeValid').html("Date not valid!");
+        }
+
+        // Validate the login ID
+        if (validation4.validateUserName(loginName)) {
+          $('#loginValid').html("Login ID is valid");
+        } else {
+          $('#loginValid').html("Invalid Login ID!");
+        }
+
+        // Validate the password
+        if (validation5.validatePassOne(pass1)) {
+          $('#passValid').html("Password is valid");
+        } else {
+          $('#passValid').html("Password not valid!");
+        }
+
+        // Validate the email address
+        if (validation6.validateEmail(emailAddress)) {
+          $('#emailValid').html("Email is valid");
+        } else {
+          $('#emailValid').html("Email not valid!");
+        }
+
+      }, false);
+
+      $('#nav li').hover(
+
+      function () {
+        //show its submenu
+        $('ul', this).show();
+      }, function () {
+        //hide its submenu
+        $('ul', this).hide();
+      });
+
+    }, false);
+
+    // While user is scrolling down, the shopping cart banner and the menu follows
+    $(window).scroll(function () {
+      if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
         $("#menu").css("position", "fixed");
-        $("#menu").css("left", "379px");
-        $("#menu").css("bottom", "470px");
-    }
-    // Revert back to normal
-    if ($(window).scrollTop() <= $(".scrollTrigger").offset({ scroll: false }).top) {
+        $("#menu").css("right", $(document).width() / 24);
+        $("#menu").css("top", 156);
+      }
+      // Revert back to normal
+      if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
         $("#header").css("position", "relative");
         $("#header").css("top", $(".scrollTrigger").offset);
         $("#menu").css("position", "relative");
         $("#menu").css("top", $(".scrollTrigger").offset);
-        $("#menu").css("left", "0px");
-        $("#menu").css("bottom", "0px");
-    }
-});
-	</script>
+        $("#menu").css("left", 0);
+        $("#menu").css("top", 0);
+      }
+    });
+</script>
 </head>
 
 <body>

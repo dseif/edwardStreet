@@ -9,46 +9,45 @@
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
 
-        document.getElementById("searchDB").addEventListener("click", function (event) {
+      document.getElementById("searchDB").addEventListener("click", function (event) {
 
-            if ($("#srchText").val() == "") {
-                alert("Field must not be empty");
-            }
+        if ($("#srchText").val() == "") {
+          alert("Field must not be empty");
+        }
 
-        }, false);
+      }, false);
 
-        $('#nav li').hover(
-		function () {
-		    //show its submenu
-		    $('ul', this).show();
-		},
-		function () {
-		    //hide its submenu
-		    $('ul', this).hide();
-		}
-	);
+      $('#nav li').hover(
 
-}, false);
+      function () {
+        //show its submenu
+        $('ul', this).show();
+      }, function () {
+        //hide its submenu
+        $('ul', this).hide();
+      });
 
-// While user is scrolling down, the shopping cart banner and the menu follows
-$(window).scroll(function () {
-    if ($(window).scrollTop() > $(".scrollTrigger").offset({ scroll: false }).top) {
+    }, false);
+
+    // While user is scrolling down, the shopping cart banner and the menu follows
+    $(window).scroll(function () {
+      if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
         $("#menu").css("position", "fixed");
-        $("#menu").css("left", "379px");
-        $("#menu").css("bottom", "470px");
-    }
-    // Revert back to normal
-    if ($(window).scrollTop() <= $(".scrollTrigger").offset({ scroll: false }).top) {
+        $("#menu").css("right", $(document).width() / 24);
+        $("#menu").css("top", 156);
+      }
+      // Revert back to normal
+      if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
         $("#header").css("position", "relative");
         $("#header").css("top", $(".scrollTrigger").offset);
         $("#menu").css("position", "relative");
         $("#menu").css("top", $(".scrollTrigger").offset);
-        $("#menu").css("left", "0px");
-        $("#menu").css("bottom", "0px");
-    }
-});
+        $("#menu").css("left", 0);
+        $("#menu").css("top", 0);
+      }
+    });
 </script>
 </head>
 
