@@ -503,6 +503,28 @@ function viewItemsPage( response) {
   });
 }
 
+// Get Item - Get information of a single item  from ITEM Table.
+function getSupplier ( response ) {
+
+  var vals = response.values;
+
+  helper.query( "SELECT * FROM SUPPLIER WHERE ITEM_ID = '" + vals.item_id + "'",
+                function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on SELCT FROM ITEM: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+      
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }  
+  });
+}
+
 // Edit Item - Update ITEM table with new item information for row ITEM_ID.
 function editItem( response ) {
 
@@ -783,7 +805,6 @@ function getSupplier ( response ) {
   });
 }
 
-
 // Edit Supplier - Update SUPPLIER table with new item information for row SUPPLIER_ID.
 function editSupplier( response ) {
 
@@ -903,6 +924,28 @@ function viewContactPerson ( response ) {
   });
 }
 
+// Get Contact person - Get information of a single contact person from CONTACT_PERSON Table.
+function getContactPerson ( response ) {
+
+  var vals = response.values;
+
+  helper.query( "SELECT * FROM CONTACT_PERSON WHERE CONTACT_PERSON_ID = '" + vals.contact_person_id + "'",
+                function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on SELECT FROM CONTACT_PERSON: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+      
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }  
+  });
+}
+
 // Edit Contact Person - change a contact person's information.
 function editContactPerson ( response ) {
 
@@ -1019,6 +1062,28 @@ function viewSupplierAddress ( response ) {
     }
 
     response.end();
+  });
+}
+
+// Get Address - Get information of a single address from SUPPLIER_ADDRESS Table.
+function getSupplierAddress ( response ) {
+
+  var vals = response.values;
+
+  helper.query( "SELECT * FROM SUPPLIER_ADDRESS WHERE ADDRESS_ID = '" + vals.address_id + "'",
+                function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on SELCT FROM SUPPLIER: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+      
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }  
   });
 }
 
@@ -1166,6 +1231,28 @@ function viewPurchaseOrdersPage ( response ) {
     }  
 
     response.end();
+  });
+}
+
+// Get Purchase Order - Get information of a single PO from PURCHASE_ORDER Table.
+function getPurchaseOrder ( response ) {
+
+  var vals = response.values;
+
+  helper.query( "SELECT * FROM PURCHASE_ORDER WHERE PO_ID = '" + vals.po_id + "'",
+                function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on SELECT FROM PURCHASE_ORDER: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+      
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }  
   });
 }
 
@@ -1376,6 +1463,28 @@ function viewOrderLine( response ) {
     }
 
     response.end();
+  });
+}
+
+// Get Purchase Order Line - Get information of a single PO Line from PO_LINE Table.
+function getOrderLine ( response ) {
+
+  var vals = response.values;
+
+  helper.query( "SELECT * FROM PO_LINE WHERE PO_ID = '" + vals.po_id "'",
+                function( error, rows, cols ) {
+
+    if ( error ) {
+      console.log( "Error on SELECT FROM PURCHASE_ORDER: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+      
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }  
   });
 }
 
