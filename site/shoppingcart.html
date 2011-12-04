@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui-1.8.16.custom.css" />
 <title>Edward Street - Shopping Cart</title>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
 <script type="text/javascript" src="../js/helper.js"></script>
@@ -20,14 +21,16 @@
         var cart = helper.cart();
         console.log(cart);
         for (var item in cart) {
-            $("#cartcontentUL").append("<h3>" + cart[item]["ITEM_NAME"] + "</h3>" +
-                         "<div id='edstItem-" + cart[item]["ITEM_NAME"] + "'></div>");
-        }
+            $("#cartcontentUL").append("<h3>" + cart[item]["Item Name"] + "</h3>" +
+                         "<div id='edstItem-" + cart[item]["Item ID"] + "'></div>");
+        
 
         for (var row in cart[item]) {
 
-            $("#edstItem-" + cart[item]["ITEM_ID"]).append("<p>" +
+            $("#edstItem-" + cart[item]["Item ID"]).append("<p>" +
                            "<b>" + row + "</b>: " + cart[item][row] + "</p>");
+                           console.log($("#edstItem-" + cart[item]["Item ID"]));
+        }
         }
 
         helper.setupAccordion(document.getElementById("cartcontentUL"));
