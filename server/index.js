@@ -32,10 +32,10 @@ handle[ "/viewitemspage" ] = requestHandlers.viewItemsPage;
 handle[ "/getitem" ] = requestHandlers.getItem;
 handle[ "/edititem" ] = requestHandlers.editItem;
 handle[ "/deleteitem" ] = requestHandlers.deleteItem;
-handle[ "/item/createprice" ] = requestHandlers.createPrice;
-handle[ "/item/viewprice" ] = requestHandlers.viewPrice;
-handle[ "/item/getsupplierlist" ] = requestHandlers.getSupplierLIst;
-handle[ "/item/getcategorylist" ] = requestHandlers.getCategoryLIst;
+handle[ "/createprice" ] = requestHandlers.createPrice;
+handle[ "/viewprice" ] = requestHandlers.viewPrice;
+handle[ "/getsupplierlist" ] = requestHandlers.getSupplierList;
+handle[ "/getcategorylist" ] = requestHandlers.getCategoryList;
 
 //  Supplier Pages
 handle[ "/createsuppliercheckdupe" ] = requestHandlers.createSupplierCheckDupe;

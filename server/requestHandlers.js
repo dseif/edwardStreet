@@ -648,7 +648,7 @@ function viewPrice ( response ) {
 
   var vals = response.values;
   
-  helper.query( "SELECT PRICE, LOG_DATE FROM PRICE_HISTORY WHERE ITEM_ID = '" + vals.item_id "' " +
+  helper.query( "SELECT PRICE, LOG_DATE FROM PRICE_HISTORY WHERE ITEM_ID = '" + vals.item_id + "' " +
                 "ORDERED BY LOG_DATE DESC LIMIT 20",
                 function( error, rows, cols ) {
 
@@ -1124,7 +1124,7 @@ function deleteSupplierAddress ( response ) {
 
   var vals = response.values;
   
-  helper.query( "DELETE FROM SUPPLIER_ADDRESS WHERE ADDRESS_ID = '" + vals.address_id "'",
+  helper.query( "DELETE FROM SUPPLIER_ADDRESS WHERE ADDRESS_ID = '" + vals.address_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
@@ -1570,6 +1570,10 @@ function getSupplierList( response ) {
       response.end();
     }
   });
+}
+
+function getSupplier( response ) {
+
 }
 
 // Get Category List - get full list of category with names.
