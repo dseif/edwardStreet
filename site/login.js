@@ -31,7 +31,7 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
   var pathname = window.location.pathname.split( "/" )
   if ( pathname[ pathname.length ] === "login.html" ) {
     if ( !cookie ) { 
-      //window.location = "login.html";
+      window.location = "login.html";
     } else {
 
       var tmpCookie = cookie.substring( 0, 2 ).toLowerCase();
