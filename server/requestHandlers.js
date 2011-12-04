@@ -283,7 +283,7 @@ function editUser( response ) {
 
   helper.query( "UPDATE USER SET USER_ID = '" + vals.user_id + "', EMAIL = '" + vals.email +
                 "', EMPLOYEE_ID = '" + vals.employee_id + "', ROLE = '" + vals.role + "' " +
-                "WHERE USER_ID = '" + vals.user_id + "'",
+                "WHERE USER_ID = '" + vals.old_user_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
