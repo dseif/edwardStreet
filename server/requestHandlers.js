@@ -1385,6 +1385,38 @@ function createReturnLine( response ) {
   });
 }
 
+// Get Supplier List - get full list of supplier with names and ID.
+function getSupplierList( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT NAME, SUPPLIER_ID FROM SUPPLIER",
+                function( error, rows, cols ) {
+    
+    if ( error ) {
+      console.log( "Error on SELECT from SUPPLIER: " + error );
+    } else {
+      response.write( JSON.stringify( rows ) );
+    }
+  });
+}
+
+// Get Category List - get full list of category with names.
+function getCategoryList( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT CAT_NAME FROM ITEM_CATEGORY",
+                function( error, rows, cols ) {
+    
+    if ( error ) {
+      console.log( "Error on SELECT from ITEM_CATEGORY: " + error );
+    } else {
+      response.write( JSON.stringify( rows ) );
+    }
+  });
+}
+
 exports.index = index;
 exports.login = login;
 exports.logout = logout;
@@ -1440,3 +1472,6 @@ exports.viewOrderLine = viewOrderLine;
 exports.editOrderLine = editOrderLine;
 
 exports.createReturnLine = createReturnLine;
+
+exports.getSupplierList = getSupplierList;
+exports.getCategoryList = getCategoryList;

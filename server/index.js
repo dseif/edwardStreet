@@ -32,6 +32,8 @@ handle[ "/edititem" ] = requestHandlers.editItem;
 handle[ "/deleteitem" ] = requestHandlers.deleteItem;
 handle[ "/item/createprice" ] = requestHandlers.createPrice;
 handle[ "/item/viewprice" ] = requestHandlers.viewPrice;
+handle[ "/item/getsupplierlist" ] = requestHandlers.getSupplierLIst;
+handle[ "/item/getcategorylist" ] = requestHandlers.getCategoryLIst;
 
 //  Supplier Pages
 handle[ "/createsuppliercheckdupe" ] = requestHandlers.createSupplierCheckDupe;
