@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
           if (response !== "Logged Out" && response !== "Invalid user/pass") {
 
             setCookie("EDST_H", response, 365);
-            window.location = "http://localhost/~dseif/edwardStreet/site/";
+            window.location = "index.html";
           } else {
             document.getElementById("response").innerHTML = response;
           }
