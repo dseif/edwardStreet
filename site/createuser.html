@@ -10,116 +10,94 @@
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
 <script type="text/javascript" src="login.js"></script>
 <script type="text/javascript">
-  document.addEventListener( "DOMContentLoaded", function( event ) {
+  document.addEventListener("DOMContentLoaded", function (event) {
+    var cookie = window.cookie;
+    if (cookie.substring(0, 2).toLowerCase() !== "ad") {
 
-    document.getElementById("saveBtn").addEventListener( "click", function() {
+      window.location = "http://localhost/~dseif/edwardStreet/site/login.html";
+    }
 
-            var ok = true;
-            // input elements
-            var $inputs = $('#content :input');
-            // div space for message
-            var $msgs = $('#content').children("div");
-            // array holding $inputs 
-            var values = [];
-            // array holding $msgs
-            var displays = [];
-            // initializing string for use in .each for $msgs and $inputs
-            var string1, string2;
-            // int variables used to iterate in .each for $msgs and $inputs 
-            var i = 0;
-            var j = 0;
+    document.getElementById("saveBtn").addEventListener("click", function () {
 
-            // gets each $msg element and pushes to array called displays
-            $msgs.each(function () {
+      var ok = true;
+      // input elements
+      var $inputs = $('#content :input');
+      // div space for message
+      var $msgs = $('#content').children("div");
+      // array holding $inputs 
+      var values = [];
+      // array holding $msgs
+      var displays = [];
+      // initializing string for use in .each for $msgs and $inputs
+      var string1, string2;
+      // int variables used to iterate in .each for $msgs and $inputs 
+      var i = 0;
+      var j = 0;
 
-                string2 = $msgs.get(j).tagName;
-                j = j + 1;
-                var text2 = $(this).attr('id');
-                displays.push(text2);
-            });
-            
-//            $inputs.each(function () {
-//                string1 = $inputs.get(i).tagName;
-//                i = i + 1;
-//                var text = $(this).attr('id');
-//                values.push(text);
-//            });
+      // gets each $msg element and pushes to array called displays
+      $msgs.each(function () {
 
-            // each validation to validate certain rules
-            validation = window.edwardValidationRequired;
-            validation2 = window.edwardValidationUser;
-            validation3 = window.edwardValidationEmail;
-            validation4 = window.edwardValidationPass;
+        string2 = $msgs.get(j).tagName;
+        j = j + 1;
+        var text2 = $(this).attr('id');
+        displays.push(text2);
+      });
 
-            // used for individual validation
-            var userField = $("#userName").val();
-            var emailField = $("#emailAddress").val();
-            var passField = $("#pass").val();
-            var passField2 = $("#confpass").val();
+      //            $inputs.each(function () {
+      //                string1 = $inputs.get(i).tagName;
+      //                i = i + 1;
+      //                var text = $(this).attr('id');
+      //                values.push(text);
+      //            });
+      // each validation to validate certain rules
+      validation = window.edwardValidationRequired;
+      validation2 = window.edwardValidationUser;
+      validation3 = window.edwardValidationEmail;
+      validation4 = window.edwardValidationPass;
 
-            // array for storing fields that are empty
-            var getBadArray = [];
+      // used for individual validation
+      var userField = $("#userName").val();
+      var emailField = $("#emailAddress").val();
+      var passField = $("#pass").val();
+      var passField2 = $("#confpass").val();
 
-            // Gets each $inputs element and pushes to array called values
-            // Aslo, it adds each input element that is empty
-            // to an array that stores inputs that are empty
-            $inputs.each(function () {
-                string1 = $inputs.get(i).tagName;
-                i = i + 1;
-                var text = $(this).attr('id');
-                values.push(text);
-                if ($(this).val().length == 0) {
-                    txt = $(this).attr('id');
-                    getBadArray.push(txt);
+      // array for storing fields that are empty
+      var getBadArray = [];
 
-                }
-            });
+      // Gets each $inputs element and pushes to array called values
+      // Aslo, it adds each input element that is empty
+      // to an array that stores inputs that are empty
+      $inputs.each(function () {
+        string1 = $inputs.get(i).tagName;
+        i = i + 1;
+        var text = $(this).attr('id');
+        values.push(text);
+        if ($(this).val().length == 0) {
+          txt = $(this).attr('id');
+          getBadArray.push(txt);
 
-// For loop to determine each input box by calling validateGeneral
-// and checking each input box whether it is part of the array that
-// holds empty textboxes 
-    for (var i = 0; i < displays.length; i++) {
-      if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
-                      $('#' + displays[i]).html("RIGHT");}
-      else {
-                      $('#' + displays[i]).html("Missing required field");
-                      ok = false;
+        }
+      });
+
+      // For loop to determine each input box by calling validateGeneral
+      // and checking each input box whether it is part of the array that
+      // holds empty textboxes 
+      for (var i = 0; i < displays.length; i++) {
+        if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
+          $('#' + displays[i]).html("RIGHT");
+        } else {
+          $('#' + displays[i]).html("Missing required field");
+          ok = false;
+        }
+
       }
-                
-    }            
-                // Validate the user name
-                if (validation2.validateUserName(userField)) {
-                    $('#userValid').html("User name is valid");
-                }
-                else {
-                    $('#userValid').html("Invalid user name!");
-                    ok = false;
-                }
-                
-                // Validate the email address
-                if (validation3.validateEmail(emailField)) {
-                    $('#emailValid').html("Email is valid");
-                }
-                else {
-                    $('#emailValid').html("Email not valid!");
-                    ok = false;
-                }
-                
-                // check if password is entered, then check if its empty
-                if(passField.length == 0 || passField2.length == 0){
-                  $('#passValid').html("Both password fields must not be empty");
-                  $('#passValid2').html("Both password fields must not be empty");
-                  ok = false;
-                }
-                else if (validation4.validatePass(passField, passField2)) {
-                    $('#passValid').html("both passwords match");
-                    $('#passValid2').html("both passwords match");
-                }
-                else {
-                    $('#passValid').html("passwords dont match, or incorrect length!");
-                    $('#passValid2').html("passwords dont match, or incorrect length!");
-                    ok = false;
-                }
+      // Validate the user name
+      if (validation2.validateUserName(userField)) {
+        $('#userValid').html("User name is valid");
+      } else {
+        $('#userValid').html("Invalid user name!");
+        ok = false;
+      }
 
 if(ok){
   $.ajax({
@@ -152,44 +130,43 @@ if(ok){
         alert( "USER NAME ALREADY EXISTS, PLEASE CHOOSE ANOTHER" );
       }
     }
-  });
+});
       }
     }, false );
   }, false );
-
   $(document).ready(function () {
 
-        $('#nav li').hover(
-			function () {
-		    	//show its submenu
-		    	$('ul', this).show();
-			},
-			function () {
-		    	//hide its submenu
-		    	$('ul', this).hide();
-			}
-		);
+    $('#nav li').hover(
 
-});
+    function () {
+      //show its submenu
+      $('ul', this).show();
+    }, function () {
+      //hide its submenu
+      $('ul', this).hide();
+    });
 
-$(window).scroll(function () {
-    if ($(window).scrollTop() > $(".scrollTrigger").offset({ scroll: false }).top) {
-        $("#header").css("position", "fixed");
-        $("#header").css("top", "0");
-        $("#menu").css("position", "fixed");
-        $("#menu").css("left", "379px");
-        $("#menu").css("bottom", "470px");
+  });
+
+  // While user is scrolling down, the shopping cart banner and the menu follows
+  $(window).scroll(function () {
+    if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
+      $("#header").css("position", "fixed");
+      $("#header").css("top", "0");
+      $("#menu").css("position", "fixed");
+      $("#menu").css("right", $(document).width() / 24);
+      $("#menu").css("top", 156);
     }
     // Revert back to normal
-    if ($(window).scrollTop() <= $(".scrollTrigger").offset({ scroll: false }).top) {
-        $("#header").css("position", "relative");
-        $("#header").css("top", $(".scrollTrigger").offset);
-        $("#menu").css("position", "relative");
-        $("#menu").css("top", $(".scrollTrigger").offset);
-        $("#menu").css("left", "0px");
-        $("#menu").css("bottom", "0px");
+    if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
+      $("#header").css("position", "relative");
+      $("#header").css("top", $(".scrollTrigger").offset);
+      $("#menu").css("position", "relative");
+      $("#menu").css("top", $(".scrollTrigger").offset);
+      $("#menu").css("left", 0);
+      $("#menu").css("top", 0);
     }
-});
+  });
 </script>
 </head>
 
@@ -243,7 +220,6 @@ $(window).scroll(function () {
       </ul>			
       <div class="clear"></div>
     </li>
-    
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
     <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     
