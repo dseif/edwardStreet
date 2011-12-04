@@ -138,14 +138,214 @@ function logout( response ) {
   response.end();
 }
 
-// Question: What is this?
-function profile() {
-  return "Profile";
+// View User History - Step 1: Returns number of entries in USER_HISTORY table for page calculation.
+function viewUserHistory( response ) {
+  
+  var vals = response.values;
+  
+  helper.query( "SELECT COUNT(*) FROM USER_HISTORY",
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( "Error on SELECT from USER_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+    
+    response.end();   
+  });
 }
 
-// Question: What is this?
-function logs() {
-  return "Logs";
+// View User History Step 2: Returns a list of entries for current page, starting with latest action.
+function viewUserHistoryPage( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT USER_ID 'User Account', CATEGORY 'Action Type', COMMENT 'Comment', " +
+                "AUTHOR 'Action By', LOG_DATE 'Date' " +
+                "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
+                function( error, rows, cols ) {
+  
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+                
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( "Error on SELECT from USER_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+  
+    response.end();
+  });
+}
+
+// View Item History - Step 1: Returns number of entries in ITEM_HISTORY table for page calculation.
+function viewItemHistory( response ) {
+  
+  var vals = response.values;
+  
+  helper.query( "SELECT COUNT(*) FROM ITEM_HISTORY",
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( "Error on SELECT from ITEM_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+    
+    response.end();   
+  });
+}
+
+// View Item History Step 2: Returns a list of entries for current page, starting with latest action.
+function viewItemHistoryPage( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT h.ITEM_ID 'Item ID', i.ITEM_NAME 'Item Name', h.CATEGORY 'Action Type', h.COMMENT 'Comment', " +
+                "AUTHOR 'Action By', LOG_DATE 'Date' FROM ITEM_HISTORY h" +
+                "LEFT OUTER JOIN ITEM i ON h.ITEM_ID = i.ITEM_ID " +
+                "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
+                function( error, rows, cols ) {
+  
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+                
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( "Error on SELECT from USER_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+  
+    response.end();
+  });
+}
+
+// View Supplier History - Step 1: Returns number of entries in SUPPLIER_HISTORY table for page calculation.
+function viewSupplierHistory( response ) {
+  
+  var vals = response.values;
+  
+  helper.query( "SELECT COUNT(*) FROM SUPPLIER_HISTORY",
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( "Error on SELECT from SUPPLIER_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+    
+    response.end();   
+  });
+}
+
+// View Supplier History Step 2: Returns a list of entries for current page, starting with latest action.
+function viewSupplierHistoryPage( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT h.SUPPLIER_ID 'Supplier ID', s.NAME 'Supplier Name', h.CATEGORY 'Action Type', h.COMMENT 'Comment', " +
+                "h.AUTHOR 'Action By', h.LOG_DATE 'Date' FROM SUPPLIER_HISTORY h " +
+                "LEFT OUTER JOIN SUPPLIER s ON h.SUPPLIER_ID = s.SUPPLIER_ID " +
+                "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
+                function( error, rows, cols ) {
+  
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+                
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( "Error on SELECT from SUPPLIER_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+  
+    response.end();
+  });
+}
+
+// View PO History - Step 1: Returns number of entries in PO_HISTORY table for page calculation.
+function viewPOHistory( response ) {
+  
+  var vals = response.values;
+  
+  helper.query( "SELECT COUNT(*) FROM PO_HISTORY",
+                function( error, rows, cols ) {
+
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+    
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( "Error on SELECT from PO_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+    
+    response.end();   
+  });
+}
+
+// View Supplier History Step 2: Returns a list of entries for current page, starting with latest action.
+function viewPOHistoryPage( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT PO_ID 'PO ID', CATEGORY 'Action Type', COMMENT 'comment', " +
+                "AUTHOR 'Action By', LOG_DATE 'Date' FROM PO_HISTORY " +
+                "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
+                function( error, rows, cols ) {
+  
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });
+                
+    if ( error ) {
+      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( "Error on SELECT from PO_HISTORY: " + error );
+      response.write( "Error occured while trying to load the page." );
+    } else {
+      response.write( JSON.stringify( rows ) ); 
+    }
+  
+    response.end();
+  });
 }
 
 // Edit Account - allow current user to change his password/email.
@@ -284,28 +484,6 @@ function viewUsersPage( response ) {
     }  
 
     response.end();
-  });
-}
-
-// Get User - Get information of a single user from USER Table.
-function getUser ( response ) {
-
-  var vals = response.values;
-
-  helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.user_id + "'",
-                function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( "Error on UPDATE USER: " + error );
-    } else {
-      response.writeHead( 200, {
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*"
-      });
-      
-      response.write( JSON.stringify( rows ) );
-      response.end();
-    }  
   });
 }
 
@@ -652,8 +830,7 @@ function createSupplierCheckDupe( response ) {
 
   var vals = response.values;
 
-  console.log( "THIS IS THE NAME", vals[ "name" ] );
-  helper.query( "SELECT COUNT(*) FROM SUPPLIER WHERE LOWER(NAME) = LOWER('" + vals[ "name" ] + "')",
+  helper.query( "SELECT COUNT(*) FROM SUPPLIER WHERE LOWER(NAME) = LOWER('" + vals.["name"] + "')",
                 function( error, rows, cols ) {
 
     response.writeHead( 200, {
@@ -740,7 +917,7 @@ function viewSuppliers( response ) {
 function viewSuppliersPage( response ) {
   
   var vals = response.values;
-  helper.query( "SELECT NAME 'Supplier Name', LEGAL_NAME 'Legal Name', " + 
+  helper.query( "SELECT SUPPLIER_ID, NAME 'Supplier Name', LEGAL_NAME 'Legal Name', " + 
                 "LEAD_TIME 'Lead Time', SUPPLIER_COMMENT 'Supplier Comments', " +
                 "SPECIAL_COMMENT 'Special Comments' " + 
                 "FROM SUPPLIER ORDER BY NAME LIMIT " + (vals.pagenum-1)*20 + ", 20", 
@@ -762,29 +939,6 @@ function viewSuppliersPage( response ) {
     response.end();
   });
 }
-
-// Get Supplier - Get information of a single supplier from SUPPLIER Table.
-function getUser ( response ) {
-
-  var vals = response.values;
-
-  helper.query( "SELECT * FROM SUPPLIER WHERE SUPPLIER_ID = '" + vals.supplier_id + "'",
-                function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( "Error on SELCT FROM SUPPLIER: " + error );
-    } else {
-      response.writeHead( 200, {
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*"
-      });
-      
-      response.write( JSON.stringify( rows ) );
-      response.end();
-    }  
-  });
-}
-
 
 // Edit Supplier - Update SUPPLIER table with new item information for row SUPPLIER_ID.
 function editSupplier( response ) {
@@ -883,7 +1037,7 @@ function viewContactPerson ( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT LAST_NAME 'Last Name', FIRST_NAME 'First Name', " +
+  helper.query( "SELECT CONTACT_PERSON_ID, LAST_NAME 'Last Name', FIRST_NAME 'First Name', " +
                 "PHONE_NUMBER 'Phone Number', EMAIL 'Email Address' FROM CONTACT_PERSON " +
                 "WHERE SUPPLIER_ID = '" + vals.supplier_id + "' ORDER BY LAST_NAME",
                 function( error, rows, cols ) {
@@ -1001,7 +1155,7 @@ function viewSupplierAddress ( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT ADDRESS_LINE_1 'Address Line 1', ADDRESS_LINE_2 'Address Line 2', " +
+  helper.query( "SELECT ADDRESS_ID, ADDRESS_LINE_1 'Address Line 1', ADDRESS_LINE_2 'Address Line 2', " +
                 "CITY 'City', PROV_STATE 'Province/State', COUNTRY 'Country', " +
                 "POSTAL_ZIP 'Postal/Zip Code', PHONE_NUMBER 'Phone Number' " +
                 "FROM SUPPLIER_ADDRESS WHERE SUPPLIER_ID = '" + vals.supplier_id + "' ORDER BY ADDRESS_ID",
@@ -1412,6 +1566,35 @@ function editOrderLine( response ) {
   });
 }
 
+// Delete PO Line - Delete a PO Line entry in the PO_LINE table.
+function deleteOrderLine ( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "DELETE FROM PO_LINE WHERE PO_ID = '" + vals.po_id + "' AND PO_LINE_ID = '" + vals.po_line_id "'",
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });                
+
+    if ( error ) {
+      console.log( "Error on DELETE from PO_LINE: " + error );
+      response.write( "Error occured while trying to delete PO line." );
+    } else {
+      console.log( "Deleted PO Line: ", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "PO Line successfully deleted." ); 
+      historyLog.supplier( vals, "Change", "Deleted PO Line." );
+    }
+
+    response.end();
+  });
+}
+
 // Create Return line - create a new return line.
 function createReturnLine( response ) {
 
@@ -1465,10 +1648,6 @@ function getSupplierList( response ) {
   });
 }
 
-function getSupplier( response ) {
-
-}
-
 // Get Category List - get full list of category with names.
 function getCategoryList( response ) {
 
@@ -1494,15 +1673,21 @@ function getCategoryList( response ) {
 exports.index = index;
 exports.login = login;
 exports.logout = logout;
-exports.profile = profile;
-exports.logs = logs;
+exports.viewUserHistory = viewUserHistory;
+exports.viewUserHistoryPage = viewUserHistoryPage;
+exports.viewItemHistory = viewItemHistory;
+exports.viewItemHistoryPage = viewItemHistoryPage;
+exports.viewSupplierHistory = viewSupplierHistory;
+exports.viewSupplierHistoryPage = viewSupplierHistoryPage;
+exports.viewPOHistory = viewPOHistory;
+exports.viewPOHistoryPage = viewPOHistoryPage;
+
 exports.editAccount = editAccount;
 
 exports.createUserCheckDupe = createUserCheckDupe;
 exports.createUser = createUser;
 exports.viewUsers = viewUsers;
 exports.viewUsersPage = viewUsersPage;
-exports.getUser = getUser;
 exports.editUser = editUser;
 exports.deleteUser = deleteUser;
 
@@ -1510,7 +1695,6 @@ exports.createItemCheckDupe = createItemCheckDupe;
 exports.createItem = createItem;
 exports.viewItems = viewItems;
 exports.viewItemsPage = viewItemsPage;
-//exports.getItem = getItem;
 exports.editItem = editItem;
 exports.deleteItem = deleteItem;
 
@@ -1521,26 +1705,22 @@ exports.createSupplierCheckDupe = createSupplierCheckDupe;
 exports.createSupplier = createSupplier;
 exports.viewSuppliers = viewSuppliers;
 exports.viewSuppliersPage = viewSuppliersPage;
-exports.getSupplier = getSupplier;
 exports.editSupplier = editSupplier;
 exports.deleteSupplier = deleteSupplier;
 
 exports.createContactPerson = createContactPerson;
 exports.viewContactPerson = viewContactPerson;
-//exports.getContactPerson = getContactPerson;
 exports.editContactPerson = editContactPerson;
 exports.deleteContactPerson = deleteContactPerson;
 
 exports.createSupplierAddress = createSupplierAddress;
 exports.viewSupplierAddress = viewSupplierAddress;
-//exports.getSupplierAddress = getSupplierAddress;
 exports.editSupplierAddress = editSupplierAddress;
 exports.deleteSupplierAddress = deleteSupplierAddress;
 
 exports.createPurchaseOrder = createPurchaseOrder;
 exports.viewPurchaseOrders = viewPurchaseOrders;
 exports.viewPurchaseOrdersPage = viewPurchaseOrdersPage;
-//exports.getPurchaseOrder = getPurchaseOrder;
 exports.editPurchaseOrder = editPurchaseOrder;
 exports.submitPurchaseOrder = submitPurchaseOrder;
 exports.cancelPurchaseOrder = cancelPurchaseOrder;
@@ -1549,8 +1729,8 @@ exports.receivePurchaseOrder = receivePurchaseOrder;
 
 exports.createOrderLine = createOrderLine;
 exports.viewOrderLine = viewOrderLine;
-//exports.getOrderLine = getOrderLine;
 exports.editOrderLine = editOrderLine;
+exports.deleteOrderLine = deleteOrderLine;
 
 exports.createReturnLine = createReturnLine;
 
