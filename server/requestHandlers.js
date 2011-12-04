@@ -487,28 +487,6 @@ function viewUsersPage( response ) {
   });
 }
 
-// Get User - Get information of a single user from USER Table.
-function getUser ( response ) {
-
-  var vals = response.values;
-
-  helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.user_id + "'",
-                function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( "Error on SELECT FROM  USER: " + error );
-    } else {
-      response.writeHead( 200, {
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*"
-      });
-      
-      response.write( JSON.stringify( rows ) );
-      response.end();
-    }  
-  });
-}
-
 // Edit User - Update USER table with new user information for row USER_ID.
 // Question: console.log may print password?
 function editUser( response ) {
@@ -700,28 +678,6 @@ function viewItemsPage( response) {
     }
 
     response.end();
-  });
-}
-
-// Get Item - Get information of a single item  from ITEM Table.
-function getItem ( response ) {
-
-  var vals = response.values;
-
-  helper.query( "SELECT * FROM SUPPLIER WHERE ITEM_ID = '" + vals.item_id + "'",
-                function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( "Error on SELECT FROM ITEM: " + error );
-    } else {
-      response.writeHead( 200, {
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*"
-      });
-      
-      response.write( JSON.stringify( rows ) );
-      response.end();
-    }  
   });
 }
 
@@ -960,7 +916,7 @@ function viewSuppliers( response ) {
 // View Supplier - Step 2: Returns a list of suppliers for current page, ordered by name
 function viewSuppliersPage( response ) {
   
-  helper.query( "SELECT NAME 'Supplier Name', LEGAL_NAME 'Legal Name', " + 
+  helper.query( "SELECT SUPPLIER_ID, NAME 'Supplier Name', LEGAL_NAME 'Legal Name', " + 
                 "LEAD_TIME 'Lead Time', SUPPLIER_COMMENT 'Supplier Comments', " +
                 "SPECIAL_COMMENT 'Special Comments' " + 
                 "FROM SUPPLIER ORDER BY NAME LIMIT " + (response.pagenum-1)*20 + ", 20", 
@@ -980,28 +936,6 @@ function viewSuppliersPage( response ) {
     }
 
     response.end();
-  });
-}
-
-// Get Supplier - Get information of a single supplier from SUPPLIER Table.
-function getSupplier ( response ) {
-
-  var vals = response.values;
-
-  helper.query( "SELECT * FROM SUPPLIER WHERE SUPPLIER_ID = '" + vals.supplier_id + "'",
-                function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( "Error on SELECT FROM SUPPLIER: " + error );
-    } else {
-      response.writeHead( 200, {
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*"
-      });
-      
-      response.write( JSON.stringify( rows ) );
-      response.end();
-    }  
   });
 }
 
@@ -1102,7 +1036,7 @@ function viewContactPerson ( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT LAST_NAME 'Last Name', FIRST_NAME 'First Name', " +
+  helper.query( "SELECT CONTACT_PERSON_ID, LAST_NAME 'Last Name', FIRST_NAME 'First Name', " +
                 "PHONE_NUMBER 'Phone Number', EMAIL 'Email Address' FROM CONTACT_PERSON " +
                 "WHERE SUPPLIER_ID = '" + vals.supplier_id + "' ORDER BY LAST_NAME",
                 function( error, rows, cols ) {
@@ -1121,28 +1055,6 @@ function viewContactPerson ( response ) {
     }
 
     response.end();
-  });
-}
-
-// Get Contact person - Get information of a single contact person from CONTACT_PERSON Table.
-function getContactPerson ( response ) {
-
-  var vals = response.values;
-
-  helper.query( "SELECT * FROM CONTACT_PERSON WHERE CONTACT_PERSON_ID = '" + vals.contact_person_id + "'",
-                function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( "Error on SELECT FROM CONTACT_PERSON: " + error );
-    } else {
-      response.writeHead( 200, {
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*"
-      });
-      
-      response.write( JSON.stringify( rows ) );
-      response.end();
-    }  
   });
 }
 
@@ -1242,7 +1154,7 @@ function viewSupplierAddress ( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT ADDRESS_LINE_1 'Address Line 1', ADDRESS_LINE_2 'Address Line 2', " +
+  helper.query( "SELECT ADDRESS_ID, ADDRESS_LINE_1 'Address Line 1', ADDRESS_LINE_2 'Address Line 2', " +
                 "CITY 'City', PROV_STATE 'Province/State', COUNTRY 'Country', " +
                 "POSTAL_ZIP 'Postal/Zip Code', PHONE_NUMBER 'Phone Number' " +
                 "FROM SUPPLIER_ADDRESS WHERE SUPPLIER_ID = '" + vals.supplier_id + "' ORDER BY ADDRESS_ID",
@@ -1262,28 +1174,6 @@ function viewSupplierAddress ( response ) {
     }
 
     response.end();
-  });
-}
-
-// Get Address - Get information of a single address from SUPPLIER_ADDRESS Table.
-function getSupplierAddress ( response ) {
-
-  var vals = response.values;
-
-  helper.query( "SELECT * FROM SUPPLIER_ADDRESS WHERE ADDRESS_ID = '" + vals.address_id + "'",
-                function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( "Error on SELECT FROM SUPPLIER_ADDRESS: " + error );
-    } else {
-      response.writeHead( 200, {
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*"
-      });
-      
-      response.write( JSON.stringify( rows ) );
-      response.end();
-    }  
   });
 }
 
@@ -1431,28 +1321,6 @@ function viewPurchaseOrdersPage ( response ) {
     }  
 
     response.end();
-  });
-}
-
-// Get Purchase Order - Get information of a single PO from PURCHASE_ORDER Table.
-function getPurchaseOrder ( response ) {
-
-  var vals = response.values;
-
-  helper.query( "SELECT * FROM PURCHASE_ORDER WHERE PO_ID = '" + vals.po_id + "'",
-                function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( "Error on SELECT FROM PURCHASE_ORDER: " + error );
-    } else {
-      response.writeHead( 200, {
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*"
-      });
-      
-      response.write( JSON.stringify( rows ) );
-      response.end();
-    }  
   });
 }
 
@@ -1666,28 +1534,6 @@ function viewOrderLine( response ) {
   });
 }
 
-// Get Purchase Order Line - Get information of a single PO Line from PO_LINE Table.
-function getOrderLine ( response ) {
-
-  var vals = response.values;
-
-  helper.query( "SELECT * FROM PO_LINE WHERE PO_ID = '" + vals.po_id "' AND PO_LINE_ID = '" + vals.po_line_id "'",
-                function( error, rows, cols ) {
-
-    if ( error ) {
-      console.log( "Error on SELECT FROM PO_LINE: " + error );
-    } else {
-      response.writeHead( 200, {
-        "Content-Type": "text/plain",
-        "Access-Control-Allow-Origin": "*"
-      });
-      
-      response.write( JSON.stringify( rows ) );
-      response.end();
-    }  
-  });
-}
-
 // Edit PO Line - change PO line information.
 function editOrderLine( response ) {
   var vals = response.values;
@@ -1841,7 +1687,6 @@ exports.createUserCheckDupe = createUserCheckDupe;
 exports.createUser = createUser;
 exports.viewUsers = viewUsers;
 exports.viewUsersPage = viewUsersPage;
-exports.getUser = getUser;
 exports.editUser = editUser;
 exports.deleteUser = deleteUser;
 
@@ -1849,7 +1694,6 @@ exports.createItemCheckDupe = createItemCheckDupe;
 exports.createItem = createItem;
 exports.viewItems = viewItems;
 exports.viewItemsPage = viewItemsPage;
-exports.getItem = getItem;
 exports.editItem = editItem;
 exports.deleteItem = deleteItem;
 
@@ -1860,26 +1704,22 @@ exports.createSupplierCheckDupe = createSupplierCheckDupe;
 exports.createSupplier = createSupplier;
 exports.viewSuppliers = viewSuppliers;
 exports.viewSuppliersPage = viewSuppliersPage;
-exports.getSupplier = getSupplier;
 exports.editSupplier = editSupplier;
 exports.deleteSupplier = deleteSupplier;
 
 exports.createContactPerson = createContactPerson;
 exports.viewContactPerson = viewContactPerson;
-exports.getContactPerson = getContactPerson;
 exports.editContactPerson = editContactPerson;
 exports.deleteContactPerson = deleteContactPerson;
 
 exports.createSupplierAddress = createSupplierAddress;
 exports.viewSupplierAddress = viewSupplierAddress;
-exports.getSupplierAddress = getSupplierAddress;
 exports.editSupplierAddress = editSupplierAddress;
 exports.deleteSupplierAddress = deleteSupplierAddress;
 
 exports.createPurchaseOrder = createPurchaseOrder;
 exports.viewPurchaseOrders = viewPurchaseOrders;
 exports.viewPurchaseOrdersPage = viewPurchaseOrdersPage;
-exports.getPurchaseOrder = getPurchaseOrder;
 exports.editPurchaseOrder = editPurchaseOrder;
 exports.submitPurchaseOrder = submitPurchaseOrder;
 exports.cancelPurchaseOrder = cancelPurchaseOrder;
@@ -1888,7 +1728,6 @@ exports.receivePurchaseOrder = receivePurchaseOrder;
 
 exports.createOrderLine = createOrderLine;
 exports.viewOrderLine = viewOrderLine;
-exports.getOrderLine = getOrderLine;
 exports.editOrderLine = editOrderLine;
 exports.deleteOrderLine = deleteOrderLine;
 
