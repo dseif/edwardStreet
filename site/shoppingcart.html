@@ -6,25 +6,48 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street - Shopping Cart</title>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
+<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
 
-      document.getElementById("searchDB").addEventListener("click", function (event) {
+        var numItems = 0,
+          numPages = 0,
+          fired = [],
+          helper = edstHelper();
+        helper.populateCart();
 
-        if ($("#srchText").val() == "") {
-          alert("Field must not be empty");
+        var cart = helper.cart();
+        console.log(cart);
+        for (var item in cart) {
+            $("#cartcontentUL").append("<h3>" + cart[item]["ITEM_NAME"] + "</h3>" +
+                         "<div id='edstItem-" + cart[item]["ITEM_NAME"] + "'></div>");
         }
 
-      }, false);
+        for (var row in cart[item]) {
 
-      $('#nav li').hover(
+            $("#edstItem-" + cart[item]["ITEM_ID"]).append("<p>" +
+                           "<b>" + row + "</b>: " + cart[item][row] + "</p>");
+        }
+
+        helper.setupAccordion(document.getElementById("cartcontentUL"));
+
+        document.getElementById("searchDB").addEventListener("click", function (event) {
+
+            if ($("#srchText").val() == "") {
+                alert("Field must not be empty");
+            }
+
+        }, false);
+
+        $('#nav li').hover(
 
       function () {
-        //show its submenu
-        $('ul', this).show();
+          //show its submenu
+          $('ul', this).show();
       }, function () {
-        //hide its submenu
-        $('ul', this).hide();
+          //hide its submenu
+          $('ul', this).hide();
       });
 
     }, false);
@@ -49,7 +72,7 @@
     <div id="logo">
       <h1 class="headings"><a href="index.html">Edward Street</a></h1>
     </div>
-    <p class="textright"><a class="textright" href="login.html">Log in</a></p>
+    <p class="textright"><a class="textright" href="login.html">Log in</a><a class="textright" href="#">Log out</a></p>
     <p class="sctext">SHOPPING CART</p>
     <div id="scBox" class="shoppingcart">
     
@@ -123,36 +146,11 @@
 
 				<div id="content">
 				
-				<table border="1">
-  					<tr>
-                            <th>PLU</th>
-                            <th>Distributor Code</th>
-                            <th>Item Name</th>
-                            <th>Receipt Name</th>
-                            <th>Category</th>
-                            <th>Supplier</th>
-                            <th>Price</th>
-                            <th>Unit</th>
-                            <th>Item Type</th>
-                            <th>QTY</th>
-                            <th>Selected</th>
-  					</tr>
-  					<tr>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-						<td></td>
-						<td><input id="qty" name="Quantity" value="" type="text"/></td>
-						<td><input id="selectedItem" name="Selected" value="" type="checkbox"/></td>
-  					</tr>
-					</table><br/>
-				<input id="conf" name="Confirm" value="Confirm" type="submit"/>
-				<input id="cancel" name="Cancel" value="Cancel" type="reset"/>
+				<br/><br/>
+                  <div id="cartcontent">
+                    <ul id="cartcontentUL"></ul>
+                  </div>
+                <hr/><br/><br/>
 				
 				</div>
 			</div>
