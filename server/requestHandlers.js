@@ -1514,6 +1514,35 @@ function editOrderLine( response ) {
   });
 }
 
+// Delete PO Line - Delete a PO Line entry in the PO_LINE table.
+function deleteOrderLine ( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "DELETE FROM PO_LINE WHERE PO_ID = '" + vals.po_id + "' AND PO_LINE_ID = '" + vals.po_line_id "'",
+                function( error, rows, cols ) {
+
+    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    
+    response.writeHead( 200, {
+      "Content-Type": "text/plain",
+      "Access-Control-Allow-Origin": "*"
+    });                
+
+    if ( error ) {
+      console.log( "Error on DELETE from PO_LINE: " + error );
+      response.write( "Error occured while trying to delete PO line." );
+    } else {
+      console.log( "Deleted PO Line: ", rows );
+      response.write( JSON.stringify( rows ) );
+      response.write( "PO Line successfully deleted." ); 
+      historyLog.supplier( vals, "Change", "Deleted PO Line." );
+    }
+
+    response.end();
+  });
+}
+
 // Create Return line - create a new return line.
 function createReturnLine( response ) {
 
@@ -1648,6 +1677,7 @@ exports.createOrderLine = createOrderLine;
 exports.viewOrderLine = viewOrderLine;
 exports.getOrderLine = getOrderLine;
 exports.editOrderLine = editOrderLine;
+exports.deleteOrderLine = deleteOrderLine;
 
 exports.createReturnLine = createReturnLine;
 

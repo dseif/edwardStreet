@@ -13,7 +13,7 @@ handle[ "/" ] = requestHandlers.index;
 handle[ "/login" ] = requestHandlers.login;
 handle[ "/logout" ] = requestHandlers.logout;
 handle[ "/editaccount" ] = requestHandlers.editAccount;
-handle[ "/admin/logs" ] = requestHandlers.logs;
+handle[ "/logs" ] = requestHandlers.logs;
 
 //  User pages
 handle[ "/createusercheckdupe" ] = requestHandlers.createUserCheckDupe;
@@ -45,16 +45,16 @@ handle[ "/viewsupplierspage" ] = requestHandlers.viewSuppliersPage;
 handle[ "/getsupplier" ] = requestHandlers.getSupplier;
 handle[ "/editsupplier" ] = requestHandlers.editSupplier;
 handle[ "/deletesupplier" ] = requestHandlers.deleteSupplier;
-handle[ "/supplier/createcontactperson" ] = requestHandlers.createContactPerson;
-handle[ "/supplier/viewcontactperson" ] = requestHandlers.viewContactPerson;
-handle[ "/supplier/getcontactperson" ] = requestHandlers.getContactPerson;
-handle[ "/supplier/editcontactperson" ] = requestHandlers.editContactPerson;
-handle[ "/supplier/deletecontactperson" ] = requestHandlers.deleteContactPerson;
-handle[ "/supplier/createsupplieraddress" ] = requestHandlers.createSupplierAddress;
-handle[ "/supplier/viewsupplieraddress" ] = requestHandlers.viewSupplierAddress;
-handle[ "/supplier/getsupplieraddress" ] = requestHandlers.getSupplierAddress;
-handle[ "/supplier/editsupplieraddress" ] = requestHandlers.editSupplierAddress;
-handle[ "/supplier/deletesupplieraddress" ] = requestHandlers.deleteSupplierAddress;
+handle[ "/createcontactperson" ] = requestHandlers.createContactPerson;
+handle[ "/viewcontactperson" ] = requestHandlers.viewContactPerson;
+handle[ "/getcontactperson" ] = requestHandlers.getContactPerson;
+handle[ "/editcontactperson" ] = requestHandlers.editContactPerson;
+handle[ "/deletecontactperson" ] = requestHandlers.deleteContactPerson;
+handle[ "/createsupplieraddress" ] = requestHandlers.createSupplierAddress;
+handle[ "/viewsupplieraddress" ] = requestHandlers.viewSupplierAddress;
+handle[ "/getsupplieraddress" ] = requestHandlers.getSupplierAddress;
+handle[ "/editsupplieraddress" ] = requestHandlers.editSupplierAddress;
+handle[ "/deletesupplieraddress" ] = requestHandlers.deleteSupplierAddress;
 
 //  Purchase Order pages
 handle[ "/createpurchaseorder" ] = requestHandlers.createPurchaseOrder;
@@ -66,10 +66,11 @@ handle[ "/submitpurchaseorder" ] = requestHandlers.submitPurchaseOrder;
 handle[ "/cancelpurchaseorder" ] = requestHandlers.cancelPurchaseOrder;
 handle[ "/receivepurchaseorder" ] = requestHandlers.receivePurchaseOrder;
 handle[ "/returnpurchaseorder" ] = requestHandlers.returnPurchaseOrder;
-handle[ "/po/createorderline" ] = requestHandlers.createOrderLine;
-handle[ "/po/vieworderline" ] = requestHandlers.viewOrderLine;
-handle[ "/po/getorderline" ] = requestHandlers.getOrderLine;
-handle[ "/po/editorderline" ] = requestHandlers.editOrderLine;
-handle[ "/po/createreturnline" ] = requestHandlers.createReturnLine;
+handle[ "/createorderline" ] = requestHandlers.createOrderLine;
+handle[ "/vieworderline" ] = requestHandlers.viewOrderLine;
+handle[ "/getorderline" ] = requestHandlers.getOrderLine;
+handle[ "/editorderline" ] = requestHandlers.editOrderLine;
+handle[ "/deleteorderline" ] = requestHandlers.deleteOrderLine;
+handle[ "/createreturnline" ] = requestHandlers.createReturnLine;
 
 server.start( router.route, handle );
