@@ -83,7 +83,6 @@
 
                           e.stopPropagation();
 
-                          console.log( $( "#shoppingCart-" + $( this ).attr( "name" ) ).length > 0 );
                           if ( !$( "#shoppingCart-" + $( this ).attr( "name" ) ).length ) {
                             $( "#scBox" ).append( "<div edst-data='" + $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "name" ) + "' id='shoppingCart-" + $( this ).attr( "name" ) + "'>" +
                               "<div style='display:inline-block'>" + $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "name" ) + "</div>" +
@@ -99,10 +98,8 @@
                           }
 
                           obj.qty = $( "#edstQtyBox-" + $( this ).attr( "name" ) ).val();
-                          console.log( obj );
                           helper.addItem( obj );
                           helper.updateStorage();
-                          console.log( helper.cart() );
                         });
                         
                         editBtn.innerHTML = "Edit";
@@ -112,7 +109,6 @@
                         $( editBtn ).click(function( e ) {
 
                           e.stopPropagation();
-                          console.log( "ASDASDASD" );
                         });
 
                       for ( var row in data[ item ] ) {
@@ -170,7 +166,6 @@
 
                           e.stopPropagation();
 
-                          console.log( $( "#shoppingCart-" + $( this ).attr( "name" ) ).length > 0 );
                           if ( !$( "#shoppingCart-" + $( this ).attr( "name" ) ).length ) {
                             $( "#scBox" ).append( "<div edst-data='" + $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "name" ) + "' id='shoppingCart-" + $( this ).attr( "name" ) + "'>" +
                               "<div style='display:inline-block'>" + $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "name" ) + "</div>" +
@@ -193,13 +188,17 @@
                         });
                         
                         editBtn.innerHTML = "Edit";
+                        editBtn.name = data[ item ][ "ITEM_ID" ];
                         editBtn.style.float = "right";
                         editBtn.style.display = "inline-block";
                         $( "#edstItem-" + data[ item ][ "ITEM_ID" ] ).append( editBtn );
                         $( editBtn ).click(function( e ) {
 
                           e.stopPropagation();
-                          console.log( "ASDASDASD" );
+
+                          var respObj = data[ $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) ];
+                          $( "#itemName" ).val( respObj[ "ITEM_NAME" ] );
+                          $( "#receiptName" ).val( respObj[ "RECEIPT_NAME" ] );
                         });
 
                       for ( var row in data[ item ] ) {
@@ -426,7 +425,6 @@
           
           <div id="content">
             
-            <form id="editItemForm">
             <table id="editItemTable">
               <tr>
                 <td>Item Name:</td>
@@ -477,7 +475,6 @@
                 <input value="Delete" type="submit" name="DeleteButton" id="deleteBtn"/></td>
               </tr>
             </table>
-            </form>
           </div> <!-- Content -->
         </div><!-- Page -->
     </div><!-- Wrapper-BgTop -->
