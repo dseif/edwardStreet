@@ -34,100 +34,38 @@
         var i = 0;
         var j = 0;
 
-        // gets each $msg element and pushes to array called displays
-        $msgs.each(function () {
-
-          string2 = $msgs.get(j).tagName;
-          j = j + 1;
-          var text2 = $(this).attr('id');
-          displays.push(text2);
-        });
-
-        //            $inputs.each(function () {
-        //                string1 = $inputs.get(i).tagName;
-        //                i = i + 1;
-        //                var text = $(this).attr('id');
-        //                values.push(text);
-        //            });
-        // each validation to validate certain rules
-        validation = window.edwardValidationRequired;
-        validation2 = window.edwardValidationPhoneNum;
-        validation3 = window.edwardValidationDate;
-        validation4 = window.edwardValidationUser;
-        validation5 = window.edwardValidationPassOne;
-        validation6 = window.edwardValidationEmail;
-
-        // used for individual validation
-        var phoneNumber = $("#cntctNumber").val();
-        var leadTime = $("#leadTime").val();
-        var loginID = $("#loginID").val();
-        var pass = $("#pwd").val();
-        var emailAddr = $("#emailAddr").val();
-
-        // array for storing fields that are empty
-        var getBadArray = [];
-
-        // Gets each $inputs element and pushes to array called values
-        // Aslo, it adds each input element that is empty
-        // to an array that stores inputs that are empty
-        $inputs.each(function () {
-          string1 = $inputs.get(i).tagName;
-          i = i + 1;
-          var text = $(this).attr('id');
-          values.push(text);
-          if ($(this).val().length == 0) {
-            txt = $(this).attr('id');
-            getBadArray.push(txt);
-
-          }
-        });
-
-        // For loop to determine each input box by calling validateGeneral
-        // and checking each input box whether it is part of the array that
-        // holds empty textboxes
-        for (var i = 0; i < displays.length; i++) {
-          if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
-            $('#' + displays[i]).html("RIGHT");
-          } else {
-            $('#' + displays[i]).html("Missing required field");
-          }
-
-        }
-        // Validate the phone number
-        if (validation2.validatePhoneNum(phoneNumber)) {
-          $('#phNumValid').html("valid phone number");
-        } else {
-          $('#phNumValid').html("Not a valid phone number!");
-        }
-
-        // Validate the date
-        if (validation3.validateDate(leadTime)) {
-          $('#leadTimeValid').html("Date is valid");
-        } else {
-          $('#leadTimeValid').html("Date not valid!");
-        }
+       
 
 if(ok){
   $.ajax({
     cache: false,
     url: "http://96.126.109.151:8080/createsuppliercheckdupe",
     data: {
-      supplier_id: document.getElementById( "suppName" ).value,
+      suppName: document.getElementById( "suppName" ).value,
       hash: cookie
     },
     success: function( response, code, xhr ) {
 
+      var tempArray = [];
+      var children = $("#edst-checkboxes").children();
+      for (var item in children) {
+        
+      tempArray.push($(children[ item ]).val()));
+
+      }
+console.log(tempArray);
       var data = JSON.parse( response );
       if ( data[ 0 ][ "COUNT(SUPPLIER_ID)" ] !== 1 ) {
       $.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/createsupplier",
         data: {
-          user_id: document.getElementById( "suppName" ).value,
-          password: document.getElementById( "confpass" ).value,
+          suppName: document.getElementById( "suppName" ).value,
+          legName: document.getElementById( "legName" ).value,
           hash: cookie,
-          email: document.getElementById( "emailAddress" ).value,
-          role: document.getElementById( "userRoleBox" ).value
+          leadTime: document.getElementById( "leadTime" ).value,
+          supplierComm: document.getElementById( "supplierComm" ).value,
+          otherComm: document.getElementById( "otherComm" ).value
         },
         success: function( response, code, xhr ) {
 
@@ -135,7 +73,7 @@ if(ok){
         }
         });
       } else {
-        alert( "Supplier NAME ALREADY EXISTS, PLEASE CHOOSE ANOTHER" );
+        alert( "SUPPLIER NAME ALREADY EXISTS, PLEASE CHOOSE ANOTHER" );
       }
     }
 });
@@ -247,6 +185,7 @@ if(ok){
 				<div id="leadTimeValid"></div>
 
         <label for="deliveryDate">Delivery Dates</label> <br/>
+        <div id="edst-checkboxes">
         <label for="delSunday">Sunday:</label>  <input type="checkbox" name="Sunday" value="Sunday"  /><br/>
         <label for="delMonday">Monday:</label>  <input type="checkbox" name="Monday" value="Monday"  /><br/>
         <label for="delTuesday">Tuesday:</label> <input type="checkbox" name="Tuesday" value="Tuesday"  /><br/>
@@ -254,6 +193,7 @@ if(ok){
         <label for="delThursday">Thursday:</label>  <input type="checkbox" name="Thursday" value="Thursday"  /><br/>
         <label for="delFriday">Friday:</label> <input type="checkbox" name="Friday" value="Friday"  /><br/>
         <label for="delSaturday">Saturday:</label>  <input type="checkbox" name="Saturday" value="Saturday"  /><br/>
+        </div>
 				<div id="deliveryDateValid"></div>
 
 			</div>
