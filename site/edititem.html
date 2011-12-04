@@ -20,6 +20,8 @@
           fired = [],
           helper = edstHelper();
 
+          helper.populateCart();
+
       $.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/viewitems",
@@ -54,14 +56,66 @@
 
                     var data = JSON.parse( response );
 
-                    console.log( data );
+                    var count = 0;
                     for ( var item in data ) {
 
-                      $( "#tabs-" + page ).append( "<h3><a href='#'>" + data[ item ][ "ITEM_NAME" ] + "</a></h3>" + 
+                      $( "#tabs-" + page ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "ITEM_ID" ] + "' name='" + data[ item ][ "ITEM_NAME" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "ITEM_NAME" ] + "</a></h3>" + 
                          "<div id='edstAccord-" + data[ item ][ "ITEM_ID" ] + "'></div>" );
+                        count++;
+
+                        var editBtn = document.createElement( "button" ),
+                            addToCartBtn = document.createElement( "button" ),
+                            qtyBox = document.createElement( "input" );
+
+                        qtyBox.value = 1;
+                        qtyBox.id = "edstQtyBox-" + data[ item ][ "ITEM_ID" ];
+                        qtyBox.style.float = "right";
+                        qtyBox.style.display = "inline-block";
+                        qtyBox.style.width = "35px";
+                        $( "#edstItem-" + data[ item ][ "ITEM_ID" ] ).append( qtyBox );
+
+                        addToCartBtn.innerHTML = "Add to Cart";
+                        addToCartBtn.name = data[ item ][ "ITEM_ID" ];
+                        addToCartBtn.style.float = "right";
+                        addToCartBtn.style.display = "inline-block";
+                        $( "#edstItem-" + data[ item ][ "ITEM_ID" ] ).append( addToCartBtn );
+                        $( addToCartBtn ).click(function( e ) {
+
+                          e.stopPropagation();
+
+                          console.log( $( "#shoppingCart-" + $( this ).attr( "name" ) ).length > 0 );
+                          if ( !$( "#shoppingCart-" + $( this ).attr( "name" ) ).length ) {
+                            $( "#scBox" ).append( "<div edst-data='" + $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "name" ) + "' id='shoppingCart-" + $( this ).attr( "name" ) + "'>" +
+                              "<div style='display:inline-block'>" + $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "name" ) + "</div>" +
+                              "<div style='display:inline-block'>Qty: " + $( "#edstQtyBox-" + $( this ).attr( "name" ) ).val() +
+                            "</div></div>" );
+                          } 
+
+                          var obj = {},
+                          respObj = data[ $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) ];
+
+                          for ( var prop in respObj ) { 
+                            obj[ prop ] = respObj[ prop ]; 
+                          }
+
+                          obj.qty = $( "#edstQtyBox-" + $( this ).attr( "name" ) ).val();
+                          console.log( obj );
+                          helper.addItem( obj );
+                          helper.updateStorage();
+                          console.log( helper.cart() );
+                        });
+                        
+                        editBtn.innerHTML = "Edit";
+                        editBtn.style.float = "right";
+                        editBtn.style.display = "inline-block";
+                        $( "#edstItem-" + data[ item ][ "ITEM_ID" ] ).append( editBtn );
+                        $( editBtn ).click(function( e ) {
+
+                          e.stopPropagation();
+                          console.log( "ASDASDASD" );
+                        });
 
                       for ( var row in data[ item ] ) {
-                        console.log( data[ item ][ row ] );
 
                         $( "#edstAccord-" + data[ item ][ "ITEM_ID" ] ).append( "<p>" +
                            "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
@@ -89,21 +143,73 @@
             success: function( response, code, xhr ) {
 
               $.unblockUI();
-              var data = JSON.parse( response );
-              console.log( data );
+              var count = 0,
+              data = JSON.parse( response );
+                    for ( var item in data ) {
 
-              for ( var item in data ) {
+                      $( "#tabs-1" ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "ITEM_ID" ] + "' name='" + data[ item ][ "ITEM_NAME" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "ITEM_NAME" ] + "</a></h3>" + 
+                         "<div id='edstAccord-" + data[ item ][ "ITEM_ID" ] + "'></div>" );
+                        count++;
 
-                $( "#tabs-1" ).append( "<h3><a href='#'>" + data[ item ][ "ITEM_NAME" ] + "</a></h3>" + 
-                   "<div id='edstAccord-" + data[ item ][ "ITEM_ID" ] + "'></div>" );
+                        var editBtn = document.createElement( "button" ),
+                            addToCartBtn = document.createElement( "button" ),
+                            qtyBox = document.createElement( "input" );
 
-                for ( var row in data[ item ] ) {
+                        qtyBox.value = 1;
+                        qtyBox.id = "edstQtyBox-" + data[ item ][ "ITEM_ID" ];
+                        qtyBox.style.float = "right";
+                        qtyBox.style.display = "inline-block";
+                        qtyBox.style.width = "35px";
+                        $( "#edstItem-" + data[ item ][ "ITEM_ID" ] ).append( qtyBox );
 
-                  $( "#edstAccord-" + data[ item ][ "ITEM_ID" ] ).append( "<p>" +
-                     "<b>" + row + "</b>: " + data[ item ][ row ] + "</br></p>" );
-                }
-              }
+                        addToCartBtn.innerHTML = "Add to Cart";
+                        addToCartBtn.name = data[ item ][ "ITEM_ID" ];
+                        addToCartBtn.style.float = "right";
+                        addToCartBtn.style.display = "inline-block";
+                        $( "#edstItem-" + data[ item ][ "ITEM_ID" ] ).append( addToCartBtn );
+                        $( addToCartBtn ).click(function( e ) {
 
+                          e.stopPropagation();
+
+                          console.log( $( "#shoppingCart-" + $( this ).attr( "name" ) ).length > 0 );
+                          if ( !$( "#shoppingCart-" + $( this ).attr( "name" ) ).length ) {
+                            $( "#scBox" ).append( "<div edst-data='" + $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "name" ) + "' id='shoppingCart-" + $( this ).attr( "name" ) + "'>" +
+                              "<div style='display:inline-block'>" + $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "name" ) + "</div>" +
+                              "<div style='display:inline-block'>Qty: " + $( "#edstQtyBox-" + $( this ).attr( "name" ) ).val() +
+                            "</div></div>" );
+                          } 
+
+                          var obj = {},
+                          respObj = data[ $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) ];
+
+                          for ( var prop in respObj ) { 
+                            obj[ prop ] = respObj[ prop ]; 
+                          }
+
+                          obj.qty = $( "#edstQtyBox-" + $( this ).attr( "name" ) ).val();
+                          console.log( obj );
+                          helper.addItem( obj );
+                          helper.updateStorage();
+                          console.log( helper.cart() );
+                        });
+                        
+                        editBtn.innerHTML = "Edit";
+                        editBtn.style.float = "right";
+                        editBtn.style.display = "inline-block";
+                        $( "#edstItem-" + data[ item ][ "ITEM_ID" ] ).append( editBtn );
+                        $( editBtn ).click(function( e ) {
+
+                          e.stopPropagation();
+                          console.log( "ASDASDASD" );
+                        });
+
+                      for ( var row in data[ item ] ) {
+
+                        $( "#edstAccord-" + data[ item ][ "ITEM_ID" ] ).append( "<p>" +
+                           "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
+                      }
+                    }
+              
               fired[ 0 ] = true;
               helper.setupAccordion( document.getElementById( "tabs-1" ) );
             }
