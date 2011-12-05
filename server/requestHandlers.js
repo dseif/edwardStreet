@@ -56,6 +56,7 @@ var historyLog = {
   
   supplier: function ( vals, category, comment ) {
   
+console.log( "SUPPLIER LOG ASDASDASDASDASDASD", vals );
     helper.query( "INSERT INTO SUPPLIER_HISTORY( SUPPLIER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
                   "VALUES( '" + vals.supplier_id + "', '" + category + "', '" + comment +
                   "', '" + vals.curUserID + "', '" + helper.date() + "')",
@@ -830,7 +831,7 @@ function createSupplierCheckDupe( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT COUNT(*) FROM SUPPLIER WHERE LOWER(NAME) = LOWER('" + vals.["name"] + "')",
+  helper.query( "SELECT COUNT(*) FROM SUPPLIER WHERE LOWER(NAME) = LOWER('" + vals["name"] + "')",
                 function( error, rows, cols ) {
 
     response.writeHead( 200, {
@@ -880,6 +881,7 @@ function createSupplier( response ) {
         if ( error ) {
           console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
         } else {
+          console.log( "STUPD SHIT FUCL", vals );
           vals.supplier_id = rows[ 0 ]["LAST_INSERT_ID()"];
           historyLog.supplier( vals, "Create", "Created new supplier." );
         }
@@ -1571,7 +1573,7 @@ function deleteOrderLine ( response ) {
 
   var vals = response.values;
   
-  helper.query( "DELETE FROM PO_LINE WHERE PO_ID = '" + vals.po_id + "' AND PO_LINE_ID = '" + vals.po_line_id "'",
+  helper.query( "DELETE FROM PO_LINE WHERE PO_ID = '" + vals.po_id + "' AND PO_LINE_ID = '" + vals.po_line_id + "'",
                 function( error, rows, cols ) {
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
