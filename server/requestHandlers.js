@@ -46,7 +46,7 @@ var historyLog = {
                   "', '" + vals.curUserID + "' )",
                   function( error, rows, cols ) {
                   
-      console.log( "debug:: historyLog - INSERT INTO USER_HISTORY " + row );
+      console.log( "debug:: historyLog - INSERT INTO USER_HISTORY " + rows );
 
       if ( error ) {
         console.log( "Error on INSERT into USER_HISTORY: " + error );
@@ -62,7 +62,7 @@ var historyLog = {
                   "', '" + vals.curUserID + "' )",
                   function( error, rows, cols ) {
 
-      console.log( "debug:: historyLog - INSERT INTO SUPPLIER_HISTORY " + row );
+      console.log( "debug:: historyLog - INSERT INTO SUPPLIER_HISTORY " + rows );
                   
       if ( error ) {
         console.log( "Error on INSERT into SUPPLIER_HISTORY: " + error );
@@ -78,7 +78,7 @@ var historyLog = {
                   "', '" + vals.curUserID + "' )",
                   function( error, rows, cols ) {
 
-      console.log( "debug:: historyLog - INSERT INTO ITEM_HISTORY " + row );
+      console.log( "debug:: historyLog - INSERT INTO ITEM_HISTORY " + rows );
                   
       if ( error ) {
         console.log( "Error on INSERT into ITEM_HISTORY: " + error );
@@ -94,7 +94,7 @@ var historyLog = {
                   "', '" + vals.curUserID + "' )",
                   function( error, rows, cols ) {
 
-      console.log( "debug:: historyLog - INSERT INTO PO_HISTORY " + row );
+      console.log( "debug:: historyLog - INSERT INTO PO_HISTORY " + rows );
                   
       if ( error ) {
         console.log( "Error on INSERT into PO_HISTORY: " + error );
@@ -111,6 +111,8 @@ function index( response, cb ) {
   helper.query( "SELECT * FROM USER " +
 				"WHERE USER_ID = '" + vals.user + "' AND PASSWORD = '" + vals.pass + "'",
 				function( error, rows, cols ) {
+
+    console.log( "debug:: index - SELECT FROM USER " + rows );
         
     if ( error ) {
       console.log( "Error on SELECT FROM USER: " + error );
@@ -153,7 +155,7 @@ function viewUserHistory( response ) {
   helper.query( "SELECT COUNT(*) FROM USER_HISTORY",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewUserHistory - SELECT FROM USER_HISTORY " + row );
+    console.log( "debug:: viewUserHistory - SELECT FROM USER_HISTORY " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -182,7 +184,7 @@ function viewUserHistoryPage( response ) {
                 "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
   
-    console.log( "debug:: viewUserHistoryPage - SELECT FROM USER_HISTORY " + row );
+    console.log( "debug:: viewUserHistoryPage - SELECT FROM USER_HISTORY " + rows );
   
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -209,7 +211,7 @@ function viewItemHistory( response ) {
   helper.query( "SELECT COUNT(*) FROM ITEM_HISTORY",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewItemHistory - SELECT FROM ITEM_HISTORY " + row );
+    console.log( "debug:: viewItemHistory - SELECT FROM ITEM_HISTORY " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -239,7 +241,7 @@ function viewItemHistoryPage( response ) {
                 "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
   
-    console.log( "debug:: viewItemHistoryPage - SELECT FROM ITEM_HISTORY " + row );
+    console.log( "debug:: viewItemHistoryPage - SELECT FROM ITEM_HISTORY " + rows );
   
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -266,7 +268,7 @@ function viewSupplierHistory( response ) {
   helper.query( "SELECT COUNT(*) FROM SUPPLIER_HISTORY",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewSupplierHistory - SELECT FROM SUPPLIEr_HISTORY " + row );
+    console.log( "debug:: viewSupplierHistory - SELECT FROM SUPPLIEr_HISTORY " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -296,7 +298,7 @@ function viewSupplierHistoryPage( response ) {
                 "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewSupplierHistoryPage - SELECT FROM SUPPLIER_HISTORY " + row );
+    console.log( "debug:: viewSupplierHistoryPage - SELECT FROM SUPPLIER_HISTORY " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -323,7 +325,7 @@ function viewPOHistory( response ) {
   helper.query( "SELECT COUNT(*) FROM PO_HISTORY",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewPOHistory - SELECT FROM PO_HISTORY " + row );
+    console.log( "debug:: viewPOHistory - SELECT FROM PO_HISTORY " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -352,7 +354,7 @@ function viewPOHistoryPage( response ) {
                 "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
   
-    console.log( "debug:: viewPOHistoryPage - SELECT FROM PO_HISTORY " + row );
+    console.log( "debug:: viewPOHistoryPage - SELECT FROM PO_HISTORY " + rows );
   
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -381,7 +383,7 @@ function editAccount( response ) {
                 "WHERE USER_ID = '" + vals.use_id + "'", 
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editAccount - UPDATE USER " + row );
+    console.log( "debug:: editAccount - UPDATE USER " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
 
@@ -411,7 +413,7 @@ function createUserCheckDupe( response ) {
   helper.query( "SELECT COUNT(*) FROM USER WHERE USER_ID = '" + vals.user_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createUserCheckDupe - SELECT FROM USER " + row );
+    console.log( "debug:: createUserCheckDupe - SELECT FROM USER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -440,7 +442,7 @@ function createUser( response ) {
                 "', '" + vals.employee_id + "', '" + vals.role + "', '" + vals.supplier_id + "' )",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createUser - INSERT INTO USER " + row );
+    console.log( "debug:: createUser - INSERT INTO USER " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
                 
@@ -471,7 +473,7 @@ function viewUsers( response ) {
   helper.query( "SELECT COUNT(*) FROM USER",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewUsers - SELECT FROM USER " + row );
+    console.log( "debug:: viewUsers - SELECT FROM USER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -501,7 +503,7 @@ function viewUsersPage( response ) {
                 "LIMIT " + (vals.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewUsersPage - SELECT FROM USER " + row );
+    console.log( "debug:: viewUsersPage - SELECT FROM USER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -531,7 +533,7 @@ function editUser( response ) {
                 "WHERE USER_ID = '" + vals.old_user_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editUser - UPDATE USER " + row );
+    console.log( "debug:: editUser - UPDATE USER " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
     
@@ -562,7 +564,7 @@ function deleteUser( response ) {
   helper.query( "DELETE FROM USER WHERE USER_ID = '" + vals.user_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: deleteUser - DELETE FROM USER " + row );
+    console.log( "debug:: deleteUser - DELETE FROM USER " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
     
@@ -594,7 +596,7 @@ function createItemCheckDupe( response ) {
                 "WHERE LOWER(ITEM_NAME) = LOWER('" + vals.item_name + "') AND SUPPLIER_ID = '" + vals.supplier_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createItemCheckDupe - SELECT FROM ITEM " + row );
+    console.log( "debug:: createItemCheckDupe - SELECT FROM ITEM " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -624,7 +626,7 @@ function createItem( response ) {
                 "', '" + vals.supplier_id + "' )",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createItem - INSERT INTO ITEM " + row );
+    console.log( "debug:: createItem - INSERT INTO ITEM " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
                 
@@ -644,7 +646,7 @@ function createItem( response ) {
 	    // Get item_id of the item just created.
       helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
       
-        console.log( "debug:: createItem - SELECT LAST_INSERT_ID() " + row );
+        console.log( "debug:: createItem - SELECT LAST_INSERT_ID() " + rows );
         
         if ( error ) {
           console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
@@ -667,7 +669,7 @@ function viewItems( response ) {
   helper.query( "SELECT COUNT(*) FROM ITEM",
                 function ( error, rows, cols ) {
 
-    console.log( "debug:: viewItems - SELECT FROM ITEM " + row );
+    console.log( "debug:: viewItems - SELECT FROM ITEM " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -700,7 +702,7 @@ function viewItemsPage( response) {
                 "ORDER BY i.ITEM_NAME LIMIT " + (vals.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewItemsPage - SELECT FROM ITEM " + row );
+    console.log( "debug:: viewItemsPage - SELECT FROM ITEM " + rows );
                     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -730,7 +732,7 @@ function editItem( response ) {
                 "WHERE ITEM_ID = '" + vals.item_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editItem - UPDATE ITEM " + row );
+    console.log( "debug:: editItem - UPDATE ITEM " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
 
@@ -761,7 +763,7 @@ function deleteItem( response ) {
   helper.query( "DELETE FROM ITEM WHERE ITEM_ID = '" + vals.item_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: deleteItem - DELETE FROM ITEM " + row );
+    console.log( "debug:: deleteItem - DELETE FROM ITEM " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
     
@@ -794,7 +796,7 @@ function createPrice ( response ) {
                 "VALUES ( '" + vals.item_id + "', " + vals.price + ", '" + vals.curUserID + "' )" +
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createPrice - INSERT INTO PRICE_HISTORY " + row );
+    console.log( "debug:: createPrice - INSERT INTO PRICE_HISTORY " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
 
@@ -811,7 +813,7 @@ function createPrice ( response ) {
     // get price_id of the price just created.
       helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
       
-        console.log( "debug:: createPrice - SELECT LAST_INSERT_ID() " + row );
+        console.log( "debug:: createPrice - SELECT LAST_INSERT_ID() " + rows );
       
         if ( error ) {
           console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
@@ -822,7 +824,7 @@ function createPrice ( response ) {
           helper.query( "UPDATE ITEM SET LATEST_PRICE = " + vals.price_id + "WHERE ITEM_ID = " + vals.item_id,
                         function( error, rows, cols ) {
                         
-            console.log( "debug:: createPrice - UPDATE ITEM " + row );
+            console.log( "debug:: createPrice - UPDATE ITEM " + rows );
             
             if ( error ) {
               console.log( "Error on UPDATE ITEM with new price: " + error );
@@ -848,7 +850,7 @@ function viewPrice ( response ) {
                 "ORDERED BY LOG_DATE DESC LIMIT 20",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewPrice - SELECT FROM PRICE_HISTORY() " + row );
+    console.log( "debug:: viewPrice - SELECT FROM PRICE_HISTORY() " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -875,7 +877,7 @@ function createSupplierCheckDupe( response ) {
   helper.query( "SELECT COUNT(*) FROM SUPPLIER WHERE LOWER(NAME) = LOWER('" + vals["name"] + "')",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createSupplierCheckDupe - SELECT FROM SUPPLIER " + row );
+    console.log( "debug:: createSupplierCheckDupe - SELECT FROM SUPPLIER " + rows );
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -904,7 +906,7 @@ function createSupplier( response ) {
                 "', '" + vals.supplier_comment + "', '" + vals.special_comment + "')",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createSupplier - SELECT FROM SUPPLIER " + row );
+    console.log( "debug:: createSupplier - SELECT FROM SUPPLIER " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")" );
                 
@@ -923,7 +925,7 @@ function createSupplier( response ) {
 
       helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
       
-        console.log( "debug:: viewSupplier - SELECT LAST_INSERT_ID() " + row );
+        console.log( "debug:: viewSupplier - SELECT LAST_INSERT_ID() " + rows );
 
         if ( error ) {
           console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
@@ -945,7 +947,7 @@ function viewSuppliers( response ) {
   helper.query( "SELECT COUNT(*) FROM SUPPLIER",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewSuppliers - SELECT FROM SUPPLIER " + row );
+    console.log( "debug:: viewSuppliers - SELECT FROM SUPPLIER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -974,7 +976,7 @@ function viewSuppliersPage( response ) {
                 "FROM SUPPLIER ORDER BY NAME LIMIT " + (vals.pagenum-1)*20 + ", 20", 
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewSuppliersPage - SELECT FROM SUPPLIER " + row );
+    console.log( "debug:: viewSuppliersPage - SELECT FROM SUPPLIER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1004,7 +1006,7 @@ function editSupplier( response ) {
                 "WHERE SUPPLIER_ID = '" + vals.supplier_id + "'",
                 function( error, rows, cols ) {
   
-    console.log( "debug:: editSupplier - UPDATE SUPPLIER " + row );
+    console.log( "debug:: editSupplier - UPDATE SUPPLIER " + rows );
   
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
 
@@ -1035,7 +1037,7 @@ function deleteSupplier( response ) {
   helper.query( "DELETE FROM SUPPLIER WHERE SUPPLIER_ID = '" + vals.supplier_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: deleteSupplier - DELETE FROM SUPPLIER " + row );
+    console.log( "debug:: deleteSupplier - DELETE FROM SUPPLIER " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
     
@@ -1068,7 +1070,7 @@ function createContactPerson ( response ) {
                 "', '" + vals.phone_number + "', '" + vals.email + "' )",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createContactPerson - INSERT INTO CONTACT_PERSON " + row );
+    console.log( "debug:: createContactPerson - INSERT INTO CONTACT_PERSON " + rows );
     
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
                 
@@ -1101,7 +1103,7 @@ function viewContactPerson ( response ) {
                 "WHERE SUPPLIER_ID = '" + vals.supplier_id + "' ORDER BY LAST_NAME",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewContactPerson- SELECT FROM CONTACT_PERSON " + row );
+    console.log( "debug:: viewContactPerson- SELECT FROM CONTACT_PERSON " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1130,7 +1132,7 @@ function editContactPerson ( response ) {
                 "WHERE CONTACT_PERSON_ID = '" + vals.contact_person_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editContactPerson - UPDATE CONTACT_PERSON " + row );
+    console.log( "debug:: editContactPerson - UPDATE CONTACT_PERSON " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
 
@@ -1161,7 +1163,7 @@ function deleteContactPerson ( response ) {
   helper.query( "DELETE FROM CONTACT_PERSON WHERE CONTACT_PERSON_ID = '" + vals.contact_person_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: deleteContactPerson - DELETE FROM CONTACT_PERSON " + row );
+    console.log( "debug:: deleteContactPerson - DELETE FROM CONTACT_PERSON " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
     
@@ -1194,7 +1196,7 @@ function createSupplierAddress ( response ) {
                 "', '" + vals.phone_number + "' )",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createSupplierAddress - INSERT INTO SUPPLIER_ADDRESS " + row );
+    console.log( "debug:: createSupplierAddress - INSERT INTO SUPPLIER_ADDRESS " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
                 
@@ -1228,7 +1230,7 @@ function viewSupplierAddress ( response ) {
                 "FROM SUPPLIER_ADDRESS WHERE SUPPLIER_ID = '" + vals.supplier_id + "' ORDER BY ADDRESS_ID",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewSupplierAddress - SELECT FROM SUPPLIER_ADDRESS " + row );
+    console.log( "debug:: viewSupplierAddress - SELECT FROM SUPPLIER_ADDRESS " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1258,7 +1260,7 @@ function editSupplierAddress ( response ) {
                 "WHERE ADDRESS_ID = '" + vals.address_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editSupplierAddress - UPDATE SUPPLIER_ADDRESS " + row );
+    console.log( "debug:: editSupplierAddress - UPDATE SUPPLIER_ADDRESS " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
 
@@ -1289,7 +1291,7 @@ function deleteSupplierAddress ( response ) {
   helper.query( "DELETE FROM SUPPLIER_ADDRESS WHERE ADDRESS_ID = '" + vals.address_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: deleteSupplierAddress - DELETE FROM SUPPLIER_ADDRESS " + row );
+    console.log( "debug:: deleteSupplierAddress - DELETE FROM SUPPLIER_ADDRESS " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
     
@@ -1322,7 +1324,7 @@ function createPurchaseOrder( response ) {
                 "', '" + vals.ref_number + "', '" + vals.comment + "', '" + vals.supplier_id + "' )",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createPurchaseOrer - INSERT INTO PURCHASE_ORDER " + row );
+    console.log( "debug:: createPurchaseOrer - INSERT INTO PURCHASE_ORDER " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
                 
@@ -1353,7 +1355,7 @@ function viewPurchaseOrders( response ) {
   helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER WHERE STATUS = '" + vals.status + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewPurchaseOrders - SELECT FROM PURCHASE_ORDER " + row );
+    console.log( "debug:: viewPurchaseOrders - SELECT FROM PURCHASE_ORDER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1385,7 +1387,7 @@ function viewPurchaseOrdersPage ( response ) {
                 "ORDER BY po.PO_ID LIMIT " + (response.values.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewPurchaseOrdersPage - SELECT FROM PURCHASE_ORDER " + row );
+    console.log( "debug:: viewPurchaseOrdersPage - SELECT FROM PURCHASE_ORDER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1414,7 +1416,7 @@ function editPurchaseOrder( response ) {
                 "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editPurchaseOrder - UPDATE PURCHASE_ORDER " + row );
+    console.log( "debug:: editPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
 
@@ -1446,7 +1448,7 @@ function submitPurchaseOrder( response ) {
                 "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: submitPurchaseOrder - UPDATE PURCHASE_ORDER " + row );
+    console.log( "debug:: submitPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
 
@@ -1477,7 +1479,7 @@ function cancelPurchaseOrder( response ) {
   helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Cancelled' WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: cancelPurchaseOrder - UPDATE PURCHASE_ORDER " + row );
+    console.log( "debug:: cancelPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
 
@@ -1509,7 +1511,7 @@ function returnPurchaseOrder( response ) {
                 "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: returnPurchaseOrder - UPDATE PURCHASE_ORDER " + row );
+    console.log( "debug:: returnPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
 
@@ -1541,7 +1543,7 @@ function receivePurchaseOrder( response ) {
                 "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: receivePurchaseOrder - UPDATE PURCHASE_ORDER " + row );
+    console.log( "debug:: receivePurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
 
@@ -1574,7 +1576,7 @@ function createOrderLine( response ) {
                 "', '" + vals.comment + "', '" + vals.curUserID + "', '" + vals.price_id + "' ) " +
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createOrderLine - INSERT INTO PO_LINE " + row );
+    console.log( "debug:: createOrderLine - INSERT INTO PO_LINE " + rows );
     
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
 
@@ -1609,7 +1611,7 @@ function viewOrderLines( response ) {
                 "ORDER BY PO_LINE_ID",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewOrderLines - SELECT FROM PO_LINE " + row );
+    console.log( "debug:: viewOrderLines - SELECT FROM PO_LINE " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1638,7 +1640,7 @@ function editOrderLine( response ) {
                 "WHERE PO_ID = '" + vals.po_id + "' AND PO_LINE_ID = '" + vals.po_line_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editOrderLines - UPDATE PO_LINE " + row );
+    console.log( "debug:: editOrderLines - UPDATE PO_LINE " + rows );
 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
 
@@ -1669,7 +1671,7 @@ function deleteOrderLine ( response ) {
   helper.query( "DELETE FROM PO_LINE WHERE PO_ID = '" + vals.po_id + "' AND PO_LINE_ID = '" + vals.po_line_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: deleteOrderLines - DELETE FROM PO_LINE " + row );
+    console.log( "debug:: deleteOrderLines - DELETE FROM PO_LINE " + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
     
@@ -1702,7 +1704,7 @@ function createReturnLine( response ) {
                 "', '" + vals.qty_returned + "', '" + vals.credit_memo_num + "', '" + vals.comment + "', '" + vals.curUserID + "' ) " +
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createReturnLine - INSERT INTO RETURN_LINE" + row );
+    console.log( "debug:: createReturnLine - INSERT INTO RETURN_LINE" + rows );
                 
     console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
 
