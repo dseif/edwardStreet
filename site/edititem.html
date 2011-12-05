@@ -123,6 +123,10 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
                         qtyBox.style.float = "right";
                         qtyBox.style.display = "inline-block";
                         qtyBox.style.width = "35px";
+                        $( qtyBox ).click(function( e ) {
+
+                            e.stopPropagation();
+                        });
                         $( "#edstItem-" + data[ item ][ "Item ID" ] ).append( qtyBox );
 
                         addToCartBtn.innerHTML = "Add to Cart";
@@ -219,6 +223,10 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
                         qtyBox.style.float = "right";
                         qtyBox.style.display = "inline-block";
                         qtyBox.style.width = "35px";
+                        $( qtyBox ).click(function( e ) {
+
+                            e.stopPropagation();
+                        });
                         $( "#edstItem-" + data[ item ][ "Item ID" ] ).append( qtyBox );
 
                         addToCartBtn.innerHTML = "Add to Cart";

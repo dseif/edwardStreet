@@ -44,7 +44,7 @@
             deleteBtn.style.display = "inline-block";
             
         
-            $("#cartcontentUL").append("<h3 edst-count='" + count + "' id='edstHeader-" + cart[ item ]["Item ID"] +"' ><a href='#' style='display:inline-block;'>" + cart[ item ][ "Item Name" ]+"</a>change qty</h3>" +
+            $("#cartcontentUL").append("<h3 edst-count='" + count + "' id='edstHeader-" + cart[ item ]["Item ID"] +"' ><a href='#' style='display:inline-block;'>" + cart[ item ][ "Item Name" ]+"</a></h3>" +
                          "<div id='edstItem-" + cart[item]["Item ID"] + "'></div>");
                          $("#edstHeader-" + cart[ item ]["Item ID"]).append( qtyBox );
                          $("#edstHeader-" + cart[ item ]["Item ID"]).append( editBtn );
@@ -64,7 +64,6 @@
           
           var obj = {},
           respObj = cart[ $( this ).attr( "name" ) ];
-console.log( "STUPIDSTUPIDSPTPIST", respObj[ "Item ID" ]);
           for ( var prop in respObj ) {
             obj[ prop ] = respObj[ prop ];
           }
@@ -75,8 +74,6 @@ console.log( "STUPIDSTUPIDSPTPIST", respObj[ "Item ID" ]);
           
 
           var v = $("#edstItem-" + respObj["Item ID"]).children().length;
-          console.log("length - ", v);
-          console.log("ASDASDASD", $("#edstItem-" + respObj["Item ID"]).children()[v-1] );
           $( $("#edstItem-" + respObj["Item ID"]).children()[v-1] ).html("<b>qty: </b>" + obj.qty);
           
           helper.changeItemQty( obj );
