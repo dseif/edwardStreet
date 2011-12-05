@@ -110,7 +110,8 @@ if(ok){
     success: function( response, code, xhr ) {
 
       var data = JSON.parse( response );
-      if ( data[ 0 ][ "COUNT(USER_ID)" ] == 0 ) {
+      console.log( data );
+      if ( data[ 0 ][ "COUNT(*)" ] == 0 ) {
       $.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/createuser",
