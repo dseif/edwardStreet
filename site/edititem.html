@@ -15,7 +15,8 @@
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
       
-      /*$.ajax({
+    
+      $.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/getsupplierlist",
         data: {
@@ -25,11 +26,23 @@
 
           var data = JSON.parse( response );
 
-          console.log( data );
-        }
-      });*/
+           var dropDown = document.getElementById( "iSupplierBox" );
 
-      $( "#iSupplierBox" )
+            var addOption = function ( obj ) {
+
+              var opt = document.createElement("option");
+              opt.text = obj[ "NAME" ]; 
+              opt.value = obj[ "NAME" ];
+              opt[ "edst-suppId" ] = obj[ "SUPPLIER_ID" ];
+              dropDown.options.add( opt );
+            };
+
+            for (var i = 0, len = data.length; i < len; i++) {
+              addOption( data[ i ] );
+            }
+        }
+      });
+
 
       var numItems = 0,
           numPages = 0,
@@ -71,6 +84,28 @@
                   success: function( response, code, xhr ) {
 
                     var data = JSON.parse( response );
+
+document.getElementById("deleteBtn").addEventListener("click", function () {
+
+      if ($("#itemName").val() !== "") {
+
+        $.ajax({
+          cache: false,
+          url: "http://96.126.109.151:8080/deleteitem",
+          data: {
+            hash: getCookie("EDST_H"),
+            "item_id": data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ] 
+          },
+          success: function (response, code, xhr) {
+
+            console.log(JSON.parse(response));
+            alert("User Successfully deleted!");
+          }
+        });
+      }
+    }, false);
+
+
 
                     var count = 0;
                     for ( var item in data ) {
@@ -119,12 +154,25 @@
                         });
                         
                         editBtn.innerHTML = "Edit";
+                        editBtn.name = data[ item ][ "Item ID" ];
                         editBtn.style.float = "right";
                         editBtn.style.display = "inline-block";
                         $( "#edstItem-" + data[ item ][ "Item ID" ] ).append( editBtn );
                         $( editBtn ).click(function( e ) {
 
                           e.stopPropagation();
+
+                          var respObj = data[ $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) ];
+                          $( "#itemName" ).val( respObj[ "Item Name" ] );
+                          $( "#itemName" ).attr( "name", $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) );
+                          $( "#receiptName" ).val( respObj[ "Receipt Name" ] );
+                          $( "#iCategoryBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Item Category" ] ) );
+                          $( "#iTypeBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Department" ] ) );
+                          $( "#iSupplierBox" ).val( respObj[ "Supplier" ] );
+                          $( "#price" ).val( "$" + respObj[ "Latest Price" ] );
+                          $( "#unitValue" ).val( respObj[ "Sale Unit" ] ); 
+                          $( "#distCode" ).val( respObj[ "Distribution Code" ] );
+                          $( "#comments" ).val( respObj[ "Comments" ] );
                         });
 
                       for ( var row in data[ item ] ) {
@@ -217,6 +265,11 @@
                           $( "#receiptName" ).val( respObj[ "Receipt Name" ] );
                           $( "#iCategoryBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Item Category" ] ) );
                           $( "#iTypeBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Department" ] ) );
+                          $( "#iSupplierBox" ).val( respObj[ "Supplier" ] );
+                          $( "#price" ).val( "$" + respObj[ "Latest Price" ] );
+                          $( "#unitValue" ).val( respObj[ "Sale Unit" ] ); 
+                          $( "#distCode" ).val( respObj[ "Distribution Code" ] );
+                          $( "#comments" ).val( respObj[ "Comments" ] );
                         });
 
                       for ( var row in data[ item ] ) {
@@ -475,7 +528,15 @@
               </tr>
               <tr>
                 <td>Unit:</td>
-                <td><input type="text" value="" name="ItemName" id="itemName"/></td>
+                <td><input type="text" value="" name="ItemName" id="unitValue"/></td>
+              </tr>
+              <tr>
+                <td>Distribution Code:</td>
+                <td><input type="text" value="" name="distCode" id="distCode"/></td>
+              </tr>
+              <tr>
+                <td>Comments:</td>
+                <td><textarea type="text" value="" name="comments" id="comments"></textarea></td>
               </tr>
               <tr>
                 <td><input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/></td>
@@ -483,6 +544,9 @@
                 <input value="Delete" type="submit" name="DeleteButton" id="deleteBtn"/></td>
               </tr>
             </table>
+            <div id="dialog-confirm" title="Delete Item?" style="display:none">
+              <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span> This item will be permanently deleted and cannot be recovered. Are you sure?</p>
+            </div>
           </div> <!-- Content -->
         </div><!-- Page -->
     </div><!-- Wrapper-BgTop -->
