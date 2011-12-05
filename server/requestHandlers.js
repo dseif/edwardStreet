@@ -11,7 +11,7 @@ var helper = {
   date: function() {
 
     var cur = new Date();
-    return cur.getFullYear() + "-" + cur.getMonth() + "-" + cur.getDate() + " " +
+    return cur.getFullYear() + "-" + (cur.getMonth()+1) + "-" + cur.getDate() + " " +
            cur.getHours() + ":" + cur.getMinutes() + ":00";
   },
   //  function to make database calls for us
@@ -170,7 +170,7 @@ function viewUserHistoryPage( response ) {
   var vals = response.values;
   
   helper.query( "SELECT USER_ID 'User Account', CATEGORY 'Action Type', COMMENT 'Comment', " +
-                "AUTHOR 'Action By', LOG_DATE 'Date' " +
+                "AUTHOR 'Action By', LOG_DATE 'Date' FROM USER_HISTORY" +
                 "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
   
