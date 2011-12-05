@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
                       for ( var row in data[ item ] ) {
 
-                        $( "#edstAccord-" + data[ item ][ "SUPPLIER_ID" ] ).append( "<p>" +
+                        $( "#edstAccord-" + data[ item ][ "Item ID" ] ).append( "<p>" +
                            "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
                       }
                     }
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                         
                       for ( var row in data[ item ] ) {
 
-                        $( "#edstAccord-" + data[ item ][ "SUPPLIER_ID" ] ).append( "<p>" +
+                        $( "#edstAccord-" + data[ item ][ "Item ID" ] ).append( "<p>" +
                            "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
                       }
                     }
