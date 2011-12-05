@@ -52,6 +52,28 @@ $( function() {
             }
           }
         },
+        // change quantity of the item in the shopping cart
+        changeItemQty: function( obj ) {
+
+          var id = obj[ "Item ID" ];
+
+          if ( cart[ id ] ) {
+            cart[ id ].qty = obj.qty;
+          /*} else {
+            cart[ id ] = obj;
+          }*/
+
+          var children = $( "#scBox" ).children();
+
+          console.log( "CHILDS PLAY 2.0", children );
+          for ( var i = 0, l = children.length; i < l; i++ ) {
+            console.log( $( children[ i ] ).attr( "edst-data" ) );
+            if ( $( children[ i ] ).attr( "edst-data" ) === obj[ "Item Name" ] ) {
+              children[ i ].children[ 1 ].innerHTML = "Qty: " + cart[ id ].qty;
+            }
+          }
+          }
+        },
         // return the users shopping cart object
         cart: function() {
 

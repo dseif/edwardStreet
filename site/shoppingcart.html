@@ -19,20 +19,103 @@
         helper.populateCart();
 
         var cart = helper.cart();
-        console.log(cart);
+        //console.log(cart);
+        var count = 0;
         for (var item in cart) {
-            $("#cartcontentUL").append("<h3>" + cart[item]["Item Name"] + "</h3>" +
-                         "<div id='edstItem-" + cart[item]["Item ID"] + "'></div>");
         
+         var deleteBtn = document.createElement( "button" ),
+            editBtn = document.createElement( "button" ),
+            qtyBox = document.createElement( "input" );
 
+            qtyBox.value = cart[ item ][ "qty" ];
+            qtyBox.id = "edstQtyBox-" + cart[ item ][ "Item ID" ];
+            qtyBox.style.float = "right";
+            qtyBox.style.display = "inline-block";
+            qtyBox.style.width = "35px";
+            
+            editBtn.innerHTML = "update quantity";
+            editBtn.name = cart[ item ][ "Item ID" ];
+            editBtn.style.float = "right";
+            editBtn.style.display = "inline-block";
+            
+            deleteBtn.innerHTML = "delete";
+            deleteBtn.name = cart[ item ][ "Item ID" ];
+            deleteBtn.style.float = "right";
+            deleteBtn.style.display = "inline-block";
+            
+        
+            $("#cartcontentUL").append("<h3 edst-count='" + count + "' id='edstHeader-" + cart[ item ]["Item ID"] +"' ><a href='#' style='display:inline-block;'>" + cart[ item ][ "Item Name" ]+"</a>change qty</h3>" +
+                         "<div id='edstItem-" + cart[item]["Item ID"] + "'></div>");
+                         $("#edstHeader-" + cart[ item ]["Item ID"]).append( qtyBox );
+                         $("#edstHeader-" + cart[ item ]["Item ID"]).append( editBtn );
+                         $("#edstHeader-" + cart[ item ]["Item ID"]).append( deleteBtn );
+                         count++;
+                         console.log(count);
+        
+        $(qtyBox).click(function( e) {
+          e.stopPropagation();
+        });
+        
+        $( editBtn ).click(function( e ) {
+        
+          e.stopPropagation();
+          
+          //var qtyFromBox = $( "#edstQtyBox-" + $( this ).attr( "name" ) ).val();
+          
+          var obj = {},
+          respObj = cart[ $( this ).attr( "name" ) ];
+console.log( "STUPIDSTUPIDSPTPIST", respObj[ "Item ID" ]);
+          for ( var prop in respObj ) {
+            obj[ prop ] = respObj[ prop ];
+          }
+          
+          
+          
+          obj.qty = $( "#edstQtyBox-" + $( this ).attr( "name" ) ).val();
+          
+
+          var v = $("#edstItem-" + respObj["Item ID"]).children().length;
+          console.log("length - ", v);
+          console.log("ASDASDASD", $("#edstItem-" + respObj["Item ID"]).children()[v-1] );
+          $( $("#edstItem-" + respObj["Item ID"]).children()[v-1] ).html("<b>qty: </b>" + obj.qty);
+          
+          helper.changeItemQty( obj );
+          helper.updateStorage();
+          
+        });
+        
+        $( deleteBtn ).click(function( e ) {
+
+          e.stopPropagation();
+          
+          var obj = {},
+          respObj = cart[ $( this ).attr( "name" ) ];
+
+          for ( var prop in respObj ) {
+            obj[ prop ] = respObj[ prop ];
+          }
+          
+          $( "#shoppingCart-" + $( this ).attr( "name" ) ).remove();
+          $( "#edstHeader-" + $( this ).attr( "name" ) ).remove();
+          $( "#edstItem-" + $( this ).attr( "name" ) ).remove();
+          
+          helper.removeItem( obj["Item ID"] );
+          helper.updateStorage();
+          console.log( helper.cart() );
+          
+        });
+                         
         for (var row in cart[item]) {
 
             $("#edstItem-" + cart[item]["Item ID"]).append("<p>" +
                            "<b>" + row + "</b>: " + cart[item][row] + "</p>");
-                           console.log($("#edstItem-" + cart[item]["Item ID"]));
+                           //console.log($("#edstItem-" + cart[item]["Item ID"]));
         }
+        
+        
+        
         }
-
+        
         helper.setupAccordion(document.getElementById("cartcontentUL"));
 
         document.getElementById("searchDB").addEventListener("click", function (event) {
@@ -75,7 +158,7 @@
     <div id="logo">
       <h1 class="headings"><a href="index.html">Edward Street</a></h1>
     </div>
-    <p class="textright"><a class="textright" href="login.html">Log in</a><a class="textright" href="#">Log out</a></p>
+    <p class="textright"><a class="textright" href="login.html">Log in</a><a class="textright" style="margin-left: 3em;" href="#">Log out</a></p>
     <p class="sctext">SHOPPING CART</p>
     <div id="scBox" class="shoppingcart">
     
