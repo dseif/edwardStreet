@@ -39,7 +39,7 @@
       //console.log(tempArray);
 console.log(response);
       var data = JSON.parse( response );
-      if ( data[ 0 ][ "COUNT(*)" ] == 0 ) {
+      if ( data[ 0 ][ "COUNT(SUPPLIER_ID)" ] == 0 ) {
       $.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/createsupplier",
