@@ -11,7 +11,7 @@ var helper = {
   date: function() {
 
     var cur = new Date();
-    return cur.getFullYear() + "-" + cur.getMonth() + "-" + cur.getDate() + " " +
+    return cur.getFullYear() + "-" + (cur.getMonth()+1) + "-" + cur.getDate() + " " +
            cur.getHours() + ":" + cur.getMinutes() + ":00";
   },
   //  function to make database calls for us
