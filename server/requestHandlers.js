@@ -57,7 +57,6 @@ var historyLog = {
   
   supplier: function ( vals, category, comment ) {
   
-    helper.query( "INSERT INTO SUPPLIER_HISTORY( SUPPLIER_ID, CATEGORY, COMMENT, AUTHOR, LOG_DATE ) " +
     helper.query( "INSERT INTO SUPPLIER_HISTORY( SUPPLIER_ID, CATEGORY, COMMENT, AUTHOR ) " +
                   "VALUES( '" + vals.supplier_id + "', '" + category + "', '" + comment +
                   "', '" + vals.curUserID + "' )",
@@ -901,7 +900,7 @@ function createSupplier( response ) {
   var vals = response.values;
 
   helper.query( "INSERT INTO SUPPLIER( NAME, LEGAL_NAME, LEAD_TIME, SUPPLIER_COMMENT, SPECIAL_COMMENT ) " +
-                "VALUES('" + vals.["name"] + "', '" + vals.legal_name + "', '" + vals.lead_time +
+                "VALUES('" + vals["name"] + "', '" + vals.legal_name + "', '" + vals.lead_time +
                 "', '" + vals.supplier_comment + "', '" + vals.special_comment + "')",
                 function( error, rows, cols ) {
 
