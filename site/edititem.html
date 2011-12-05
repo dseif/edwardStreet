@@ -89,17 +89,35 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
 
       if ($("#itemName").val() !== "") {
 
-        $.ajax({
-          cache: false,
-          url: "http://96.126.109.151:8080/deleteitem",
-          data: {
-            hash: getCookie("EDST_H"),
-            "item_id": data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ] 
-          },
-          success: function (response, code, xhr) {
+        $( "#dialog-confirm" ).dialog({
+          resizable: false,
+          height:160,
+          modal: true,
+          buttons: {
+            "Delete": function() {
 
-            console.log(JSON.parse(response));
-            alert("User Successfully deleted!");
+              $.ajax({
+                cache: false,
+                url: "http://96.126.109.151:8080/deleteitem",
+                data: {
+                  hash: getCookie( "EDST_H" ),
+                  "item_id": document.getElementById( "userName" ).value
+                },
+                success: function( response, code, xhr ) {
+
+                  $( "#userName" ).val( " " );
+                  $( "#emailAddress" ).val(  " " );
+                  $( "userRoleBox" ).val( " " );
+                  $( "#itemTable" ).find( "tr:gt(0)" ).remove();
+                  viewuser();
+                }
+              });
+              $( this ).dialog( "close" );
+            },
+            Cancel: function() {
+            
+              $( this ).dialog( "close" );
+            }
           }
         });
       }
