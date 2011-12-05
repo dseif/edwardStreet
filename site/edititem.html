@@ -377,12 +377,12 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
 
     // While user is scrolling down, the shopping cart banner and the menu follows
     $(window).scroll(function () {
-      if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
+      if ($(window).scrollTop() > $(".scrollTrigger").offset().top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
       }
       // Revert back to normal
-      if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
+      if ($(window).scrollTop() <= $(".scrollTrigger").offset().top) {
         $("#header").css("position", "relative");
         $("#header").css("top", $(".scrollTrigger").offset);
       }
@@ -396,7 +396,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
     <div id="logo">
       <h1 class="headings"><a href="index.html">Edward Street</a></h1>
     </div>
-    <p class="textright"><a class="textright" href="login.html">Log in</a></p>
+    <p class="textright"><a class="textright" href="login.html">Log in</a><a class="textright" style="margin-left: 3em;" href="#">Log out</a></p>
     <p class="sctext">SHOPPING CART</p>
     <div id="scBox" class="shoppingcart">
     
