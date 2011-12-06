@@ -1352,7 +1352,7 @@ function viewPurchaseOrders( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER WHERE STATUS = '" + vals.status + "'",
+  helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER WHERE STATUS LIKE '" + vals.status + "'",
                 function( error, rows, cols ) {
 
     console.log( "debug:: viewPurchaseOrders - SELECT FROM PURCHASE_ORDER " + rows );
