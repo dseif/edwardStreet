@@ -1352,7 +1352,7 @@ function viewPurchaseOrders( response ) {
 
   var vals = response.values;
 
-  helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER WHERE STATUS = '" + vals.status + "'",
+  helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER WHERE STATUS LIKE '" + vals.status + "'",
                 function( error, rows, cols ) {
 
     console.log( "debug:: viewPurchaseOrders - SELECT FROM PURCHASE_ORDER " + rows );
@@ -1384,7 +1384,8 @@ function viewPurchaseOrdersPage ( response ) {
                 "po.DELIVERY_TIME 'Delivery Time', po.RECEIVE_DATE 'Date Received', " +
                 "po.REF_NUMBER 'Reference Number', po.COMMENT 'Comments', s.NAME 'Supplier' " +
                 "FROM PURCHASE_ORDER po LEFT OUTER JOIN SUPPLIER s ON po.SUPPLIER_ID = s.SUPPLIER_ID " +
-                "ORDER BY po.PO_ID LIMIT " + (response.values.pagenum-1)*20 + ", 20",
+                "WHERE po.STATUS LIKE '" + vals.status + "' " +
+                "ORDER BY po.PO_ID DESC LIMIT " + (response.values.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
 
     console.log( "debug:: viewPurchaseOrdersPage - SELECT FROM PURCHASE_ORDER " + rows );
