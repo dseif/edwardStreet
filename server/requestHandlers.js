@@ -1384,7 +1384,7 @@ function viewPurchaseOrdersPage ( response ) {
                 "po.DELIVERY_TIME 'Delivery Time', po.RECEIVE_DATE 'Date Received', " +
                 "po.REF_NUMBER 'Reference Number', po.COMMENT 'Comments', s.NAME 'Supplier' " +
                 "FROM PURCHASE_ORDER po LEFT OUTER JOIN SUPPLIER s ON po.SUPPLIER_ID = s.SUPPLIER_ID " +
-                "WHERE STATUS LIKE '" + vals.status + "' " +
+                "WHERE po.STATUS LIKE '" + vals.status + "' " +
                 "ORDER BY po.PO_ID DESC LIMIT " + (response.values.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
 
