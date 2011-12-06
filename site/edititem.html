@@ -101,15 +101,21 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
                 url: "http://96.126.109.151:8080/deleteitem",
                 data: {
                   hash: getCookie( "EDST_H" ),
-                  "item_id": document.getElementById( "userName" ).value
+                  "item_id": data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ]
                 },
                 success: function( response, code, xhr ) {
 
-                  $( "#userName" ).val( " " );
-                  $( "#emailAddress" ).val(  " " );
-                  $( "userRoleBox" ).val( " " );
-                  $( "#itemTable" ).find( "tr:gt(0)" ).remove();
-                  viewuser();
+                  $( "#itemName" ).val( "" );
+                  $( "#receiptName" ).val( "" ); 
+                  $( "#iCategoryBox" ).val( "" );
+                  $( "#iTypeBox" ).val( "" ); 
+                  $( "#iSupplierBox" ).val( "" ); 
+                  $( "#price" ).val( "" ); 
+                  $( "#unitValue" ).val( "" ); 
+                  $( "#distCode" ).val( "" ); 
+                  $( "#comments" ).val( "" );
+                  $( "#edstAccord-" + data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ] ).remove();
+                  $( "#edstItem-" + data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ] ).remove();
                 }
               });
               $( this ).dialog( "close" );
@@ -226,6 +232,49 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               $.unblockUI();
               var count = 0,
               data = JSON.parse( response );
+              document.getElementById("deleteBtn").addEventListener("click", function () {
+
+                if ($("#itemName").val() !== "") {
+
+                  $( "#dialog-confirm" ).dialog({
+                    resizable: false,
+                    height:160,
+                    modal: true,
+                    buttons: {
+                      "Delete": function() {
+
+                        $.ajax({
+                          cache: false,
+                          url: "http://96.126.109.151:8080/deleteitem",
+                          data: {
+                            hash: getCookie( "EDST_H" ),
+                            "item_id": data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ]
+                          },
+                          success: function( response, code, xhr ) {
+
+                            $( "#itemName" ).val( "" );
+                            $( "#receiptName" ).val( "" ); 
+                            $( "#iCategoryBox" ).val( "" );
+                            $( "#iTypeBox" ).val( "" ); 
+                            $( "#iSupplierBox" ).val( "" ); 
+                            $( "#price" ).val( "" ); 
+                            $( "#unitValue" ).val( "" ); 
+                            $( "#distCode" ).val( "" ); 
+                            $( "#comments" ).val( "" );
+                            $( "#edstAccord-" + data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ] ).remove();
+                            $( "#edstItem-" + data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ] ).remove();
+                          }
+                        });
+                        $( this ).dialog( "close" );
+                      },
+                      Cancel: function() {
+            
+                        $( this ).dialog( "close" );
+                      }
+                    }
+                  });
+                }
+              }, false );
                     for ( var item in data ) {
 
                       $( "#tabs-1" ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "Item ID" ] + "' name='" + data[ item ][ "Item Name" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "Item Name" ] + "</a></h3>" + 
@@ -288,6 +337,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
 
                           var respObj = data[ $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) ];
                           $( "#itemName" ).val( respObj[ "Item Name" ] );
+                          $( "#itemName" ).attr( "name", $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) );
                           $( "#receiptName" ).val( respObj[ "Receipt Name" ] );
                           $( "#iCategoryBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Item Category" ] ) );
                           $( "#iTypeBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Department" ] ) );
