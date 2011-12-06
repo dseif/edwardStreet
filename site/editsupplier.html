@@ -29,8 +29,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
         }
       });*/
 
-      $( "#iSupplierBox" )
-
       var numItems = 0,
           numPages = 0,
           fired = [],
@@ -78,6 +76,26 @@ document.addEventListener("DOMContentLoaded", function (event) {
                       $( "#tabs-" + page ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "SUPPLIER_ID" ] + "' name='" + data[ item ][ "Supplier Name" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "Supplier Name" ] + "</a></h3>" + 
                          "<div id='edstAccord-" + data[ item ][ "SUPPLIER_ID" ] + "'></div>" );
                         count++;
+                      
+                      var editBtn = document.createElement( "button" );
+                      editBtn.innerHTML = "Edit";
+                        editBtn.name = data[ item ][ "Supplier Name" ];
+                        editBtn.style.float = "right";
+                        editBtn.style.display = "inline-block";
+                        $( "#edstItem-" + data[ item ][ "SUPPLIER_ID" ] ).append( editBtn );
+                        $( editBtn ).click(function( e ) {
+
+                          e.stopPropagation();
+
+                          var respObj = data[ $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) ];
+                          $( "#suppName" ).val( respObj[ "Supplier Name" ] );
+                          $( "#suppName" ).attr( "name", $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) );
+                          $( "#legName" ).val( respObj[ "Legal Name" ] );
+                          $( "#leadTime" ).val( String.prototype.toLowerCase.apply( respObj[ "Lead Time" ] ) );
+                          $( "#supplierComm" ).val( String.prototype.toLowerCase.apply( respObj[ "Supplier Comments" ] ) );
+                          $( "#otherComm" ).val( respObj[ "Special Comments" ] );
+                          
+                        });
 
                       for ( var row in data[ item ] ) {
 
@@ -114,6 +132,26 @@ document.addEventListener("DOMContentLoaded", function (event) {
                          "<div id='edstAccord-" + data[ item ][ "SUPPLIER_ID" ] + "'></div>" );
                         count++;
                         
+                      var editBtn = document.createElement( "button" );
+                        editBtn.innerHTML = "Edit";
+                        editBtn.name = data[ item ][ "Supplier Name" ];
+                        editBtn.style.float = "right";
+                        editBtn.style.display = "inline-block";
+                        $( "#edstItem-" + data[ item ][ "SUPPLIER_ID" ] ).append( editBtn );
+                        $( editBtn ).click(function( e ) {
+
+                          e.stopPropagation();
+
+                          var respObj = data[ $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) ];
+                          $( "#suppName" ).val( respObj[ "Supplier Name" ] );
+                          $( "#suppName" ).attr( "name", $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) );
+                          $( "#legName" ).val( respObj[ "Legal Name" ] );
+                          $( "#leadTime" ).val( String.prototype.toLowerCase.apply( respObj[ "Lead Time" ] ) );
+                          $( "#supplierComm" ).val( String.prototype.toLowerCase.apply( respObj[ "Supplier Comments" ] ) );
+                          $( "#otherComm" ).val( respObj[ "Special Comments" ] );
+                          
+                        });
+
                       for ( var row in data[ item ] ) {
 
                         $( "#edstAccord-" + data[ item ][ "SUPPLIER_ID" ] ).append( "<p>" +
@@ -127,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
           });
           $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
         }
-      });  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      });  
 
       document.getElementById("savBtn").addEventListener("click", function (event) {
 
@@ -277,7 +315,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     <li id="poMenu" class="blacklink"><a href="#"> Purchase Order > </a>
       <ul>
         <li class="blacklink"><a href="createpo.html">Create Purchase Order</a></li>
-        <li class="blacklink"><a href="modifypo.html">Edit Purchase Order</a></li>
+        <li class="blacklink"><a href="editpo.html">Edit Purchase Order</a></li>
         <li class="blacklink"><a href="viewpo.html">View Purchase Order</a></li>
         <li class="blacklink"><a href="receivepo.html">Receive Purchase Order</a></li>
         <li class="blacklink"><a href="returnpo.html">Return Purchase Order</a></li>
@@ -320,41 +358,42 @@ document.addEventListener("DOMContentLoaded", function (event) {
             <ul id="resultsUL"></ul>
           </div>
           <hr/><br/><br/>
-				
-				<label for="usrName">LoginName</label> <input type="text" value="" name="UserName" id="usrName"/><br/>
-				
-                <label for="roleBox">Role</label>
-					<select name="RoleBox" id="roleBox">
-  						<option value="buyer">Buyer</option>
-  						<option value="receiver">Receiver</option>
-  						<option value="shipper">Shipper</option>
-  						<option value="admin">Admin</option>
-					</select><br/>
-				
+							
                 <label for="suppName">Supplier Name</label> <input type="text" value="" name="SupplierName" id="suppName"/><br/>
+				<div id="suppValid"></div>
 				
-                <label for="leglName">Legal Name</label> <input type="text" value="" name="LegalName" id="leglName"/><br/>
+				<label for="legName">Legal Name</label> <input type="text" value="" name="LegalName" id="legName"/><br/>
+				<div id="legNamValid"></div>
 				
-                <label for="addrs">Address</label> <input type="text" value="" name="Address" id="addrs"/><br/>
 				
-                <label for="contact">Contact</label> <input type="text" value="" name="Contact" id="contact"/><br/>
-				
-                <label for="datesofdelivery">Delivery Dates</label> <textarea name="DeliveryDateText" id="datesofdelivery" rows="3" cols="10"></textarea><br/>
-				
-                <label for="leadTime">Lead Time</label> <input type="text" value="" name="LeadTime" id="leadTime"/><br/>
-				<br/>
+				<label for="leadTime">Lead Time</label> <input type="text" value="" name="LeadTime" id="leadTime"/><br/>
+				<div id="leadTimeValid"></div>
+
+        <label for="deliveryDate">Delivery Dates</label> <br/>
+        <div id="edst-checkboxes">
+          <label for="delSunday">Sunday:</label>  <input type="checkbox" name="Sunday" value="Sunday"  /><br/>
+          <label for="delMonday">Monday:</label>  <input type="checkbox" name="Monday" value="Monday"  /><br/>
+          <label for="delTuesday">Tuesday:</label> <input type="checkbox" name="Tuesday" value="Tuesday"  /><br/>
+          <label for="delWednesday">Wednesday:</label> <input type="checkbox" name="Wednesday" value="Wednesday"  /><br/>
+          <label for="delThursday">Thursday:</label>  <input type="checkbox" name="Thursday" value="Thursday"  /><br/>
+          <label for="delFriday">Friday:</label> <input type="checkbox" name="Friday" value="Friday"  /><br/>
+          <label for="delSaturday">Saturday:</label>  <input type="checkbox" name="Saturday" value="Saturday"  /><br/>
+        </div>
+				<div id="deliveryDateValid"></div>
 
 			</div>
 			
-				<label for="suppComm">Supplier Comments</label> <textarea id="suppComm" rows="3" cols="20" name="SupplierComments"></textarea><br/>
-				
+        <label for="supplierComm">Supplier Comments</label> <textarea id="supplierComm" rows="3" cols="20" name="SupplierComments"></textarea><br/>
 				<label for="otherComm">Other Comments</label> <textarea id="otherComm" rows="3" cols="20" name="SpecialComments"></textarea><br/>
 			
       <div id="content">
 						
 				</div>
-                <input class="submitbutton" value="Save" type="submit" name="SaveButton" id="savBtn"/>
-                <input value="Cancel" type="reset" name="CancelButton" id="cancelBtn"/>
+                <input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/>
+                <input class="submitbutton" value="Save" type="submit" name="SaveButton" id="savBtn"/>OR<input value="Delete" type="submit" name="DeleteButton" id="deleteBtn"/>
+      <div id="dialog-confirm" title="Delete Item?" style="display:none">
+              <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span> This item will be permanently deleted and cannot be recovered. Are you sure?</p>
+            </div>
 	</div>
 <div>
 

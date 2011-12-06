@@ -5,7 +5,7 @@
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui-1.8.16.custom.css" />
-<title>Edward Street</title>
+<title>Edward Street - Edit Item</title>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
@@ -445,14 +445,14 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
             url: "http://96.126.109.151:8080/edititem",
             data: {
               hash: getCookie( "EDST_H" )
-              dist_code:
-              item_name:
-              receiptname:
-              category:
-              unit:
-              comment:
-              supplier_id:
-              item_id:
+              //dist_code:
+              //item_name:
+              //receiptname:
+              //category:
+              //unit:
+              //comment:
+              //supplier_id:
+              //item_id:
             },
             success: function( response, code, xhr ) {
 
