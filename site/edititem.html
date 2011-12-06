@@ -438,6 +438,27 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
           $('#numValid').html("Not a number, also needs dollar sign!");
         }
 
+        if ( ok ) {
+
+          $.ajax({
+            cache: false,
+            url: "http://96.126.109.151:8080/edititem",
+            data: {
+              hash: getCookie( "EDST_H" )
+              dist_code:
+              item_name:
+              receiptname:
+              category:
+              unit:
+              comment:
+              supplier_id:
+              item_id:
+            },
+            success: function( response, code, xhr ) {
+
+            }
+          });
+        }
       }, false);
 
       $('#nav li').hover(
