@@ -32,7 +32,7 @@
         success: function( response, code, xhr ) {
 
           numItems = JSON.parse( response )[ 0 ][ "COUNT(*)" ];
-          numPages = numItems > 20 ? Math.round( numItems/20 ) : 1;
+          numPages = Math.abs((numItems-1)/20)+1;
 
           for ( var i = 1; i <= numPages; i++ ) {
 

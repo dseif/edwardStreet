@@ -60,7 +60,7 @@
         success: function( response, code, xhr ) {
 
           numItems = JSON.parse( response )[ 0 ][ "COUNT(*)" ];
-          numPages = Math.round( numItems/20 );
+          numPages = Math.abs((numItems-1)/20)+1;
 
           for ( var i = 1; i <= numPages; i++ ) {
 
