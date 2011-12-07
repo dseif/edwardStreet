@@ -4,18 +4,455 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui-1.8.16.custom.css" />
 <title>Edward Street - Edit Purchase Order</title>
+<script src="login.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
-<script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function (event) {
+<script type="text/javascript" src="js/validation.js"></script>
+<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function (event) {
 
-      document.getElementById("submitBtn").addEventListener("click", function (event) {
+      $(function() {
+        $("#deliveryDate").datepicker();
+      });
+            
+            
+            $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/getpurchaseorder",
+        data: {
+          hash: getCookie( "EDST_H" ),
+          po_id: 1//document.getElementById( "" ).value
+        },
+        success: function( response, code, xhr ) {
 
-        if ($("#srchText").val() == "") {
-          alert("Field must not be empty");
+          var data = JSON.parse( response );
+
+           //var dropDown = document.getElementById( "itemBox" );
+          var label1 = document.getElementById("poNumber");
+          var label2 = document.getElementById("createDate");
+          var label3 = document.getElementById("suppLabel");
+          
+          var textbox1 = document.getElementById("deliveryDate");
+          var textbox2 = document.getElementById("deliveryDate");
+          var textbox3 = document.getElementById("refNumber");
+          var textbox4 = document.getElementById("comments");
+          
+            var addOption = function ( obj ) {
+
+              var opt = document.createElement("option");
+              opt.text = obj[ "ITEM_NAME" ];
+              opt.value = obj[ "ITEM_ID" ];
+              opt[ "edst-itemId" ] = obj[ "ITEM_ID" ];
+              dropDown.options.add( opt );
+            };
+
+            for (var i = 0, len = data.length; i < len; i++) {
+              addOption( data[ i ] );
+            }
+            
+            $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/getitemlist",
+        data: {
+          hash: getCookie( "EDST_H" ),
+          supplier_id: document.getElementById( "suppBox" ).value
+        },
+        success: function( response, code, xhr ) {
+
+          var data = JSON.parse( response );
+
+           var dropDown = document.getElementById( "itemBox" );
+
+            var addOption = function ( obj ) {
+
+              var opt = document.createElement("option");
+              opt.text = obj[ "ITEM_NAME" ];
+              opt.value = obj[ "ITEM_ID" ];
+              opt[ "edst-itemId" ] = obj[ "ITEM_ID" ];
+              dropDown.options.add( opt );
+            };
+
+            for (var i = 0, len = data.length; i < len; i++) {
+              addOption( data[ i ] );
+            }
+        }
+      });
+      
+        }
+      });
+            
+            
+      
+
+      
+      
+
+    // get our helper object
+    var helper = edstHelper();
+    helper.setupSortable();
+
+//$('#poContent').append('<h3><a href="#">OLNumber# 9000</a></h3><div><p>item id</p><p>item name</p><p>qty</p><p>price</p><p>comments</p><p>orderlinenumber</p></div>');
+
+
+jQuery('#poContent').accordion({
+    //header: 'div.title',
+    collapsible: true
+    //active: false,
+    //alwaysOpen: false,
+    //animated: false,
+    //autoHeight: false
+});
+
+/*$('#poContent').accordion({
+show: -1,
+opacity: 0,
+alwaysHide: true,
+onActive: function(toggler) { toggler.setStyle('color', '#f30'); },
+onBackground: function(toggler) { toggler.setStyle('color', '#000'); }
+});*/
+
+/*
+$('#poContent').click(function( e ) {
+$('#poContent').accordion({
+active: false
+});
+});*/
+
+
+/*
+$.ajax({
+cache: false,
+url: "http://96.126.109.151:8080/viewsupplier",
+data: {
+hash: getCookie("EDST_H")
+},
+success: function (response, code, xhr) {
+
+if (response === "Invalid user/pass") {
+window.location = "login.html";
+}
+
+response = JSON.parse(response);
+var dropDown = document.getElementById("suppBox");
+
+var addOption = function (text) {
+var opt = document.createElement("option");
+opt.text = text;
+opt.value = text;
+dropDown.options.add(opt);
+}
+
+for (var i = 0, len = response.length; i < len; i++) {
+var temp = response[i].NAME;
+addOption(temp);
+}
+}
+});*/
+    
+
+    
+    /*
+$.ajax({
+cache: false,
+url: "http://96.126.109.151:8080/viewitems",
+data: {
+hash: getCookie("EDST_H")
+},
+success: function (response, code, xhr) {
+
+response = JSON.parse(response);
+
+var container = document.getElementById("container"),
+ul = document.createElement("ul"),
+responseItems = response.length,
+tabs = responseItems / 100,
+counter = 1;
+
+container.appendChild(ul);
+
+for (var i = 1; i < tabs + 1; i++) {
+
+var item = document.createElement("div"),
+li = document.createElement("li"),
+div = document.createElement("div"),
+innerItem = document.createElement("a");
+
+ul.appendChild(li);
+li.appendChild(item);
+item.appendChild(innerItem);
+innerItem.href = "#tabs" + i;
+innerItem.innerHTML = i;
+div.id = "tabs" + i;
+container.appendChild(div);
+}
+
+var addRow = function (count, target) {
+
+// create a new item
+var item = document.createElement("div"),
+innerDiv = document.createElement("div"),
+header = document.createElement("h3"),
+innerHeader = document.createElement("a"),
+qtyBox = document.createElement("input"),
+submitBtn = document.createElement("button"),
+qtySpan = document.createElement("a"),
+data = response[count];
+
+$(submitBtn).click(function (event) {
+
+var item = document.createElement("div"),
+obj = {},
+data = response[$(this).parent().attr("name")],
+itemID = $(this).parent().attr("id").substring(5);
+
+for (var prop in data) {
+obj[prop] = data[prop];
+}
+
+obj.qty = $(this).parent().children(".edst-val")[0].value;
+item.style.width = $("#scBox").width() + "px";
+item.setAttribute("edst-data", itemID);
+
+$(item).append("<p style='display:inline-block;'>" + itemID + " </p>" + "<p id='qty' style='display:inline-block;'>Qty: " + obj.qty + "</p>");
+
+helper.addItem(obj);
+helper.updateStorage();
+
+$("#scBox").append(item);
+
+event.stopPropagation();
+});
+
+$(qtyBox).click(function (event) {
+
+event.stopPropagation();
+});
+
+innerHeader.href = "#";
+innerDiv.style.position = "absolute";
+innerDiv.style.right = "0";
+qtyBox.style.width = "30px";
+qtyBox.value = 1;
+$(qtyBox).addClass("edst-val");
+
+innerHeader.style.display = "inline-block";
+innerDiv.style.display = "inline-block";
+qtySpan.style.display = "inline-block";
+
+qtySpan.innerHTML = "Quantity: ";
+submitBtn.innerHTML = "Add to Cart";
+innerDiv.id = "edst-" + data["ITEM_NAME"];
+innerDiv.setAttribute("name", count);
+innerHeader.innerHTML = data["ITEM_NAME"];
+
+header.appendChild(innerHeader);
+innerDiv.appendChild(qtySpan);
+innerDiv.appendChild(qtyBox);
+innerDiv.appendChild(submitBtn);
+header.appendChild(innerDiv);
+target.appendChild(header);
+
+for (var prop in data) {
+if (data[prop]) {
+item.innerHTML += "<b>" + prop + ": </b>" + data[prop] + "</br>";
+}
+}
+
+item.id = count;
+target.appendChild(item);
+}
+
+for (var i = 0, k = 0, len = response.length; i < len; i++, k++) {
+
+if (k >= 100) {
+helper.setupAccordion(document.getElementById("tabs" + counter));
+counter++;
+k = 0;
+}
+addRow(i, document.getElementById("tabs" + counter));
+}
+
+helper.setupAccordion(document.getElementById("tabs" + counter));
+
+$("#container").tabs();
+}
+});*/
+    
+    createPO = function() {
+    
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/createpurchaseorder",
+        data: {
+          delivery_date: document.getElementById( "deliveryDate" ).value,
+          delivery_time: document.getElementById( "deliveryTime" ).value,
+          ref_number: document.getElementById( "refNumber" ).value,
+          comments: document.getElementById( "comments" ).value,
+          supplier_id: document.getElementById( "suppBox" ).value,
+          hash: cookie
+        },
+        success: function( response, code, xhr ) {
+          console.log( response );
+          
+          // looping once per line
+          $.ajax({
+            cache: false,
+            url: "http://96.126.109.151:8080/createorderline",
+            data: {
+              po_id: document.getElementById( "deliveryDate" ).value,
+              po_line: document.getElementById( "deliveryTime" ).value,
+              item_id: document.getElementById( "refNumber" ).value,
+              qty_ordered: document.getElementById( "comments" ).value,
+              comment: document.getElementById( "comments" ).value,
+              curUserID: "",
+              price_id: "",
+              hash: cookie
+            },
+            success: function( response, code, xhr ) {
+              console.log( response );
+            }
+          });
+         }
+         
+      });
+    
+    }
+    
+    validateOnPage = function() {
+    
+      var ok = true;
+      // input elements
+      var $inputs = $('#content :input');
+      // div space for message
+      var $msgs = $('#content').children("div");
+      // array holding $inputs
+      var values = [];
+      // array holding $msgs
+      var displays = [];
+      // initializing string for use in .each for $msgs and $inputs
+      var string1, string2;
+      // int variables used to iterate in .each for $msgs and $inputs
+      var i = 0;
+      var j = 0;
+
+      // gets each $msg element and pushes to array called displays
+      $msgs.each(function () {
+
+        string2 = $msgs.get(j).tagName;
+        j = j + 1;
+        var text2 = $(this).attr('id');
+        displays.push(text2);
+      });
+
+      // $inputs.each(function () {
+      // string1 = $inputs.get(i).tagName;
+      // i = i + 1;
+      // var text = $(this).attr('id');
+      // values.push(text);
+      // });
+      // each validation to validate certain rules
+      validation = window.edwardValidationRequired;
+      validation2 = window.edwardValidationNumber;
+      validation3 = window.edwardValidationDate;
+
+      // used for individual validation
+      var numberField = $("#grndTotal").val();
+      var dateField = $("#delivDate").val();
+
+      // array for storing fields that are empty
+      var getBadArray = [];
+
+      // Gets each $inputs element and pushes to array called values
+      // Aslo, it adds each input element that is empty
+      // to an array that stores inputs that are empty
+      $inputs.each(function () {
+        string1 = $inputs.get(i).tagName;
+        i = i + 1;
+        var text = $(this).attr('id');
+        values.push(text);
+        if ($(this).val().length == 0) {
+          txt = $(this).attr('id');
+          getBadArray.push(txt);
+
+        }
+      });
+
+      // For loop to determine each input box by calling validateGeneral
+      // and checking each input box whether it is part of the array that
+      // holds empty textboxes
+      for (var i = 0; i < displays.length; i++) {
+        if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
+          $('#' + displays[i]).html("RIGHT");
+        } else {
+          $('#' + displays[i]).html("Missing required field");
+          ok = false;
         }
 
-      }, false);
+      }
+      // Validate the number
+      if (validation2.validateNumber(numberField)) {
+        $('#grandTotalValid').html("Number is valid");
+      } else {
+        $('#grandTotalValid').html("Invalid number!");
+        ok = false;
+      }
+
+      // Validate the date
+      if (validation3.validateDate(dateField)) {
+        $('#deliveryDateValid').html("Date is valid");
+      } else {
+        $('#deliveryDateValid').html("Date not valid!");
+        ok = false;
+      }
+      return ok;
+    }
+    
+    // add line buttn
+    var ocount = 1;
+    document.getElementById("addLineBtn").addEventListener("click", function () {
+      //if( validateOnPage( )) {
+        $('#poContent').append('<h3><a href="#">Order Line ' + ocount + '</a></h3><div><p>item id: NOT WORKING</p><p>item name: NOT WORKING</p><p>qty: ' + $("#qty").val() + '</p><p>price: ' + $("#price").val() + '</p><p>comments: ' + $("#comment").val() + '</p><p>orderline number: '+ ocount +'</p></div>').accordion('destroy').accordion({collapsible: true, active: false});
+        //$('#poContent').accordion();
+      //}
+      ocount++;
+    }, false);
+    
+    // queue buttn
+    document.getElementById("queueBtn").addEventListener("click", function () {
+      if( validateOnPage( )) {
+        createPO();
+      }
+    }, false);
+    
+    // submit button
+    document.getElementById("confBtn").addEventListener("click", function () {
+      
+      if ( validateOnPage( ) ) {
+      
+        createPO();
+        
+        var poid;
+        $.ajax({
+          cache: false,
+          url: "http://96.126.109.151:8080/submitpurchaseorder",
+          data: {
+            po_id: poid,
+            hash: getCookie("EDST_H")
+          },
+          success: function (response, code, xhr) {}
+        });
+      }
+
+    }, false);
+  }, false);
+  
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
 
       $('#nav li').hover(
 
@@ -27,7 +464,7 @@
         $('ul', this).hide();
       });
 
-    }, false);
+    });
 
     // While user is scrolling down, the shopping cart banner and the menu follows
     $(window).scroll(function () {
@@ -86,12 +523,12 @@
     
     <li id="poMenu" class="blacklink"><a href="#"> Purchase Order > </a>
       <ul>
-        <li class="blacklink"><a href="createpo.html">Create Purchase Order</a></li>
-        <li class="blacklink"><a href="#">Edit Purchase Order</a></li>
+        <li class="blacklink"><a href="#">Create Purchase Order</a></li>
+        <li class="blacklink"><a href="modifypo.html">Edit Purchase Order</a></li>
         <li class="blacklink"><a href="viewpo.html">View Purchase Order</a></li>
         <li class="blacklink"><a href="receivepo.html">Receive Purchase Order</a></li>
         <li class="blacklink"><a href="returnpo.html">Return Purchase Order</a></li>
-      </ul>			
+      </ul>
       <div class="clear"></div>
     </li>
     
@@ -100,69 +537,80 @@
     
     </ul>
 
+</div>
     <div class="scrollTrigger"></div>
-  </div>
 
 <div id="wrapper">
-	<h2 class="bigfont">Purchase Orders</h2><br />
-		
-	<div id="wrapper-bgtop">
-		<h3>Modify Purchase Orders</h3><br/>
-			
-			<div id="page">
+<h2 class="bigfont">Purchase Orders</h2><br />
+
+<div id="wrapper-bgtop">
+<h3>Edit Purchase Orders</h3><br/>
+
+<div id="page">
+        <label for="PONumber">PO Number: </label><label id="PONumber">STATIC</label><br/>
 				
-				Search <input value="" type="text" name="SearchText" id="srchText"/>
-				<input value="Search" type="submit" name="SubmitButton" id="submitBtn"/><br/>
+				<label for="CreateDate">Date Created: </label><label id="CreateDate">STATIC</label><br/>
+				
+        <label for="">Delivery Date: </label><input id="deliveryDate" type="text"/><br/>
+        
+        <label for="">Delivery Time: </label><input id="deliveryTime" type="text"/><br/>
+        
+        <label for="refnum">Reference Number: </label><input id="refNumber" type="text"/><br/>
+        
+        <label for="comments">Comments: </label><input id="comments" type="text"/><br/>
+        
+        <label for="supp">Supplier: </label><label id="suppName" value="">STATIC</label>
+        <!--<select id="suppBox"/>
+        </select>--><br/>
+        
+        <!--<div id="cartcontent">-->
+        <ul id="poContent"></ul>
+        <!--</div>-->
+        
+        <hr>
+        
+        <div id="POLine">
+        
+        <!--<label for="itemBox">Items: </label> -->
+        Items:
+        <select id="itemBox"/>
+        </select>
+        
+        <!--<label for="qty">->Quantity: </label> --> Quantity: <input type="text" id="qty"/>
+        
+        <!--<label for="price">->Price: </label> --> Price: <input type="text" id="price"/>
+        
+        <!--<label for="comment">Comments: </label> --> Comments: <textarea id="comment"></textarea><br/>
+        
+        </div>
 
-				<div id="content">
+<!--
+<label for="suppBox">Select Supplier:</label> <select name="SupplierBox" id="suppBox"></select><br/>
+<label>Select Item:</label><br/>
+<label><a href="createitem.html">Create New Item</a></label><br/>
+<div border="1" id="container">
+</div><br/>
+<div id="content">
+<label for="grndTotal">Grand Total :</label> <input type="text" value="" name="GrandTotal" id="grndTotal"/>
+<div id="grandTotalValid"></div>
+<label for="delivDate">Delivery Date:</label><input type="text" value="" name="DeliveryDate" id="delivDate"/><br/>
+<div id="deliveryDateValid"></div>
+</div>
+<label for="comment">Comment:</label> <textarea rows="4" cols="20" name="Comment" id="comment"></textarea><br/>
+<label for="holdOrdr">Hold Order:</label> <input type="checkbox" value="hold" name="HoldOrder" id="holdOrdr"/><br/>
+<br/> -->
 
+<input class="submitbutton" value="Add Line" type="submit" name="addlinebutton" id="addLineBtn"/>
 
-					<table border="1" id="modPoTable">
-  					<tr>
-    						<th>OrderNumber</th>
-    						<th>Status</th>
-    						<th>Create Date</th>
-    						<th>Submit Date</th>
-    						<th>Delivery Date</th>
-    						<th>Receive Date</th>
-    						<th>Reference Number</th>
-    						<th>Author</th>
-    						<th>Supplier</th>
-    						<th>Item</th>
-    						<th>QTY Ordered</th>
-    						<th>price</th>
-    						<th>price/unit comment</th>
-    						<th>Subtotal</th>
-    						<th>Grand Total</th>
-    						<th>Selected</th>
-  					</tr>
-  					<tr>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td><input value="" type="text" name="QTYBox" id="qtyBox"/></td>
-    						<td></td>
-    						<td></td>
-                            <td></td>
-                            <td></td>
-    						<td><input value="selectedItem" type="checkbox" name="SelectedItemBox" id="selectedBox"/></td>
-  					</tr>
-					</table>
+</div>
+<br />
+<br />
+<hr>
+            <input class="submitbutton" value="Queue" type="submit" name="QueueButton" id="queueBtn"/>
+<input value="Submit" type="submit" name="ConfirmButton" id="confBtn"/>
+<input value="Clear" type="reset" name="ClearButton" id="clearBtn"/>
+</div>
 
-				<input value="Save" type="submit" name="SaveButton" id="savBtn"/>
-				<input value="Cancel" type="reset" name="SancelButton" id="cancelBtn"/>
-				<br/>
-	
-				</div>
-			</div>
-	</div>
 <div>
 
 
@@ -173,6 +621,7 @@
 </div>
 </div>
 
-</body>
 
-</html> 
+
+</body>
+</html>

@@ -728,7 +728,7 @@ function editItem( response ) {
   helper.query( "UPDATE ITEM SET DIST_CODE = '" + vals.dist_code + "', ITEM_NAME = '" + vals.item_name +
                 "', RECEIPT_NAME = '" + vals.receipt_name + "', CATEGORY = '" + vals.category +"', UNIT = '" + vals.unit +
                 "', ITEM_TYPE = '" + vals.item_type + "', COMMENT = '" + vals.comment + ", SUPPLIER_ID = '" + vals.supplier_id +
-                "WHERE ITEM_ID = '" + vals.item_id + "'",
+                "' WHERE ITEM_ID = '" + vals.item_id + "'",
                 function( error, rows, cols ) {
 
     console.log( "debug:: editItem - UPDATE ITEM " + rows );
