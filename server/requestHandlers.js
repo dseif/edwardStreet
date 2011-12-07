@@ -1772,6 +1772,28 @@ function getCategoryList( response ) {
   });
 }
 
+// Get Item List - get a list of item for a specific supplier.
+function getItemList( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT ITEM_ID, ITEM_NAME FROM ITEM WHERE SUPPLIER_ID = '" + vals.supplier_id + "'",
+                function( error, rows, cols ) {
+    
+    if ( error ) {
+      console.log( "Error on SELECT from ITEM: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+    
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }
+  });
+}
+
 exports.index = index;
 exports.login = login;
 exports.logout = logout;
@@ -1838,3 +1860,4 @@ exports.createReturnLine = createReturnLine;
 
 exports.getSupplierList = getSupplierList;
 exports.getCategoryList = getCategoryList;
+exports.getItemList = getItemList;

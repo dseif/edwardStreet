@@ -4,11 +4,121 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui-1.8.16.custom.css" />
 <title>Edward Street - Return Purchase Order</title>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
+<script type="text/javascript" src="js/validation.js"></script>
+<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
+<script type="text/javascript" src="../js/block.js"></script>
+<script type="text/javascript" src="login.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
 <script type="text/javascript">
-  $(document).ready(function () {
-    $('#nav li').hover(
+    document.addEventListener("DOMContentLoaded", function (event) {
+
+      var numItems = 0,
+          numPages = 0,
+          fired = [],
+          helper = edstHelper();
+
+          helper.populateCart();
+
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/viewpurchaseorders",
+        data: {
+          hash: getCookie( "EDST_H" ),
+          status: "Received"
+        },
+        success: function( response, code, xhr ) {
+
+          numItems = JSON.parse( response )[ 0 ][ "COUNT(*)" ];
+          numPages = Math.abs((numItems-1)/20)+1;
+
+          for ( var i = 1; i <= numPages; i++ ) {
+
+            fired.push( false ); 
+            $( "#resultsUL" ).append( "<li id='edstTabs-" + i + "'><a href='#tabs-" + i + "'>" + i + "</a></li>" );
+            $( "#results" ).append( "<div id='tabs-" + i + "'></div>" );
+            $( "#edstTabs-" + i ).children( 0 ).click(function() {
+
+              var page = $( this ).parent().attr( "id" ).split( "-" )[ 1 ];
+              if ( !fired[ page - 1 ] ) {
+                
+                $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
+                fired[ page - 1 ] = true;
+                $.ajax({
+                  cache: false,
+                  url: "http://96.126.109.151:8080/viewpurchaseorderspage",
+                  data: {
+                    hash: getCookie( "EDST_H" ),
+                    pagenum: page,
+                    status: "Received"
+                  },
+                  success: function( response, code, xhr ) {
+
+                    var data = JSON.parse( response );
+
+                    var count = 0;
+                    for ( var item in data ) {
+                      console.log( data[ item ]["PO Number"] );
+                      $( "#tabs-" + page ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "PO Number" ] + "' name='" + data[ item ][ "PO Number" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "PO Number" ] + "</a></h3>" + 
+                         "<div id='edstAccord-" + data[ item ][ "PO Number" ] + "'></div>" );
+                        count++;
+
+                      for ( var row in data[ item ] ) {
+
+                        $( "#edstAccord-" + data[ item ][ "PO Number" ] ).append( "<p>" +
+                           "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
+                      }
+                    }
+
+                    helper.setupAccordion( document.getElementById( "tabs-" + page ) );
+                    $.unblockUI();
+                  }
+                });
+              }
+            });
+          }
+
+          $( "#results" ).tabs();
+
+          $.ajax({
+            cache: false,
+            url: "http://96.126.109.151:8080/viewpurchaseorderspage",
+            data: {
+              hash: getCookie( "EDST_H" ),
+              pagenum: 1,
+              status: "Received"
+            },
+            success: function( response, code, xhr ) {
+
+              $.unblockUI();
+              var count = 0,
+              data = JSON.parse( response );
+                    for ( var item in data ) {
+
+                      $( "#tabs-1" ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "PO Number" ] + "' name='" + data[ item ][ "PO Number" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "PO Number" ] + "</a></h3>" + 
+                         "<div id='edstAccord-" + data[ item ][ "PO Number" ] + "'></div>" );
+                        count++;
+                        
+                      for ( var row in data[ item ] ) {
+
+                        $( "#edstAccord-" + data[ item ][ "PO Number" ] ).append( "<p>" +
+                           "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
+                      }
+                    }
+              
+              fired[ 0 ] = true;
+              helper.setupAccordion( document.getElementById( "tabs-1" ) );
+            }
+          });
+          $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
+        }
+      });
+   
+
+      $('#nav li').hover(
+
       function () {
         //show its submenu
         $('ul', this).show();
@@ -16,7 +126,8 @@
         //hide its submenu
         $('ul', this).hide();
       });
-  }, false);
+
+    }, false);
 
     // While user is scrolling down, the shopping cart banner and the menu follows
     $(window).scroll(function () {
@@ -31,7 +142,19 @@
       }
     });
 
-});
+    // While user is scrolling down, the shopping cart banner and the menu follows
+    $(window).scroll(function () {
+      if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
+        $("#header").css("position", "fixed");
+        $("#header").css("top", "0");
+      }
+      // Revert back to normal
+      if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
+        $("#header").css("position", "relative");
+        $("#header").css("top", $(".scrollTrigger").offset);
+      }
+    });
+
 </script>
 </head>
 
@@ -101,7 +224,12 @@
 		<h3>Return Purchase Orders</h3><br/>
 			
 			<div id="page">
-				
+								                Results:
+				<br/><br/>
+          <div id="results">
+            <ul id="resultsUL"></ul>
+          </div>
+          <hr/><br/><br/>
 
 					<table border="1" id="poTbl">
   					<tr>
