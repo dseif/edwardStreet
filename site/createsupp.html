@@ -36,8 +36,8 @@
         //  tempArray.push($(children[ item ]).val());
         //}
 
-      //console.log(tempArray);
-console.log(response);
+        //console.log(tempArray);
+
       var data = JSON.parse( response );
       if ( data[ 0 ][ "COUNT(*)" ] == 0 ) {
       $.ajax({
@@ -134,7 +134,7 @@ console.log(response);
     <li id="poMenu" class="blacklink"><a href="#"> Purchase Order > </a>
       <ul>
         <li class="blacklink"><a href="createpo.html">Create Purchase Order</a></li>
-        <li class="blacklink"><a href="modifypo.html">Edit Purchase Order</a></li>
+        <li class="blacklink"><a href="editpo.html">Edit Purchase Order</a></li>
         <li class="blacklink"><a href="viewpo.html">View Purchase Order</a></li>
         <li class="blacklink"><a href="receivepo.html">Receive Purchase Order</a></li>
         <li class="blacklink"><a href="returnpo.html">Return Purchase Order</a></li>
