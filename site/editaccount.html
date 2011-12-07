@@ -31,8 +31,12 @@
                 //user_id: userID // Needs to be filled
               },
               success: function (response, code, xhr) {
-              var emailField = document.getElementById("email");
-              emailField.value = JSON.parse(response)[ 0 ][ "EMAIL" ];
+                var emailField = document.getElementById("email");
+                emailField.value = JSON.parse(response)[ 0 ][ "EMAIL" ];
+                $("#user").html(JSON.parse(response)[ 0 ][ "USER_ID" ]);
+                $("#supplierID").html(JSON.parse(response)[ 0 ][ "SUPPLIER_ID" ]);
+                $("#employeeID").html(JSON.parse(response)[ 0 ][ "EMPLOYEE_ID" ]);
+                $("#role").html(JSON.parse(response)[ 0 ][ "ROLE" ]);
               }
             });
 
@@ -129,7 +133,7 @@
             $('#passValid2').html("passwords dont match, or incorrect length!");
             ok = false;
           }
-
+          alert(ok);
           if (ok) {
 
             var pass = document.getElementById("newpass").value,
@@ -140,9 +144,9 @@
               url: "http://96.126.109.151:8080/editAccount",
               data: {
                 hash: getCookie("EDST_H"),
-                curUserID: userID,
+                //curUserID: userID,
                 password: pass,
-                email: document.getElementByID("email").value
+                email: document.getElementById("email").value
               },
 
               success: function (response, code, xhr) {
@@ -260,10 +264,10 @@
 
 			<div id="page">
 
-				<label for="userlogin">User Login</label>User<br/>
-        <label for="EmployeeID">EmployeeID</label>Employee ID<br/>
-        <label for="SupplierID">SupplierID</label>Supplier ID<br/>
-        <label for="userrole">Role</label>User Role<br/>
+				<label for="user">User Login</label><label id="user"></label><br />
+        <label for="employeeID">EmployeeID</label><label id="employeeID">Employee ID</label><br/>
+        <label for="supplierID">SupplierID</label><label id="supplierID">Supplier ID</label><br/>
+        <label for="role">Role</label><label id="role"></label><br/>
         
 				<label for="curpass">Current Password</label> <input id="curpass" name="CurrentPass" type="password" value=""/><br/>
         <div id="passOriginalValid"></div>
@@ -274,7 +278,7 @@
 				<label for="confpass">Confirm Password</label> <input id="confpass" name="ConfPass" type="password" value=""/><br/>
         <div id="passValid2"></div>
         
-        <label for="email">Email</label><input id="email"/><br/>
+        <label for="email">Email</label><input id="email" /><br/>
 				
 
 				<br/>
