@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui.css" />
 <link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui-1.8.16.custom.css" />
-<title>Edward Street - Create Purchase Order</title>
+<title>Edward Street - Edit Purchase Order</title>
 <script src="login.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
@@ -43,8 +43,8 @@
             for (var i = 0, len = data.length; i < len; i++) {
               addOption( data[ i ] );
             }
-            
-            $.ajax({
+            // items list --------------------------------------------------
+            /*$.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/getitemlist",
         data: {
@@ -69,7 +69,7 @@
               addOption( data[ i ] );
             }
         }
-      });
+      });*/
         }
       });
       
@@ -80,6 +80,39 @@
     helper.setupSortable();
 
 //$('#poContent').append('<h3><a href="#">OLNumber# 9000</a></h3><div><p>item id</p><p>item name</p><p>qty</p><p>price</p><p>comments</p><p>orderlinenumber</p></div>');
+for(var i = 1; i < 5; i++){
+$("#poContent").append("<li id='tabs-" + i + "'><a href='#tabs-"+ i + "'>" + i + "</a></li>");}
+//$("#poContentdiv").append("<div id='tabs-" + i + "'</div>");
+
+$.ajax({
+            cache: false,
+            url: "http://96.126.109.151:8080/vieworderlines",
+            data: {
+              hash: getCookie( "EDST_H" ),
+              po_id: 1//document.getElementById( "specType" ).value
+            },
+            success: function( response, code, xhr ) {
+
+              $.unblockUI();
+              var count = 0,
+              data = JSON.parse( response );
+                    for ( var item in data ) {
+i++;
+                      $(  "#tabs-" + i ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "Line" ] + "' name='" + data[ item ][ "Line" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "Line" ] + "</a></h3>" + 
+                         "<div id='edstAccord-" + data[ item ][ "Line" ] + "'></div>" );
+                        count++;
+                        
+                      for ( var row in data[ item ] ) {
+
+                        $( "#edstAccord-" + data[ item ][ "Line" ] ).append( "<p>" +
+                           "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
+                      }
+                    }
+              
+              //fired[ 0 ] = true;
+              helper.setupAccordion( document.getElementById( "tabs-1" ) );
+            }
+          });
 
 
 jQuery('#poContent').accordion({ 
@@ -528,9 +561,13 @@ active: false
 	<h2 class="bigfont">Purchase Orders</h2><br />
 		
 	<div id="wrapper-bgtop">
-		<h3>Create Purchase Orders</h3><br/>
+		<h3>Edit Purchase Orders</h3><br/>
 			
 			<div id="page">
+        
+        <label for="poNumber">PO Number: </label><label id="poNumber">STATIC</label><br/>
+        
+        <label for="createDate">Date Created: </label><label id="createDate">STATIC</label><br/>
         
         <label for="">Delivery Date: </label><input id="deliveryDate" type="text"/><br/>
         
@@ -544,9 +581,9 @@ active: false
         <select id="suppBox"/>
         </select><br/>
         
-        <!--<div id="cartcontent">-->
+        <div id="poContentdiv">
         <ul id="poContent"></ul>
-        <!--</div>-->
+        </div>
         
         <hr>
         
