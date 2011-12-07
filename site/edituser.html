@@ -6,7 +6,6 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui-1.8.16.custom.css" />
 <title>Edward Street - Edit User</title>
-<script src="login.js" ></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
@@ -333,7 +332,7 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
 
 
         }, false);
-  
+    $(function() {
     $('#nav li').hover(
 		function () {
 		    //show its submenu
@@ -344,6 +343,7 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
 		    $('ul', this).hide();
 		}
 	);
+	
 
 
 // While user is scrolling down, the shopping cart banner and the menu follows
@@ -363,7 +363,7 @@ $(window).scroll(function () {
         $("#menu").css("top", $(".scrollTrigger").offset);
         $("#menu").css("left", "0px");
         $("#menu").css("bottom", "0px");
-    }
+    }});
 });
 	</script>
 </head>
