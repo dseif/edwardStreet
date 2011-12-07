@@ -106,6 +106,23 @@
                          "<div id='edstAccord-" + data[ item ][ "User Login" ] + "'></div>" );
                         count++;
 
+                        var editBtn = document.createElement( "button" );
+                        editBtn.innerHTML = "Edit";
+                        editBtn.name = data[ item ][ "User Login" ];
+                        editBtn.style.float = "right";
+                        editBtn.style.display = "inline-block";
+                        $( "#edstItem-" + data[ item ][ "User Login" ] ).append( editBtn );
+                        $( editBtn ).click(function( e ) {
+
+                          e.stopPropagation();
+
+                          var respObj = data[ $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) ];
+                          $( "#userName" ).val( respObj[ "User Login" ] );
+                          $( "#emailAddress" ).val( respObj[ "Email Address" ] );
+                          $( "#userRoleBox" ).val( String.prototype.toLowerCase.apply( dataObj[ $( this ).attr( "id" ) ][ "Role" ] ) );
+                        });
+                        
+                        
                       for ( var row in data[ item ] ) {
 
                         $( "#edstAccord-" + data[ item ][ "User Login" ] ).append( "<p>" +
@@ -140,6 +157,22 @@
                       $( "#tabs-1" ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "User Login" ] + "' name='" + data[ item ][ "User Login" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "User Login" ] + "</a></h3>" + 
                          "<div id='edstAccord-" + data[ item ][ "User Login" ] + "'></div>" );
                         count++;
+                        
+                                                var editBtn = document.createElement( "button" );
+                        editBtn.innerHTML = "Edit";
+                        editBtn.name = data[ item ][ "User Login" ];
+                        editBtn.style.float = "right";
+                        editBtn.style.display = "inline-block";
+                        $( "#edstItem-" + data[ item ][ "User Login" ] ).append( editBtn );
+                        $( editBtn ).click(function( e ) {
+
+                          e.stopPropagation();
+
+                          var respObj = data[ $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) ];
+                          $( "#userName" ).val( respObj[ "User Login" ] );
+                          $( "#emailAddress" ).val( respObj[ "Email Address" ] );
+                          $( "#userRoleBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Role" ] ) );
+                        });
                         
                       for ( var row in data[ item ] ) {
 
