@@ -5,7 +5,7 @@
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui-1.8.16.custom.css" />
-<title>Edward Street</title>
+<title>Edward Street - Edit Item</title>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
@@ -454,7 +454,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               item_type: $( "#iTypeBox" ).val(),
               supplier_id: $( "#iSupplierBox" ).val(),
               item_id: data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ]
-                            $( "#price" ).val( "" ); 
+              $( "#price" ).val( "" ); 
             },
             success: function( response, code, xhr ) {
 
