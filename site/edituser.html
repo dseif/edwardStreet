@@ -8,15 +8,16 @@
 <title>Edward Street - Edit User</title>
 <script src="login.js" ></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
-<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
-<script type="text/javascript" src="../js/helper.js"></script>
+<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
+<script type="text/javascript" src="../js/block.js"></script>
 <script type="text/javascript" src="login.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
 <script type="text/javascript">
 
   var viewuser;
   document.addEventListener( "DOMContentLoaded", function( event ) {
-
+  
     viewuser = function() {
 
       $( "#userName" ).val( "" );
@@ -56,9 +57,112 @@
       }); 
     };
     viewuser();
+    
+              var numItems = 0,
+          numPages = 0,
+          fired = [],
+          helper = edstHelper();
+
+          helper.populateCart();
+
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/viewusers",
+        data: {
+          hash: getCookie( "EDST_H" ),
+        },
+        success: function( response, code, xhr ) {
+
+          numItems = JSON.parse( response )[ 0 ][ "COUNT(*)" ];
+          numPages = Math.abs((numItems-1)/20)+1;
+
+          for ( var i = 1; i <= numPages; i++ ) {
+
+            fired.push( false ); 
+            $( "#resultsUL" ).append( "<li id='edstTabs-" + i + "'><a href='#tabs-" + i + "'>" + i + "</a></li>" );
+            $( "#results" ).append( "<div id='tabs-" + i + "'></div>" );
+            $( "#edstTabs-" + i ).children( 0 ).click(function() {
+
+              var page = $( this ).parent().attr( "id" ).split( "-" )[ 1 ];
+              if ( !fired[ page - 1 ] ) {
+                
+                $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
+                fired[ page - 1 ] = true;
+                $.ajax({
+                  cache: false,
+                  url: "http://96.126.109.151:8080/viewuserspage",
+                  data: {
+                    hash: getCookie( "EDST_H" ),
+                    pagenum: page,
+                  },
+                  success: function( response, code, xhr ) {
+
+                    var data = JSON.parse( response );
+
+                    var count = 0;
+                    for ( var item in data ) {
+                      console.log( data[ item ]["PO Number"] );
+                      $( "#tabs-" + page ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "User Login" ] + "' name='" + data[ item ][ "User Login" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "User Login" ] + "</a></h3>" + 
+                         "<div id='edstAccord-" + data[ item ][ "User Login" ] + "'></div>" );
+                        count++;
+
+                      for ( var row in data[ item ] ) {
+
+                        $( "#edstAccord-" + data[ item ][ "User Login" ] ).append( "<p>" +
+                           "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
+                      }
+                    }
+
+                    helper.setupAccordion( document.getElementById( "tabs-" + page ) );
+                    $.unblockUI();
+                  }
+                });
+              }
+            });
+          }
+
+          $( "#results" ).tabs();
+
+          $.ajax({
+            cache: false,
+            url: "http://96.126.109.151:8080/viewuserspage",
+            data: {
+              hash: getCookie( "EDST_H" ),
+              pagenum: 1,
+            },
+            success: function( response, code, xhr ) {
+
+              $.unblockUI();
+              var count = 0,
+              data = JSON.parse( response );
+                    for ( var item in data ) {
+
+                      $( "#tabs-1" ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "User Login" ] + "' name='" + data[ item ][ "User Login" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "User Login" ] + "</a></h3>" + 
+                         "<div id='edstAccord-" + data[ item ][ "User Login" ] + "'></div>" );
+                        count++;
+                        
+                      for ( var row in data[ item ] ) {
+
+                        $( "#edstAccord-" + data[ item ][ "User Login" ] ).append( "<p>" +
+                           "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
+                      }
+                    }
+              
+              fired[ 0 ] = true;
+              helper.setupAccordion( document.getElementById( "tabs-1" ) );
+            }
+          });
+          $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
+        }
+      });
+    
+    
+    
   }, false );
     document.addEventListener("DOMContentLoaded", function (event) {
 
+    
+    
 document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
 
     if( $( "#userName" ).val() !== "" ) {
@@ -330,7 +434,7 @@ $(window).scroll(function () {
       <h3>Edit User</h3><br/>
         
         <div id="page">
-          
+
             <label for="searchText">Search:</label> <input value="" type="text" name="SearchText" id="searchText"/>
             
             By:
@@ -342,7 +446,14 @@ $(window).scroll(function () {
 
             <input class="submitbutton" value="Search" type="submit" name="SubmitButton" id="submitBtn"/>OR
             <input value="View All" type="submit" name="ViewAllButton" id="viewAllBtn"/>
-          
+                Results:
+				<br/><br/>
+          <div id="results">
+            <ul id="resultsUL"></ul>
+          </div>
+          <hr/><br/><br/>
+
+            
           <br/><hr/><br/>
           Results:
           <br/><br/>

@@ -134,6 +134,7 @@
             ok = false;
           }
           alert(ok);
+          
           if (ok) {
 
             var pass = document.getElementById("newpass").value,
@@ -141,18 +142,14 @@
 
             $.ajax({
               cache: false,
-              url: "http://96.126.109.151:8080/editAccount",
+              url: "http://96.126.109.151:8080/editaccount",
               data: {
                 hash: getCookie("EDST_H"),
-                //curUserID: userID,
                 password: pass,
                 email: document.getElementById("email").value
               },
-
               success: function (response, code, xhr) {
-
                 message.innerHTML = response;
-
               }
 
             });
