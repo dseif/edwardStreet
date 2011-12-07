@@ -54,20 +54,11 @@
 
     // get our helper object
     var helper = edstHelper();
-    helper.setupSortable();
+    
 
 //$('#poContent').append('<h3><a href="#">OLNumber# 9000</a></h3><div><p>item id</p><p>item name</p><p>qty</p><p>price</p><p>comments</p><p>orderlinenumber</p></div>');
 
 jQuery('#poTabs').tabs();
-
-jQuery('#poContent').accordion({
-    //header: 'div.title',
-    collapsible: true
-    //active: false,
-    //alwaysOpen: false,
-    //animated: false,
-    //autoHeight: false
-});
 
 /*$('#poContent').accordion({
 show: -1,
@@ -380,16 +371,24 @@ $("#container").tabs();
       return ok;
     }
     
-    // add supplier buttn
-    document.getElementById("selSupp").addEventListener("click", function () {
+    // supplier combo box select
+    //document.getElementById("selSupp").addEventListener("click", function () {
+    //$('#itemBox').empty();
+    //});
     
+    // create po 'formerly add supplier' button
+    var tabcount = 1;
+    document.getElementById("selSupp").addEventListener("click", function () {
+      $('#itemBox').empty();
       $('#page').show();
       $('#threeButtons').show();
       //$('#suppDiv').hide();
-      
+      $('#poContent').append("<li><a href='#tabs-'" + tabcount + ">" + $("#suppBox option:selected").select().text() + "</a></li>");
+      $('#poTabs').tabs();
       $('#curSupplier').html($("#suppBox option:selected").select().text());
+      helper.setupSortable( $( "#tabs-" + tabcount ) );
             
-      $('#itemBox').empty();
+      
       $.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/getitemlist",
@@ -424,7 +423,8 @@ $("#container").tabs();
     var ocount = 1;
     document.getElementById("addLineBtn").addEventListener("click", function () {
       //if( validateOnPage( )) {
-        $('#poContent').append('<h3><a href="#">Order Line ' + ocount + '</a></h3><div id=edstItem-' + ocount + '><p>item id: ' + $("#itemBox").val() + '</p><p>item name: ' + $("#itemBox option:selected").select().text() + '</p><p>qty: ' + $("#qty").val() + '</p><p>price: ' + $("#price").val() + '</p><p>comments: ' + $("#comments2").val() + '</p><p>orderline number: '+ ocount +'</p></div>').accordion('destroy').accordion({collapsible: true, active: false});
+        $( "#poTabs" ).append( "<div id='edstCurSupp-" + $("#suppBox option:selected").val() + "'></div>");
+        $('#edstCurSupp-' + $("#suppBox option:selected").val()).append('<h3><a href="#">Order Line ' + ocount + '</a></h3><div id=edstItem-' + ocount + '><p>item id: ' + $("#itemBox").val() + '</p><p>item name: ' + $("#itemBox option:selected").select().text() + '</p><p>qty: ' + $("#qty").val() + '</p><p>price: ' + $("#price").val() + '</p><p>comments: ' + $("#comments2").val() + '</p><p>orderline number: '+ ocount +'</p></div>').accordion('destroy').accordion({collapsible: true, active: false});
         //$('#poContent').accordion();
       //}
       ocount++;
@@ -578,9 +578,9 @@ $("#container").tabs();
         <label for="curSupplier">Current Supplier: </label><label id="curSupplier">static</label><br />
         
         <!--<div id="cartcontent">-->
-        <ul id="poTabs">
+        <div id="poTabs">
           <ul id="poContent"></ul>
-        </ul>
+        </div>
         
         <!--</div>-->
         <br />
