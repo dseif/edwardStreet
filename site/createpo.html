@@ -18,7 +18,7 @@
       $(function() {
         $("#deliveryDate").datepicker();
       });
-  
+      
   $('#page').hide();
   $('#threeButtons').hide();
   $('#suppDiv').show();
@@ -47,8 +47,6 @@
             for (var i = 0, len = data.length; i < len; i++) {
               addOption( data[ i ] );
             }
-            
-            
         }
       });
       
@@ -59,7 +57,6 @@
     helper.setupSortable();
 
 //$('#poContent').append('<h3><a href="#">OLNumber# 9000</a></h3><div><p>item id</p><p>item name</p><p>qty</p><p>price</p><p>comments</p><p>orderlinenumber</p></div>');
-
 
 jQuery('#poContent').accordion({
     //header: 'div.title',
@@ -381,7 +378,6 @@ $("#container").tabs();
       return ok;
     }
     
-    
     // add supplier buttn
     document.getElementById("selSupp").addEventListener("click", function () {
     
@@ -420,7 +416,6 @@ $("#container").tabs();
       });
       
     }, false);
-    
     
     // add line buttn
     var ocount = 1;
@@ -552,6 +547,7 @@ $("#container").tabs();
     <div class="scrollTrigger"></div>
 
 <div id="wrapper">
+
 <h2 class="bigfont">Purchase Orders</h2><br />
 
 <div id="wrapper-bgtop">
@@ -564,6 +560,7 @@ $("#container").tabs();
         <input class="submitbutton" value="Select Supplier" type="submit" id="selSupp"/><br /><hr>
 </div>
 <div id="page">
+
 
         
         
