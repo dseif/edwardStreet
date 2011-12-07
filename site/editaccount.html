@@ -22,6 +22,19 @@
           return; 
         }*/
       document.addEventListener("DOMContentLoaded", function (event) {
+      
+        $.ajax({
+          cache: false,
+            url: "http://96.126.109.151:8080/getuser",
+              data: {
+                hash: getCookie("EDST_H"),
+                user_id: "" // Needs to be filled
+              },
+              success: function (response, code, xhr) {
+              var emailField = document.getElementByID("email");
+              emailField.value = JSON.parse(response)[0]["EMAIL"];
+              }
+            });
 
         document.getElementById("saveBtn").addEventListener("click", function () {
 
@@ -123,14 +136,13 @@
               message = document.getElementById("message");
 
             $.ajax({
-
               cache: false,
-
-              url: "http://96.126.109.151:8080/changePassword",
-
+              url: "http://96.126.109.151:8080/editAccount",
               data: {
                 hash: getCookie("EDST_H"),
-                pass: pass
+                curUserID: userID,
+                password: pass,
+                email: document.getElementByID("email").value
               },
 
               success: function (response, code, xhr) {
@@ -236,7 +248,7 @@
   <div class="scrollTrigger"></div>
 <div id="wrapper">
 
-	<h2 class="bigfont">Maintain User Profile</h2><br />
+	<h2 class="bigfont">Edit Account</h2><br />
 
 		
 
@@ -248,18 +260,21 @@
 
 			<div id="page">
 
-				
-
+				<label for="userlogin">User Login</label>User<br/>
+        <label for="EmployeeID">EmployeeID</label>Employee ID<br/>
+        <label for="SupplierID">SupplierID</label>Supplier ID<br/>
+        <label for="userrole">Role</label>User Role<br/>
+        
 				<label for="curpass">Current Password</label> <input id="curpass" name="CurrentPass" type="password" value=""/><br/>
         <div id="passOriginalValid"></div>
         
 				<label for="newpass">New Password</label> <input id="newpass" name="NewPass" type="password" value=""/><br/>
         <div id="passValid"></div>
         
-				<label for="confpass">Confirm New Password</label> <input id="confpass" name="ConfPass" type="password" value=""/><br/>
+				<label for="confpass">Confirm Password</label> <input id="confpass" name="ConfPass" type="password" value=""/><br/>
         <div id="passValid2"></div>
-				
-
+        
+        <label for="email">Email</label><input id="email"/><br/>
 				
 
 				<br/>

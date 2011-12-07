@@ -1794,6 +1794,50 @@ function getItemList( response ) {
   });
 }
 
+// Get User - Get a user's information from the USER table.
+function getUser( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.user_id + "'",
+                function( error, rows, cols ) {
+    
+    if ( error ) {
+      console.log( "Error on SELECT from USER: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+    
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }
+  });
+}
+
+// Get Item - Get an item's information from the ITEM table.
+function getItem( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT * FROM ITEM WHERE ITEM_ID = '" + vals.item_id + "'",
+                function( error, rows, cols ) {
+    
+    if ( error ) {
+      console.log( "Error on SELECT from ITEM: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+    
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }
+  });
+}
+
 exports.index = index;
 exports.login = login;
 exports.logout = logout;
@@ -1861,3 +1905,4 @@ exports.createReturnLine = createReturnLine;
 exports.getSupplierList = getSupplierList;
 exports.getCategoryList = getCategoryList;
 exports.getItemList = getItemList;
+exports.getUser = getUser;
