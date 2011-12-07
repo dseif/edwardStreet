@@ -33,7 +33,7 @@
               var opt = document.createElement("option");
               opt.text = obj[ "NAME" ]; 
               opt.value = obj[ "NAME" ];
-              opt[ "edst-suppId" ] = obj[ "SUPPLIER_ID" ];
+              opt.id = obj[ "SUPPLIER_ID" ];
               dropDown.options.add( opt );
             };
 
@@ -201,6 +201,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
                           $( "#unitValue" ).val( respObj[ "Sale Unit" ] ); 
                           $( "#distCode" ).val( respObj[ "Distribution Code" ] );
                           $( "#comments" ).val( respObj[ "Comments" ] );
+                          document.getElementById("saveBtn").addEventListener("click", updateItem, false);
                         });
 
                       for ( var row in data[ item ] ) {
@@ -212,7 +213,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
 
                     helper.setupAccordion( document.getElementById( "tabs-" + page ) );
                     $.unblockUI();
-      document.getElementById("saveBtn").addEventListener("click", function (event) {
+                    function updateItem(event) {
 /*
         // input elements
         var $inputs = $('#page :input');
@@ -289,7 +290,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
 
         if ( ok ) {*/
 
-          console.log( data[ $( "#itemName" ).attr( "name" ) ] );
+          console.log( "THIS SHOULD ONLY HAPPEN ONCE" );
           $.ajax({
             cache: false,
             url: "http://96.126.109.151:8080/edititem",
@@ -302,15 +303,17 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               unit: $( "#unitValue" ).val(),
               comment: $( "#comments" ).val(),
               item_type: $( "#iTypeBox" ).val(),
-              supplier_id: $( "#iSupplierBox" ).val(),
+              supplier_id: $( "#iSupplierBox option:selected" ).attr( "id" ),
               item_id: data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ]
             },
             success: function( response, code, xhr ) {
 
+              document.getElementById( "saveBtn" ).removeEventListener( "click", updateItem, false );
             }
           });
         //}
-      }, false);
+      }
+      document.getElementById("saveBtn").addEventListener("click", updateItem, false);
 
 
                   }
@@ -447,6 +450,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
                           $( "#unitValue" ).val( respObj[ "Sale Unit" ] ); 
                           $( "#distCode" ).val( respObj[ "Distribution Code" ] );
                           $( "#comments" ).val( respObj[ "Comments" ] );
+                          document.getElementById("saveBtn").addEventListener("click", updateItem, false);
                         });
 
                       for ( var row in data[ item ] ) {
@@ -458,8 +462,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               
               fired[ 0 ] = true;
               helper.setupAccordion( document.getElementById( "tabs-1" ) );
-
-      document.getElementById("saveBtn").addEventListener("click", function (event) {
+              function updateItem(event) {
 /*
         // input elements
         var $inputs = $('#page :input');
@@ -536,7 +539,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
 
         if ( ok ) {*/
 
-          console.log( data[ $( "#itemName" ).attr( "name" ) ] );
+          console.log( "THIS SHOULD ONLY HAPPEN ONCE" );
           $.ajax({
             cache: false,
             url: "http://96.126.109.151:8080/edititem",
@@ -549,15 +552,17 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               unit: $( "#unitValue" ).val(),
               comment: $( "#comments" ).val(),
               item_type: $( "#iTypeBox" ).val(),
-              supplier_id: $( "#iSupplierBox" ).val(),
+              supplier_id: $( "#iSupplierBox option:selected" ).attr( "id" ),
               item_id: data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ]
             },
             success: function( response, code, xhr ) {
 
+              document.getElementById( "saveBtn" ).removeEventListener( "click", updateItem, false );
             }
           });
         //}
-      }, false);
+      }
+      document.getElementById("saveBtn").addEventListener("click", updateItem, false);
 
 
             }
