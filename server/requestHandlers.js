@@ -43,7 +43,7 @@ var historyLog = {
   
     helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR ) " +
                   "VALUES( '" + vals.user_id + "', '" + category + "', '" + comment + 
-                  "', '" + vals.curUserID + "' )",
+                  "', '" + vals.userName + "' )",
                   function( error, rows, cols ) {
                   
       console.log( "debug:: historyLog - INSERT INTO USER_HISTORY " + rows );
@@ -59,7 +59,7 @@ var historyLog = {
   
     helper.query( "INSERT INTO SUPPLIER_HISTORY( SUPPLIER_ID, CATEGORY, COMMENT, AUTHOR ) " +
                   "VALUES( '" + vals.supplier_id + "', '" + category + "', '" + comment +
-                  "', '" + vals.curUserID + "' )",
+                  "', '" + vals.userName + "' )",
                   function( error, rows, cols ) {
 
       console.log( "debug:: historyLog - INSERT INTO SUPPLIER_HISTORY " + rows );
@@ -75,7 +75,7 @@ var historyLog = {
   
     helper.query( "INSERT INTO ITEM_HISTORY( ITEM_ID, CATEGORY, COMMENT, AUTHOR ) " +
                   "VALUES( '" + vals.item_id + "', '" + category + "', '" + comment + 
-                  "', '" + vals.curUserID + "' )",
+                  "', '" + vals.userName + "' )",
                   function( error, rows, cols ) {
 
       console.log( "debug:: historyLog - INSERT INTO ITEM_HISTORY " + rows );
@@ -91,7 +91,7 @@ var historyLog = {
   
     helper.query( "INSERT INTO PO_HISTORY( PO_ID, CATEGORY, COMMENT, AUTHOR ) " +
                   "VALUES( '" + vals.po_id + "', '" + category + "', '" + comment + 
-                  "', '" + vals.curUserID + "' )",
+                  "', '" + vals.userName + "' )",
                   function( error, rows, cols ) {
 
       console.log( "debug:: historyLog - INSERT INTO PO_HISTORY " + rows );
@@ -119,8 +119,8 @@ function index( response, cb ) {
       return;
     }
 
-    vals.curEmployeeID = rows[ 0 ] && rows[ 0 ].EMPLOYEE_ID;
-    vals.curUserID = rows[ 0 ] && rows[ 0 ].USER_ID;
+    vals.userID = rows[ 0 ] && rows[ 0 ].EMPLOYEE_ID;
+    vals.userName = rows[ 0 ] && rows[ 0 ].USER_ID;
     vals.curRole = rows[ 0 ] && rows[ 0 ].ROLE;
 
     console.log( !!rows.length );
@@ -163,7 +163,7 @@ function viewUserHistory( response ) {
     });
     
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
       console.log( "Error on SELECT from USER_HISTORY: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -192,7 +192,7 @@ function viewUserHistoryPage( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from USER_HISTORY: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -219,7 +219,7 @@ function viewItemHistory( response ) {
     });
     
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
       console.log( "Error on SELECT from ITEM_HISTORY: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -249,7 +249,7 @@ function viewItemHistoryPage( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from USER_HISTORY: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -276,7 +276,7 @@ function viewSupplierHistory( response ) {
     });
     
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
       console.log( "Error on SELECT from SUPPLIER_HISTORY: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -306,7 +306,7 @@ function viewSupplierHistoryPage( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from SUPPLIER_HISTORY: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -333,7 +333,7 @@ function viewPOHistory( response ) {
     });
     
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
       console.log( "Error on SELECT from PO_HISTORY: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -362,7 +362,7 @@ function viewPOHistoryPage( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT FROM PO_HISTORY: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -377,15 +377,14 @@ function viewPOHistoryPage( response ) {
 function editAccount( response ) {
 
   var vals = response.values;
-  vals.user_id = vals.curUserID;
   
   helper.query( "UPDATE USER SET PASSWORD = '" + vals.password + "', EMAIL = '" + vals.email + "' " +
-                "WHERE USER_ID = '" + vals.use_id + "'", 
+                "WHERE USER_ID = '" + vals.userName + "'", 
                 function( error, rows, cols ) {
 
     console.log( "debug:: editAccount - UPDATE USER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -421,7 +420,7 @@ function createUserCheckDupe( response ) {
     });
         
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT FROM USER: " + error );
       response.write( "Error occured while trying to create user." );
     } else {
@@ -444,7 +443,7 @@ function createUser( response ) {
 
     console.log( "debug:: createUser - INSERT INTO USER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -481,7 +480,7 @@ function viewUsers( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
       console.log( "Error on SELECT from USER: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -511,7 +510,7 @@ function viewUsersPage( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from USER, SUPPLIER: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -535,7 +534,7 @@ function editUser( response ) {
 
     console.log( "debug:: editUser - UPDATE USER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -566,7 +565,7 @@ function deleteUser( response ) {
 
     console.log( "debug:: deleteUser - DELETE FROM USER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -604,7 +603,7 @@ function createItemCheckDupe( response ) {
     });
     
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT ITEM: " + error );
       response.write( "Error occured while trying to create item." );
     } else {
@@ -628,7 +627,7 @@ function createItem( response ) {
 
     console.log( "debug:: createItem - INSERT INTO ITEM " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -677,7 +676,7 @@ function viewItems( response ) {
     });
 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from ITEM: " + error );
       response.write( "Error occured while trying to load page." );
     } else {
@@ -710,7 +709,7 @@ function viewItemsPage( response) {
     });
 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from ITEM, SUPPLIER, PRICE_HISTORY: " + error );
       response.write( "Error occured while trying to load page." );
     } else {
@@ -734,7 +733,7 @@ function editItem( response ) {
 
     console.log( "debug:: editItem - UPDATE ITEM " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -765,7 +764,7 @@ function deleteItem( response ) {
 
     console.log( "debug:: deleteItem - DELETE FROM ITEM " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -793,12 +792,12 @@ function createPrice ( response ) {
   
   // create a new price entry
   helper.query( "INSERT INTO PRICE_HISTORY( ITME_ID, PRICE, AUTHOR) " +
-                "VALUES ( '" + vals.item_id + "', " + vals.price + ", '" + vals.curUserID + "' )" +
+                "VALUES ( '" + vals.item_id + "', " + vals.price + ", '" + vals.userName + "' )" +
                 function( error, rows, cols ) {
 
     console.log( "debug:: createPrice - INSERT INTO PRICE_HISTORY " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -858,7 +857,7 @@ function viewPrice ( response ) {
     });
 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from PRICE_HISTORY: " + error );
       response.write( "Error occured while trying to load page." );
     } else {
@@ -885,7 +884,7 @@ function createSupplierCheckDupe( response ) {
     });
         
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on select from SUPPLIER: " + error );
       response.write( "Error occured while trying to create supplier." );
     } else {
@@ -908,7 +907,7 @@ function createSupplier( response ) {
 
     console.log( "debug:: createSupplier - SELECT FROM SUPPLIER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")" );
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")" );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -955,7 +954,7 @@ function viewSuppliers( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from SUPPLIER: " + error );
       response.write( "Error occured while trying to load page." );
     } else {
@@ -984,7 +983,7 @@ function viewSuppliersPage( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from SUPPLIER: " + error );
       response.write( "Error occured while trying to load page." );
     } else {
@@ -1008,7 +1007,7 @@ function editSupplier( response ) {
   
     console.log( "debug:: editSupplier - UPDATE SUPPLIER " + rows );
   
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1039,7 +1038,7 @@ function deleteSupplier( response ) {
 
     console.log( "debug:: deleteSupplier - DELETE FROM SUPPLIER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1072,7 +1071,7 @@ function createContactPerson ( response ) {
 
     console.log( "debug:: createContactPerson - INSERT INTO CONTACT_PERSON " + rows );
     
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1111,7 +1110,7 @@ function viewContactPerson ( response ) {
     });
     
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from CONTACT_PERSON: " + error );
       response.write( "Error occured while trying to load contact person(s)." );
     } else {
@@ -1134,7 +1133,7 @@ function editContactPerson ( response ) {
 
     console.log( "debug:: editContactPerson - UPDATE CONTACT_PERSON " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1165,7 +1164,7 @@ function deleteContactPerson ( response ) {
 
     console.log( "debug:: deleteContactPerson - DELETE FROM CONTACT_PERSON " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1198,7 +1197,7 @@ function createSupplierAddress ( response ) {
 
     console.log( "debug:: createSupplierAddress - INSERT INTO SUPPLIER_ADDRESS " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1238,7 +1237,7 @@ function viewSupplierAddress ( response ) {
     });
     
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from SUPPLIER_ADDRESS: " + error );
       response.write( "Error occured while trying to load supplier address(es)." );
     } else {
@@ -1262,7 +1261,7 @@ function editSupplierAddress ( response ) {
 
     console.log( "debug:: editSupplierAddress - UPDATE SUPPLIER_ADDRESS " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1293,7 +1292,7 @@ function deleteSupplierAddress ( response ) {
 
     console.log( "debug:: deleteSupplierAddress - DELETE FROM SUPPLIER_ADDRESS " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1326,7 +1325,7 @@ function createPurchaseOrder( response ) {
 
     console.log( "debug:: createPurchaseOrer - INSERT INTO PURCHASE_ORDER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1363,7 +1362,7 @@ function viewPurchaseOrders( response ) {
     });  
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
       console.log( "Error on SELECT from PURCHASE_ORDER: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -1396,7 +1395,7 @@ function viewPurchaseOrdersPage ( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from PURCHASE_ORDER, SUPPLIER: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -1419,7 +1418,7 @@ function editPurchaseOrder( response ) {
 
     console.log( "debug:: editPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1451,7 +1450,7 @@ function submitPurchaseOrder( response ) {
 
     console.log( "debug:: submitPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1482,7 +1481,7 @@ function cancelPurchaseOrder( response ) {
 
     console.log( "debug:: cancelPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1514,7 +1513,7 @@ function returnPurchaseOrder( response ) {
 
     console.log( "debug:: returnPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1546,7 +1545,7 @@ function receivePurchaseOrder( response ) {
 
     console.log( "debug:: receivePurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1574,12 +1573,12 @@ function createOrderLine( response ) {
   
   helper.query( "INSERT INTO PO_LINE( PO_ID, PO_LINE_ID, ITEM_ID, QTY_ORDERED, COMMENT, AUTHOR, PRICE_ID) " +
                 "VALUES( '" + vals.po_id + "', " + vals.po_line + "', '" + vals.item_id + "', '" + vals.qty_ordered +
-                "', '" + vals.comment + "', '" + vals.curUserID + "', '" + vals.price_id + "' ) " +
+                "', '" + vals.comment + "', '" + vals.userName + "', '" + vals.price_id + "' ) " +
                 function( error, rows, cols ) {
 
     console.log( "debug:: createOrderLine - INSERT INTO PO_LINE " + rows );
     
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1620,7 +1619,7 @@ function viewOrderLines( response ) {
     });
     
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from PO_LINE: " + error );
       response.write( "Error occured while trying to load PO lines." );
     } else {
@@ -1636,14 +1635,14 @@ function editOrderLine( response ) {
   var vals = response.values;
 
   helper.query( "UPDATE PO_LINE SET ITEM_ID = '" + vals.item_id + "', QTY_ORDERED ='" + vals.qty_ordered +
-                "', QTY_RECEIVED = '" + vals.qty_received + "', COMMENT = '" + vals.comment + "', AUTHOR = '" + vals.curUserID +
+                "', QTY_RECEIVED = '" + vals.qty_received + "', COMMENT = '" + vals.comment + "', AUTHOR = '" + vals.userName +
                 "', PRICE_ID = '" + vals.price_id + "' " + 
                 "WHERE PO_ID = '" + vals.po_id + "' AND PO_LINE_ID = '" + vals.po_line_id + "'",
                 function( error, rows, cols ) {
 
     console.log( "debug:: editOrderLines - UPDATE PO_LINE " + rows );
 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1674,7 +1673,7 @@ function deleteOrderLine ( response ) {
 
     console.log( "debug:: deleteOrderLines - DELETE FROM PO_LINE " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1702,12 +1701,12 @@ function createReturnLine( response ) {
   
   helper.query( "INSERT INTO RETURN_LINE( PO_ID, RETURN_LINE_ID, PO_LINE_ID, RETURN_DATE, QTY_RETURNED, CREDIT_MEMO_NUM, COMMENT, AUTHOR) " +
                 "VALUES( '" + vals.po_id + "', '" + vals.return_line_id + "', '" + vals.po_line_id + "', '" + vals.return_date +
-                "', '" + vals.qty_returned + "', '" + vals.credit_memo_num + "', '" + vals.comment + "', '" + vals.curUserID + "' ) " +
+                "', '" + vals.qty_returned + "', '" + vals.credit_memo_num + "', '" + vals.comment + "', '" + vals.userName + "' ) " +
                 function( error, rows, cols ) {
 
     console.log( "debug:: createReturnLine - INSERT INTO RETURN_LINE" + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1799,7 +1798,7 @@ function getUser( response ) {
 
   var vals = response.values;
   
-  helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.user_id + "'",
+  helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.userName + "'",
                 function( error, rows, cols ) {
     
     if ( error ) {
@@ -1822,6 +1821,28 @@ function getItem( response ) {
   var vals = response.values;
   
   helper.query( "SELECT * FROM ITEM WHERE ITEM_ID = '" + vals.item_id + "'",
+                function( error, rows, cols ) {
+    
+    if ( error ) {
+      console.log( "Error on SELECT from ITEM: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+    
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }
+  });
+}
+
+// Get Item - Get an item's information from the ITEM table.
+function getPurchaseOrder( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT * FROM PURCHASE_ORDER WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
     
     if ( error ) {
@@ -1906,3 +1927,4 @@ exports.getSupplierList = getSupplierList;
 exports.getCategoryList = getCategoryList;
 exports.getItemList = getItemList;
 exports.getUser = getUser;
+exports.getPurchaseOrder = getPurchaseOrder;

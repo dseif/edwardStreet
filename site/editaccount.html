@@ -28,11 +28,11 @@
             url: "http://96.126.109.151:8080/getuser",
               data: {
                 hash: getCookie("EDST_H"),
-                user_id: "" // Needs to be filled
+                //user_id: userID // Needs to be filled
               },
               success: function (response, code, xhr) {
-              var emailField = document.getElementByID("email");
-              emailField.value = JSON.parse(response)[0]["EMAIL"];
+              var emailField = document.getElementById("email");
+              emailField.value = JSON.parse(response)[ 0 ][ "EMAIL" ];
               }
             });
 

@@ -77,6 +77,6 @@ handle[ "/vieworderlines" ] = requestHandlers.viewOrderLines;
 handle[ "/editorderline" ] = requestHandlers.editOrderLine;
 handle[ "/deleteorderline" ] = requestHandlers.deleteOrderLine;
 handle[ "/createreturnline" ] = requestHandlers.createReturnLine;
-handle[ "/getitemlist" ] = requestHandlers.getItemLst;
+handle[ "/getitemlist" ] = requestHandlers.getItemList;
 
 server.start( router.route, handle );
