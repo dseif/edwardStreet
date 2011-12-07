@@ -445,14 +445,16 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
             url: "http://96.126.109.151:8080/edititem",
             data: {
               hash: getCookie( "EDST_H" )
-              dist_code:
-              item_name:
-              receiptname:
-              category:
-              unit:
+              dist_code: $( "#distCode" ).val(),
+              item_name: $( "#itemName" ).val(),
+              receiptname: $( "#receiptName" ).val(),
+              category: $( "iCategoryBox" ).val(),
+              unit: $( "#unitValue" ).val(),
               comment:
-              supplier_id:
-              item_id:
+              item_type: $( "#iTypeBox" ).val(),
+              supplier_id: $( "#iSupplierBox" ).val(),
+              item_id: data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ]
+                            $( "#price" ).val( "" ); 
             },
             success: function( response, code, xhr ) {
 
