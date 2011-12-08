@@ -1,0 +1,46 @@
+My Contributions:
+
+As a project Manager:
+
+- Managed the group respository.  THis involved merging everyones code various times a week, sometimes up to 20 times a day.  In doing so I was responsible for fixing all merge conflicts, keeping files up to date with our development branch and debugging all git related issues.  THis involved issues with multiple operating systems altering the same files, allowing node.js modules to live inside a respository while they have outward dependencies and so on.  There are graphs of all of our commits, number of commits, files touched, lines touched all living on our repository.  In all I alter over 275,000 lines of code and authored more then 100 commits.  Each commit has a history of each file that I created/deleted as well as each line that I touched. This is essential to understanding how much work I have done on the project.  Here is a list of some useful links for our gitub repository:
+
+  Main part of the repository: https://github.com/dseif/edwardStreet
+
+  A list of commits: https://github.com/dseif/edwardStreet/commits/alpha?page=1
+  Keep in mind there is 8 pages of commits, the following is the last page https://github.com/dseif/edwardStreet/commits/alpha?page=8
+
+  Netowkr graph showing how I merged everyones work together and kept it up to date, you can hover over each dot in the graph and view its commit as well as the author. It accurately shows what is done each commit and who did what.  It also shows how I was involved with every commit that went into the repository: https://github.com/dseif/edwardStreet/network
+  
+  Impact graph visually showing the amount of lines of code each user touched.  Clicking on each colored region shows the user as well as what code they altered, how many lines, ect.  https://github.com/dseif/edwardStreet/graphs/impact   This shows the magnitude of the work I did.
+
+  I was responsible for sending emails out to the group multiple times a week, staying on top of each of the group members, as well as being involved in every discussion about the project.  I was involved in the majority of debugging issues with the group.
+
+  Since our client never got back to us about server access I took the liberty of purchasing my own server to keep development moving forward.  This involved installing mysql, node.js and many modules.
+
+  Coding I did the following:
+
+ - Design our whole server.  I used node.js because of its many appealing features that would be benefitial to use. THis involves creating a real time response system in order to alow page content to constantly be dynamically updated.  Node.js also scales extremely well for running off of a single machine, which is exactly what the client stated that they would be doing.  The nature of node.js allows us to use an event driven asynchronous callback system, allow us to never block simultaneous requests and perform fast server side transactinos.
+
+  = The server was design with an onion layer model.  This means we created various layers in our server.  This allowed us to create a secure structure where no sql or authentication data would ever be visible even is someone got into the server.  You would need to pass through various levels of authentication to access each part of our servers API.  This meant implementing both a client side and server side cookie system. In doing so we would update the users cookie each time a valid request was made ( 30 minutes is both client and server cookie expiration time ).  A unqiue GUID is generated for each user.  User data is only stored on the server and is never passed back to the client ( things such as password and userid ). 
+
+ - The server then has a router function in the next layer to ensure that requests are only coming from the domain that we specify. If the domain is valid we then allow the request to go to the specified function.  Inside each function various sql statements are made against a private database handler.  By not allowing any sql to be passed along ever we eliminate the chance for thigns such as sql injection attacks and so on.  Each server functions runs on a callback methodology, which means returning data once it is ready.
+
+ - I designed everything on the server side, this is a big deal because I am using a relatively new technology so a lot of the work I was doing was new and did not have any guides I could follow or anything.  I blogged my experiences along the way to show my work and to help others, here are some links:  
+ http://dseifried.wordpress.com/2011/09/13/experimenting-with-node-js/
+ http://dseifried.wordpress.com/2011/09/30/node-js-connecting-to-a-database-and-some-very-basic-authentication/
+
+ - I implemented and divised the use of ajax on the client side for the project.  Ajax was appealing because it fit nicely with the callback methodology that we were working with. Doing this on both the client and server allowed for isntant data responses, not requiring a refresh.  This meant we can update the ui and data on the fly and create a dynamic experience accross the site.  This is cool because a user can update an item on the client side, update our database and have the results show live without refreshing.  We can edit an item and have it populate our purchase order, shopping cart and supplier all without a page refresh.
+
+ - I authored the following pages: edit user, edit account, login, createpo, edititem and helped with every other page in the project. I was involved with literally every file.
+
+ - Designed the cookie system we use as well as utilized local storage that is a part of modern browsers to allow data persistance.  I felt it would be bad to constantly store each users temporary data on the server.  This is because storing each item again on the server, for every logged in user, for every purchase order and supplier, can become very bulky very fast.  The solution to this was to store referneces to each item id, supplier id, qty, and purchase order in local storage on each users machine.  SInce none of this data is security sensitive at all this worked out perfectly.  All of the unique helper functions can be found in helper.js .
+
+- Implemented the force logout of users once there cookie experis, as well as hiding data based on a users role.
+
+- ALl of the work I did with the ajax requests is what was dubbed the standard there on out for the work the rest of my group did.  They used my work as a template.  Again, I was not able to simple go online and copy what someone did and didn't have someone elses work to look at, I did it all on my own.
+
+- Any modal dialogues accross the site and loading gifs are all my work
+
+- Utilized jquery ui for various things such as the accordions and tabs.
+
+In total I estimate I did between 200 - 220 hours of work ( no exageration ).  I had to research everything that I did and I utilized new technologies to create a unique end experience for the client.  I blogged about my experiences ( which I got comments on and helped other people ) in order to accomplish my goals. 

@@ -1,0 +1,26 @@
+September (20 Hrs)
+- Database creation research for importing existing Item database from Edward Street Market
+- Research connections between MySql to Filemaker database
+- Database creation, various view all/one stored procedures (View all Items/Suppliers/Users/Purchase Orders)
+
+October (15 Hrs)
+- Website design page layout and functionality discussions/research
+- Removed unnessesary pages which were redundant (Edit, Delete and View can all be effectively one page)
+
+- EDST MS Project file created to map out progress and monitor productivity through the term
+- WBS Diagram in Visio as part of deliverables and subgroups of overall system including releases
+
+November (40 Hrs)
+- Implemented Supplier pages into the system
+- Made View all, and Edit suppliers work according to the specifications defined
+
+- Refactored the website to remove redundant web pages and functionality (TestPage.html, test forms)
+- Created standard naming convention for navigation and page layout to maintain cohesion between pages (Div id, form field names)
+- Reworked Supplier Pages to implement the new accordion style item selections along with edit functionality
+
+- Final group presentation (Powerpoint presentation, Documentation and screen shots of features to include in user guide)
+
+December (20 Hrs)
+- Testing and error checking on the entire system (Create/Delete functionality)
+- Test for duplicate database enrtries (Supplier/User/Items)
+- Removing bugs and redundant code ( Certain Edit buttons not pulling information correctly )

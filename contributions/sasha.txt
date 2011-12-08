@@ -1,0 +1,17 @@
+What I have done:
+
+- I have created the base of all the web pages for the website. Most of the pages have been removed, but the ones that are still there are: createitem, createpo, createsupp, createuser, editaccount, edititem, editpo, edituser, index, login, receivepo, returnpo, shoppingcart, and viewpo.
+
+- I have created the style.css file, which is used to give web pages a themed layout. It is used to display the graphics for the top bar, and it gives the menu a different look. It adds a big rectangle to the main body of the page where all the information is displayed. There are properties that are used to position various text fields, bars, lists, labels, etc.
+
+- I have written inside each html web pages a jQuery scrollable top bar, and a show/hide for the menu bar. I have also written a java_script file called validation.js. It validates required fields, user name, password, numbers, etc. Required fields are passed as arrays, and every specific validation is done individually.
+
+- I have added a white div area for shopping cart use, and David Seifried made it work with the shopping cart items.
+
+- I have added a jQuery UI for a Date Picker in create purchase order.
+
+- I have partially worked on create purchase order page, where I added the inputs and boxes and various other fields to the web page, and I have utilized the jQuery UI Accordion. I did not complete the web page.
+
+- I have worked on the shopping cart page, where I used the jQuery UI Accordion to display a list of shopping cart items. I made the option to modify quantity and delete from with the help of David Seifried.
+
+- I have tweaked the web pages, if the web pages had minor problems, such as styling, syntax errors, added missing fields in pages, removing unused pages, links or code.
