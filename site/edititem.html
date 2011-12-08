@@ -42,6 +42,32 @@
             }
         }
       });
+      
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/getcategorylist",
+        data: {
+          hash: getCookie( "EDST_H" )
+        },
+        success: function( response, code, xhr ) {
+
+        var data = JSON.parse( response );
+
+          var dropDown = document.getElementById( "iCategoryBox" );
+
+            var addOption = function ( obj ) {
+
+              var opt = document.createElement("option");
+              opt.text = obj[ "CAT_NAME" ]; 
+              opt.value = obj[ "CAT_NAME" ];
+              dropDown.options.add( opt );
+            };
+
+            for (var i = 0, len = data.length; i < len; i++) {
+              addOption( data[ i ] );
+            }
+          }
+      });
 
 
       var numItems = 0,
@@ -194,7 +220,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
                           $( "#itemName" ).val( respObj[ "Item Name" ] );
                           $( "#itemName" ).attr( "name", $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) );
                           $( "#receiptName" ).val( respObj[ "Receipt Name" ] );
-                          $( "#iCategoryBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Item Category" ] ) );
+                          $( "#iCategoryBox" ).val( respObj[ "Item Category" ] );
                           $( "#iTypeBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Department" ] ) );
                           $( "#iSupplierBox" ).val( respObj[ "Supplier" ] );
                           $( "#price" ).val( "$" + respObj[ "Latest Price" ] );
@@ -290,6 +316,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
 
         if ( ok ) {*/
 
+          alert($( "iCategoryBox" ).val());
           console.log( "THIS SHOULD ONLY HAPPEN ONCE" );
           $.ajax({
             cache: false,
@@ -443,7 +470,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
                           $( "#itemName" ).val( respObj[ "Item Name" ] );
                           $( "#itemName" ).attr( "name", $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) );
                           $( "#receiptName" ).val( respObj[ "Receipt Name" ] );
-                          $( "#iCategoryBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Item Category" ] ) );
+                          $( "#iCategoryBox" ).val( respObj[ "Item Category" ] );
                           $( "#iTypeBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Department" ] ) );
                           $( "#iSupplierBox" ).val( respObj[ "Supplier" ] );
                           $( "#price" ).val( "$" + respObj[ "Latest Price" ] );
@@ -719,9 +746,6 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               <tr>
                 <td>Item Category:</td> <!-- Auto populated -->
                 <td><select name="itemCategory" id="iCategoryBox">
-                  <option value="meat">Meat</option>
-                  <option value="cheese">Cheese</option>
-                  <option value="fish">Fish</option>
                   </select>
                 </td>
               </tr>
