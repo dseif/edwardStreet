@@ -236,18 +236,18 @@
         cache: false,
         url: "http://96.126.109.151:8080/createpurchaseorder",
         data: {
+          hash: cookie,
           delivery_date: document.getElementById( "deliveryDate" ).value,
           delivery_time: document.getElementById( "deliveryTime" ).value,
           ref_number: document.getElementById( "refNumber" ).value,
-          comments: document.getElementById( "comments" ).value,
-          supplier_id: document.getElementById( "suppBox" ).value,
-          hash: cookie
+          comment: document.getElementById( "comments" ).value,
+          supplier_id: $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ]
         },
         success: function( response, code, xhr ) {
           console.log( response );
           
           var i = 1;
-          
+          /*
           $.ajax({
             cache: false,
             url: "http://96.126.109.151:8080/createorderline",
@@ -266,6 +266,7 @@
               console.log( response );
             }
           });
+          */
          }
       });
     },
@@ -361,9 +362,9 @@
         
    // queue buttn
     document.getElementById("queueBtn").addEventListener("click", function () {
-      if( validateOnPage( )) {
+      //if( validateOnPage( )) {
         createPO();
-      }
+      //}
     }, false);
     
     // submit button

@@ -1020,7 +1020,7 @@ function createPurchaseOrder( response ) {
 
   var vals = response.values;
   
-  helper.query( "INSERT INTO PURCHASE_ORDER( STATUS, DELIVERY_DATE, DELIVER_TIME, REF_NUMBER, COMMENT, SUPPLIER_ID )" +
+  helper.query( "INSERT INTO PURCHASE_ORDER( STATUS, DELIVERY_DATE, DELIVERY_TIME, REF_NUMBER, COMMENT, SUPPLIER_ID )" +
                 "VALUES( 'Queued', '" + vals.delivery_date + "', '" + vals.delivery_time +
                 "', '" + vals.ref_number + "', '" + vals.comment + "', '" + vals.supplier_id + "' )",
                 function( error, rows, cols ) {
