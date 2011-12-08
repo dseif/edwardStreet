@@ -32,6 +32,9 @@
       $( "#tabs-" + $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ).append( "<h3 id='orderLine-" + curItem + "'><a href='#'>" + $( "#itemBox option:selected" ).text() +
           "</a></h3>" );
       $( "#tabs-" + $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ).append( "<div id='edstItem-" + curItem + "'></div>" );
+      console.log( $( "#tabs-" + $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ) );
+      $( "#tabs-" + $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ).click(function() {
+      });
 
       var obj = window.edstPOobj,
           currentItem = obj[ $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ];
@@ -47,7 +50,7 @@
         };
       } else {
         currentItem[ "obj" ][ curItem ].qty = $( "#qty" ).val();
-        currentItem[ "obj" ][ curItem ].comment = $( "#commentis2" ).val();
+        currentItem[ "obj" ][ curItem ].comment = $( "#comments2" ).val();
         currentItem[ "obj" ][ curItem ].price = $( "#price" ).val();
       }
 
@@ -84,10 +87,10 @@
           dropDown.options.add( opt );
         };
 
-        supplier = {};
+        suppliers = {};
         for (var i = 0, len = data.length; i < len; i++) {
           addOption( data[ i ] );
-          supplier[ data[ i ][ "NAME" ] ] = data[ i ][ "SUPPLIER_ID" ]; 
+          suppliers[ data[ i ][ "NAME" ] ] = data[ i ][ "SUPPLIER_ID" ]; 
         }
       }
     });
@@ -119,21 +122,19 @@
       // GO TO BED
       if ( cart ) {
 
-        for ( var prop in cart ) {
+        for( var item in obj ) {
 
-          for( var item in obj ) {
+          for ( var prop in cart ) {
 
-            if( item === suppliers[ cart[ prop ] ] ) {
+            if( item === suppliers[ cart[ prop ][ "Supplier" ] ] ) {
 
-              for( var propy in obj[ item ][ "obj" ] ) {
-
-                if( !obj[ item ][ "obj" ][ propy ] ) {
+                if( !obj[ item ][ "obj" ][ cart[ prop ][ "Item ID" ] ] ) {
 
                   obj[ item ].count = 0;
                   obj[ item ][ "name" ] = cart[ prop ][ "Supplier" ];
                   obj[ item ].obj = {};
 
-                  obj[ item ][ "obj" ][ propy ] = {
+                  obj[ item ][ "obj" ][ cart[ prop ][ "Item ID" ] ] = {
                     Line: ++obj[ item ].count,
                     item_id: curItem,
                     item_name: cart[ prop ][ "Item Name" ], 
@@ -141,19 +142,28 @@
                     comment: cart[ prop ][ "Comments" ], 
                     price: cart[ prop ][ "Latest Price" ] 
                   };
+                } else {
+
+                  obj[ item ][ "obj" ][ cart[ prop ][ "Item ID" ] ] = {
+                    Line: ++obj[ item ].count,
+                    item_id: cart[ prop ][ "Item ID" ],
+                    item_name: cart[ prop ][ "Item Name" ], 
+                    qty: cart[ prop ][ "qty" ],
+                    comment: cart[ prop ][ "Comments" ], 
+                    price: cart[ prop ][ "Latest Price" ] 
+                  };
                 }
-              }
             } else {
 
-              obj [ suppliers[ cart[ prop ] ] ] = {};
+              obj [ suppliers[ cart[ prop ][ "Supplier" ] ] ] = {};
 
-              obj[ item ].count = 0;
-              obj[ item ][ "name" ] = cart[ prop ][ "Supplier" ];
-              obj[ item ].obj = {};
+              obj[ suppliers[ cart[ prop ][ "Supplier" ] ] ].count = 0;
+              obj[ suppliers[ cart[ prop ][ "Supplier" ] ] ][ "name" ] = cart[ prop ][ "Supplier" ];
+              obj[ suppliers[ cart[ prop ][ "Supplier" ] ] ].obj = {};
 
-              obj[ item ][ "obj" ][ propy ] = {
-                Line: ++obj[ item ].count,
-                item_id: curItem,
+              obj[ suppliers[ cart[ prop ][ "Supplier" ] ] ][ "obj" ][ cart[ prop ][ "Item ID" ] ] = {
+                Line: ++obj[ suppliers[ cart[ prop ][ "Supplier" ] ] ].count,
+                item_id: cart[ prop ][ "Item ID" ],
                 item_name: cart[ prop ][ "Item Name" ], 
                 qty: cart[ prop ][ "qty" ],
                 comment: cart[ prop ][ "Comments" ], 
@@ -163,21 +173,52 @@
           }
         }
       }
+      console.log( obj );
 
       for( var item in obj ) {
 
         $( "#poContent" ).append( "<li id='supp-" + item + "'><a href='#tabs-" + item + "'>" + obj[ item ][ "name" ] + "</a></li>" );
         $( "#poTabs" ).append( "<div id='tabs-" + item + "'></div>" );
+        $( "#supp-" + item ).children().click(function() {
+        $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/getitemlist",
+        data: {
+          hash: getCookie( "EDST_H" ),
+          supplier_id: suppliers[ $( this ).html() ]
+        },
+        success: function( response, code, xhr ) {
+
+          var data = JSON.parse( response ),
+              dropDown = document.getElementById( "itemBox" ),
+              addOption;
+
+          $( dropDown ).html( " " );
+
+          addOption = function ( obj ) {
+
+            var opt = document.createElement("option");
+              opt.text = obj[ "ITEM_NAME" ];
+              opt.value = obj[ "ITEM_ID" ];
+              dropDown.options.add( opt );
+          };
+
+          for (var i = 0, len = data.length; i < len; i++) {
+            addOption( data[ i ] );
+          }
+        }
+      });
+          console.log( $( this ).html() );
+        });
 
         for ( var prop in obj[ item ][ "obj" ] ) {
-
 
           if ( obj[ item ][ "obj" ][ prop ] ) {
 
             $( "#tabs-" + item ).append( "<h3 id='item-" + obj[ item ][ "obj" ][ prop ][ "item_id" ] + "'><a href='#'>" + 
                   obj[ item ][ "obj" ][ prop ][ "item_name" ] + "</a></h3>" );
             $( "#tabs-" + item ).append( "<div id='edstItems-" + obj[ item ][ "obj" ][ prop ][ "item_id" ] + "'></div>" );
-
+            
             for( var propy in obj[ item ][ "obj" ][ prop ] ) {
 
               $( "#edstItems-" + obj[ item ][ "obj" ][ prop ][ "item_id" ] ).append( "<p><b>" + propy + ": </b>" + obj[ item ][ "obj" ][ prop ][ propy ] + "</p>" );
@@ -223,7 +264,7 @@
           var a = $( "#supp-" + $( "#suppBox option:selected" ).val() ).children()[ 0 ];
           a.dispatchEvent( e );
         }
-      }); 
+      });
 
       $( "#poTabs" ).tabs();
     });

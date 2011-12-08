@@ -136,7 +136,11 @@ margin-left: 4.5em;
   width: 95%;
 }
 
-#tabs-1 {
+#tabs-1{
+  width: 95%;
+}
+
+#poTabs div {
   width: 95%;
 }
 
