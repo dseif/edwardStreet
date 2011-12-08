@@ -159,8 +159,6 @@
             supplier_id: document.getElementById( "iSupplierBox" ).value
           },
           success: function( response, code, xhr ) {
-
-            alert("success");
             
             $.ajax({
               cache: false,
@@ -171,9 +169,6 @@
               price: document.getElementById( "price" ).value
             },
             success: function( response, code, xhr ) {
-
-              alert("success, again");
-              
             }
           });
           }

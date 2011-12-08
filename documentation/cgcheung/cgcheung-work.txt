@@ -1,0 +1,17 @@
+Christopher Cheung
+
+What I have Done
+
+- Created and maintained the mysql database.
+
+- Created usable data for database from client's original dbf file, and populated our database with it.
+
+- Created and maintained all the required SQL statements for web query.
+
+- Put those SQL statements into functions in the database handler.
+
+- handled most of the javascript coding for createitem, viewpo, editaccount.
+
+- Collaborative work on many other pages.
+
+- Created documentation for the database and database handler.
