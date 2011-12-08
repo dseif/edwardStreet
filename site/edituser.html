@@ -14,48 +14,14 @@
 <script type="text/javascript" src="../js/helper.js"></script>
 <script type="text/javascript">
 
-  var viewuser;
-  document.addEventListener( "DOMContentLoaded", function( event ) {
   
-    viewuser = function() {
+  document.addEventListener( "DOMContentLoaded", function( event ) {
+    var cookie = window.cookie;
+    if (cookie.substring(0, 2).toLowerCase() !== "ad") {
 
-      $( "#userName" ).val( "" );
-      $( "#emailAddress" ).val( "" );
-
-      $.ajax({
-        cache: false,
-        url: "http://96.126.109.151:8080/viewuserspage",
-        data: {
-          hash: getCookie( "EDST_H" ),
-          pagenum: 1
-        },
-        success: function( response, code, xhr ) {
-
-          var table = $( "#itemTable" );
-          table.find("tr:gt(0)").remove();
-
-          var data = JSON.parse( response ),
-              dataObj = {};
-              console.log( data );
-          for ( var i = 0, l = data.length; i < l; i++ ) {
-
-            dataObj[ data[ i ][ "User Login" ] ] = data[ i ];
-
-            table.append( "<tr><td><b>" + data[ i ][ "User Login" ] + "</b></td><td>" + data[ i ][ "Role" ] + "</td>" + 
-              "<td>" + data[ i ][ "Email Address" ] + "</td><td><button id='" + data[ i ][ "User Login" ] + "'>Edit</button></td></tr>" );
-
-            $( "#" + data[ i ][ "User Login" ] ).click(function() {
-
-              $( "#userName" ).val( dataObj[ $( this ).attr( "id" ) ][ "User Login" ] );
-              $( "#userName" ).attr( "edst-data", dataObj[ $( this ).attr( "id" ) ][ "User Login" ] );
-              $( "#emailAddress" ).val( dataObj[ $( this ).attr( "id" ) ][ "Email Address" ] );
-              $( "#userRoleBox" ).val( String.prototype.toLowerCase.apply( dataObj[ $( this ).attr( "id" ) ][ "Role" ] ) );
-            });
-          }
-        }
-      }); 
-    };
-    viewuser();
+      window.location = "login.html";
+    } // Cookie business
+    
     
               var numItems = 0,
           numPages = 0,
@@ -101,8 +67,11 @@
                     var count = 0;
                     for ( var item in data ) {
                       console.log( data[ item ]["PO Number"] );
-                      $( "#tabs-" + page ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "User Login" ] + "' name='" + data[ item ][ "User Login" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "User Login" ] + "</a></h3>" + 
-                         "<div id='edstAccord-" + data[ item ][ "User Login" ] + "'></div>" );
+                      $( "#tabs-" + page ).append( "<h3 edst-count='" + count + "' id='edstItem-" 
+                      + data[ item ][ "User Login" ] + "' name='" 
+                      + data[ item ][ "User Login" ] + "'><a href='#' style='display:inline-block;'>" 
+                      + data[ item ][ "User Login" ] + "</a></h3>" + "<div id='edstAccord-" 
+                      + data[ item ][ "User Login" ] + "'></div>" );
                         count++;
 
                         var editBtn = document.createElement( "button" );
@@ -218,8 +187,7 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
                 $( "#userName" ).val( " " );
                 $( "#emailAddress" ).val(  " " );
                 $( "userRoleBox" ).val( " " );
-                $( "#itemTable" ).find( "tr:gt(0)" ).remove();
-                viewuser();
+
               }
             });
             $( this ).dialog( "close" );
