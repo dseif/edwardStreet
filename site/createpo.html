@@ -16,7 +16,46 @@
   document.addEventListener("DOMContentLoaded", function (event) {
 
     var helper = edstHelper();
+
     window.edstPOobj = {};
+
+    function addAccordionItem() {
+
+      var curItem = $( "#itemBox option:selected" ).val();
+      console.log( curItem );
+      $( "#tabs-" + $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ).accordion( "destroy" );
+
+      $( "#tabs-" + $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ).append( "<h3 id='orderLine-" + curItem + "'><a href='#'>" + $( "#itemBox option:selected" ).text() +
+          "</a></h3>" );
+      $( "#tabs-" + $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ).append( "<div id='edstItem-" + curItem + "'></div>" );
+
+      var obj = window.edstPOobj,
+          currentItem = obj[ $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ];
+
+      if( !currentItem[ "obj" ][ curItem ] ) {
+        currentItem[ "obj" ][ curItem ] = {
+          Line: currentItem.count,
+          item_id: curItem,
+          item_name: $( "#itemBox option:selected" ).text(),
+          qty: $( "#qty" ).val(),
+          comment: $( "#comments2" ).val(),
+          price: $( "#price" ).val()
+        };
+      } else {
+        currentItem[ "obj" ][ curItem ].qty = $( "#qty" ).val();
+        currentItem[ "obj" ][ curItem ].comment = $( "#commentis2" ).val();
+        currentItem[ "obj" ][ curItem ].price = $( "#price" ).val();
+      }
+
+      var orderLine = currentItem[ "obj" ][ currentItem[ "item_id" ] ];
+      for( var item in orderLine ) { 
+
+        $( "#edstItem-" + curItem ).append( "<p><b>" + item + "</b>: " + orderLine[ item ] + "</p>" );
+      }
+
+      helper.setupAccordion( $( "#tabs-" + $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ) );
+      console.log( obj );
+    }
 
     $("#deliveryDate").datepicker();
     $('#page').hide();
@@ -62,6 +101,7 @@
 
         obj[ $( this ).val() ] = {
           "name": $( "#suppBox option:selected" ).text(),
+          count: 0,
           obj: {}
         };
       }
@@ -73,11 +113,20 @@
 
         for ( var prop in obj[ item ][ "obj" ] ) {
 
-          if ( obj[ item ][ "obj" ][ "Line" ] ) {
-            $( "#tabs-" + item ).append( "<div id='item-" + obj[ item ][ "obj" ][ "Line" ] + "'></div>" );
-            $( "#item-" + obj[ item ][ "obj" ][ "Line" ] ).append( "<p><b>" + prop + ": </b>" + obj[ item ][ "obj" ][ prop ] + "</p>" );
+
+          if ( obj[ item ][ "obj" ][ prop ] ) {
+
+            $( "#tabs-" + item ).append( "<h3 id='item-" + obj[ item ][ "obj" ][ prop ][ "item_id" ] + "'><a href='#'>" + 
+                  obj[ item ][ "obj" ][ prop ][ "item_name" ] + "</a></h3>" );
+            $( "#tabs-" + item ).append( "<div id='edstItems-" + obj[ item ][ "obj" ][ prop ][ "item_id" ] + "'></div>" );
+
+            for( var propy in obj[ item ][ "obj" ][ prop ] ) {
+                            $( "#edstItems-" + obj[ item ][ "obj" ][ prop ][ "item_id" ] ).append( "<p><b>" + propy + ": </b>" + obj[ item ][ "obj" ][ prop ][ propy ] + "</p>" );
+            }
           }
         }
+        $( "#tabs-" + item ).accordion( "destroy" );$( "#tabs-" + item )
+        helper.setupAccordion( $( "#tabs-" + item ) );
       }
 
       $.ajax({
@@ -117,25 +166,7 @@
       $( "#poTabs" ).tabs();
     });
 
-    $( "#addLineBtn" ).click(function() {
-
-      var curItem = $( "#itemBox option:selected" ).val();
-
-      $( ".ui-state-active" ).append( "<div id='orderLine-" + curItem + "'></div>" );
-
-      var obj = window.edstPOobj;
-
-      obj[ $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ][ "obj" ] = {
-        Line: 1,
-        item_id: curItem,
-        item_name: $( "#itemBox option:selected" ).text(),
-        qty: $( "#" ).val(),
-        comment: $( "#" ).val(),
-        price: $( "#" ).val()
-      };
-      
-
-    });
+    $( "#addLineBtn" ).click( addAccordionItem );
       
     var createPO = function() {
     

@@ -316,8 +316,8 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
 
         if ( ok ) {*/
 
-          alert($( "iCategoryBox" ).val());
           console.log( "THIS SHOULD ONLY HAPPEN ONCE" );
+          console.log( "CATEGORY1", $( "#iCategoryBox" ) );
           $.ajax({
             cache: false,
             url: "http://96.126.109.151:8080/edititem",
@@ -326,7 +326,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               dist_code: $( "#distCode" ).val(),
               item_name: $( "#itemName" ).val(),
               receiptname: $( "#receiptName" ).val(),
-              category: $( "iCategoryBox" ).val(),
+              category: $( "#iCategoryBox" ).val(),
               unit: $( "#unitValue" ).val(),
               comment: $( "#comments" ).val(),
               item_type: $( "#iTypeBox" ).val(),
@@ -567,6 +567,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
         if ( ok ) {*/
 
           console.log( "THIS SHOULD ONLY HAPPEN ONCE" );
+          console.log( "CATEGORY1", $( "iCategoryBox" ) );
           $.ajax({
             cache: false,
             url: "http://96.126.109.151:8080/edititem",
@@ -575,7 +576,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               dist_code: $( "#distCode" ).val(),
               item_name: $( "#itemName" ).val(),
               receipt_name: $( "#receiptName" ).val(),
-              category: $( "iCategoryBox" ).val(),
+              category: $( "#iCategoryBox" ).val(),
               unit: $( "#unitValue" ).val(),
               comment: $( "#comments" ).val(),
               item_type: $( "#iTypeBox" ).val(),
