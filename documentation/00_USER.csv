@@ -1,5 +1,0 @@
-USER_ID,PASSWORD,EMAIL,EMPLOYEE_ID,ROLE,SUPPLIER_ID
-jgreenway,mintgum,jon@edwardstreet.ca,000000,Administrator,
-apex_admin,admin,admin@email,admin,Administrator,
-apex_buyer,buyer,buyer@email,buyer,Buyer,
-apex_receiver,receiver,receiver@email,receiver,Receiver,
