@@ -15,227 +15,130 @@
 <script>
   document.addEventListener("DOMContentLoaded", function (event) {
 
-      $(function() {
-        $("#deliveryDate").datepicker();
-      });
-      
-  $('#page').hide();
-  $('#threeButtons').hide();
-  $('#suppDiv').show();
+    var helper = edstHelper();
+    window.edstPOobj = {};
+
+    $("#deliveryDate").datepicker();
+    $('#page').hide();
+    $('#threeButtons').hide();
+    $('#suppDiv').show();
   
+    $.ajax({
+      cache: false,
+      url: "http://96.126.109.151:8080/getsupplierlist",
+      data: {
+        hash: getCookie( "EDST_H" )
+      },
+      success: function( response, code, xhr ) {
+
+        var data = JSON.parse( response ),
+        dropDown = document.getElementById( "suppBox" ),
+        addOption = function ( obj ) {
+
+          var opt = document.createElement("option");
+          opt.text = obj[ "NAME" ];
+          opt.value = obj[ "SUPPLIER_ID" ];
+          dropDown.options.add( opt );
+        };
+
+        for (var i = 0, len = data.length; i < len; i++) {
+          addOption( data[ i ] );
+        }
+      }
+    });
+
+    $( "#suppBox" ).change(function( event ) {
+
+      $('#page').show();
+      $('#threeButtons').show();
+
+      var obj = window.edstPOobj;
+
+      $( "#poTabs" ).html( " " );;
+      $( "#poTabs" ).append( "<ul id='poContent'></ul>" );
+      $( "#poTabs" ).tabs( "destroy" );
+
+      if( !obj[ $( this ).val() ] ) {
+
+        obj[ $( this ).val() ] = {
+          "name": $( "#suppBox option:selected" ).text(),
+          obj: {}
+        };
+      }
+
+      for( var item in obj ) {
+
+        $( "#poContent" ).append( "<li id='supp-" + item + "'><a href='#tabs-" + item + "'>" + obj[ item ][ "name" ] + "</a></li>" );
+        $( "#poTabs" ).append( "<div id='tabs-" + item + "'></div>" );
+
+        for ( var prop in obj[ item ][ "obj" ] ) {
+
+          if ( obj[ item ][ "obj" ][ "Line" ] ) {
+            $( "#tabs-" + item ).append( "<div id='item-" + obj[ item ][ "obj" ][ "Line" ] + "'></div>" );
+            $( "#item-" + obj[ item ][ "obj" ][ "Line" ] ).append( "<p><b>" + prop + ": </b>" + obj[ item ][ "obj" ][ prop ] + "</p>" );
+          }
+        }
+      }
+
       $.ajax({
         cache: false,
-        url: "http://96.126.109.151:8080/getsupplierlist",
+        url: "http://96.126.109.151:8080/getitemlist",
         data: {
-          hash: getCookie( "EDST_H" )
+          hash: getCookie( "EDST_H" ),
+          supplier_id: $( this ).val()
         },
         success: function( response, code, xhr ) {
 
-          var data = JSON.parse( response );
+          var data = JSON.parse( response ),
+              dropDown = document.getElementById( "itemBox" ),
+              addOption;
 
-           var dropDown = document.getElementById( "suppBox" );
+          $( dropDown ).html( " " );
 
-            var addOption = function ( obj ) {
+          addOption = function ( obj ) {
 
-              var opt = document.createElement("option");
-              opt.text = obj[ "NAME" ];
-              opt.value = obj[ "SUPPLIER_ID" ];
-              opt[ "edst-suppId" ] = obj[ "SUPPLIER_ID" ];
+            var opt = document.createElement("option");
+              opt.text = obj[ "ITEM_NAME" ];
+              opt.value = obj[ "ITEM_ID" ];
               dropDown.options.add( opt );
-            };
+          };
 
-            for (var i = 0, len = data.length; i < len; i++) {
-              addOption( data[ i ] );
-            }
+          for (var i = 0, len = data.length; i < len; i++) {
+            addOption( data[ i ] );
+          }
+
+          var e = document.createEvent('MouseEvents');
+          e.initEvent( 'click', true, true );
+          var a = $( "#supp-" + $( "#suppBox option:selected" ).val() ).children()[ 0 ];
+          a.dispatchEvent( e );
         }
-      });
+      }); 
+
+      $( "#poTabs" ).tabs();
+    });
+
+
+    $( "#addLineBtn" ).click(function() {
+
+      var curItem = $( "#itemBox option:selected" ).val();
+
+      $( ".ui-state-active" ).append( "<div id='orderLine-" + curItem + "'></div>" );
+
+      var obj = window.edstPOobj;
+
+      obj[ $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ][ "obj" ] = {
+        Line: 1,
+        item_id: curItem,
+        item_name: $( "#itemBox option:selected" ).text(),
+        qty: $( "#" ).val(),
+        comment: $( "#" ).val(),
+        price: $( "#" ).val()
+      };
       
+
+    });
       
-
-    // get our helper object
-    var helper = edstHelper();
-    
-
-//$('#poContent').append('<h3><a href="#">OLNumber# 9000</a></h3><div><p>item id</p><p>item name</p><p>qty</p><p>price</p><p>comments</p><p>orderlinenumber</p></div>');
-
-jQuery('#poTabs').tabs();
-
-/*$('#poContent').accordion({
-show: -1,
-opacity: 0,
-alwaysHide: true,
-onActive: function(toggler) { toggler.setStyle('color', '#f30'); },
-onBackground: function(toggler) { toggler.setStyle('color', '#000'); }
-});*/
-
-/*
-$('#poContent').click(function( e ) {
-$('#poContent').accordion({
-active: false
-});
-});*/
-
-
-/*
-$.ajax({
-cache: false,
-url: "http://96.126.109.151:8080/viewsupplier",
-data: {
-hash: getCookie("EDST_H")
-},
-success: function (response, code, xhr) {
-
-if (response === "Invalid user/pass") {
-window.location = "login.html";
-}
-
-response = JSON.parse(response);
-var dropDown = document.getElementById("suppBox");
-
-var addOption = function (text) {
-var opt = document.createElement("option");
-opt.text = text;
-opt.value = text;
-dropDown.options.add(opt);
-}
-
-for (var i = 0, len = response.length; i < len; i++) {
-var temp = response[i].NAME;
-addOption(temp);
-}
-}
-});*/
-    
-
-    
-    /*
-$.ajax({
-cache: false,
-url: "http://96.126.109.151:8080/viewitems",
-data: {
-hash: getCookie("EDST_H")
-},
-success: function (response, code, xhr) {
-
-response = JSON.parse(response);
-
-var container = document.getElementById("container"),
-ul = document.createElement("ul"),
-responseItems = response.length,
-tabs = responseItems / 100,
-counter = 1;
-
-container.appendChild(ul);
-
-for (var i = 1; i < tabs + 1; i++) {
-
-var item = document.createElement("div"),
-li = document.createElement("li"),
-div = document.createElement("div"),
-innerItem = document.createElement("a");
-
-ul.appendChild(li);
-li.appendChild(item);
-item.appendChild(innerItem);
-innerItem.href = "#tabs" + i;
-innerItem.innerHTML = i;
-div.id = "tabs" + i;
-container.appendChild(div);
-}
-
-var addRow = function (count, target) {
-
-// create a new item
-var item = document.createElement("div"),
-innerDiv = document.createElement("div"),
-header = document.createElement("h3"),
-innerHeader = document.createElement("a"),
-qtyBox = document.createElement("input"),
-submitBtn = document.createElement("button"),
-qtySpan = document.createElement("a"),
-data = response[count];
-
-$(submitBtn).click(function (event) {
-
-var item = document.createElement("div"),
-obj = {},
-data = response[$(this).parent().attr("name")],
-itemID = $(this).parent().attr("id").substring(5);
-
-for (var prop in data) {
-obj[prop] = data[prop];
-}
-
-obj.qty = $(this).parent().children(".edst-val")[0].value;
-item.style.width = $("#scBox").width() + "px";
-item.setAttribute("edst-data", itemID);
-
-$(item).append("<p style='display:inline-block;'>" + itemID + " </p>" + "<p id='qty' style='display:inline-block;'>Qty: " + obj.qty + "</p>");
-
-helper.addItem(obj);
-helper.updateStorage();
-
-$("#scBox").append(item);
-
-event.stopPropagation();
-});
-
-$(qtyBox).click(function (event) {
-
-event.stopPropagation();
-});
-
-innerHeader.href = "#";
-innerDiv.style.position = "absolute";
-innerDiv.style.right = "0";
-qtyBox.style.width = "30px";
-qtyBox.value = 1;
-$(qtyBox).addClass("edst-val");
-
-innerHeader.style.display = "inline-block";
-innerDiv.style.display = "inline-block";
-qtySpan.style.display = "inline-block";
-
-qtySpan.innerHTML = "Quantity: ";
-submitBtn.innerHTML = "Add to Cart";
-innerDiv.id = "edst-" + data["ITEM_NAME"];
-innerDiv.setAttribute("name", count);
-innerHeader.innerHTML = data["ITEM_NAME"];
-
-header.appendChild(innerHeader);
-innerDiv.appendChild(qtySpan);
-innerDiv.appendChild(qtyBox);
-innerDiv.appendChild(submitBtn);
-header.appendChild(innerDiv);
-target.appendChild(header);
-
-for (var prop in data) {
-if (data[prop]) {
-item.innerHTML += "<b>" + prop + ": </b>" + data[prop] + "</br>";
-}
-}
-
-item.id = count;
-target.appendChild(item);
-}
-
-for (var i = 0, k = 0, len = response.length; i < len; i++, k++) {
-
-if (k >= 100) {
-helper.setupAccordion(document.getElementById("tabs" + counter));
-counter++;
-k = 0;
-}
-addRow(i, document.getElementById("tabs" + counter));
-}
-
-helper.setupAccordion(document.getElementById("tabs" + counter));
-
-$("#container").tabs();
-}
-});*/
-    
-    createPO = function() {
+    var createPO = function() {
     
       $.ajax({
         cache: false,
@@ -253,10 +156,6 @@ $("#container").tabs();
           
           var i = 1;
           
-          /*var v = $("#edstItem-" + ).children().length;
-          $( $("#edstItem-" + respObj["Item ID"]).children()[v-1] ).html("<b>qty: </b>" + obj.qty);*/
-          
-          // looping once per line
           $.ajax({
             cache: false,
             url: "http://96.126.109.151:8080/createorderline",
@@ -267,7 +166,6 @@ $("#container").tabs();
               comment: document.getElementById( "comments" ).value,
               curUserID: "",
               price_id: "",
-              
               po_id: document.getElementById( "deliveryDate" ).value,
               po_line: document.getElementById( "deliveryTime" ).value,
               hash: cookie
@@ -277,10 +175,8 @@ $("#container").tabs();
             }
           });
          }
-         
       });
-    
-    }
+    },
     
     validateOnPage = function() {
     
@@ -369,67 +265,8 @@ $("#container").tabs();
         ok = false;
       }
       return ok;
-    }
-    
-    // supplier combo box select
-    //document.getElementById("selSupp").addEventListener("click", function () {
-    //$('#itemBox').empty();
-    //});
-    
-    // create po 'formerly add supplier' button
-    var tabcount = 1;
-    document.getElementById("selSupp").addEventListener("click", function () {
-      $('#itemBox').empty();
-      $('#page').show();
-      $('#threeButtons').show();
-      //$('#suppDiv').hide();
-      $('#poContent').append("<li><a href='#tabs-'" + tabcount + ">" + $("#suppBox option:selected").select().text() + "</a></li>");
-      $('#poTabs').tabs();
-      $('#curSupplier').html($("#suppBox option:selected").select().text());
-      helper.setupSortable( $( "#tabs-" + tabcount ) );
-            
-      
-      $.ajax({
-        cache: false,
-        url: "http://96.126.109.151:8080/getitemlist",
-        data: {
-          hash: getCookie( "EDST_H" ),
-          supplier_id: document.getElementById( "suppBox" ).value
-        },
-        success: function( response, code, xhr ) {
-
-          var data = JSON.parse( response );
-
-           var dropDown = document.getElementById( "itemBox" );
-
-            var addOption = function ( obj ) {
-
-              var opt = document.createElement("option");
-              opt.text = obj[ "ITEM_NAME" ];
-              opt.value = obj[ "ITEM_ID" ];
-              opt[ "edst-itemId" ] = obj[ "ITEM_ID" ];
-              dropDown.options.add( opt );
-            };
-
-            for (var j = 0, len = data.length; j < len; j++) {
-              addOption( data[ j ] );
-            }
-        }
-      });
-      
-    }, false);
-    
-    // add line buttn
-    var ocount = 1;
-    document.getElementById("addLineBtn").addEventListener("click", function () {
-      //if( validateOnPage( )) {
-        $( "#poTabs" ).append( "<div id='edstCurSupp-" + $("#suppBox option:selected").val() + "'></div>");
-        $('#edstCurSupp-' + $("#suppBox option:selected").val()).append('<h3><a href="#">Order Line ' + ocount + '</a></h3><div id=edstItem-' + ocount + '><p>item id: ' + $("#itemBox").val() + '</p><p>item name: ' + $("#itemBox option:selected").select().text() + '</p><p>qty: ' + $("#qty").val() + '</p><p>price: ' + $("#price").val() + '</p><p>comments: ' + $("#comments2").val() + '</p><p>orderline number: '+ ocount +'</p></div>').accordion('destroy').accordion({collapsible: true, active: false});
-        //$('#poContent').accordion();
-      //}
-      ocount++;
-    }, false);
-    
+    };
+        
     // queue buttn
     document.getElementById("queueBtn").addEventListener("click", function () {
       if( validateOnPage( )) {
@@ -455,10 +292,8 @@ $("#container").tabs();
           success: function (response, code, xhr) {}
         });
       }
-
     }, false);
   }, false);
-  
 </script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -559,14 +394,8 @@ $("#container").tabs();
         <label for="suppBox">Supplier: </label>
         <select id="suppBox"/>
         </select><br />
-        
-        <input class="submitbutton" value="Create a Purchase Order" type="submit" id="selSupp"/><br /><hr>
 </div>
 <div id="page">
-
-
-        
-        
         <label for="">Delivery Date: </label><input id="deliveryDate" type="text"/><br />
         
         <label for="">Delivery Time: </label><input id="deliveryTime" type="text"/><br />

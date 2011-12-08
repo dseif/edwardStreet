@@ -640,7 +640,6 @@ function createItem( response ) {
     } else {
       console.log("Created new item: " + vals.item_name );
       response.write( JSON.stringify( rows ) );
-      response.write( "New item successfully created." );
     
 	    // Get item_id of the item just created.
       helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
