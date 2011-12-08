@@ -94,6 +94,7 @@
     // get our helper object
     var helper = edstHelper();
     helper.setupSortable();
+    helper.populateCart();
 
 //$('#poContent').append('<h3><a href="#">OLNumber# 9000</a></h3><div><p>item id</p><p>item name</p><p>qty</p><p>price</p><p>comments</p><p>orderlinenumber</p></div>');
 
@@ -468,12 +469,12 @@ $("#container").tabs();
 
     // While user is scrolling down, the shopping cart banner and the menu follows
     $(window).scroll(function () {
-      if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
+      if ($(window).scrollTop() > $(".scrollTrigger").offset().top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
       }
       // Revert back to normal
-      if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
+      if ($(window).scrollTop() <= $(".scrollTrigger").offset().top) {
         $("#header").css("position", "relative");
         $("#header").css("top", $(".scrollTrigger").offset);
       }
@@ -507,7 +508,7 @@ $("#container").tabs();
       <ul>
         <li class="blacklink"><a href="createuser.html">Create User</a></li>
         <li class="blacklink"><a href="edituser.html">Edit User</a></li>
-        <li class="blacklink"><a href="editaccount.html">Change Password</a></li>
+        <li class="blacklink"><a href="editaccount.html">Edit Account</a></li>
       </ul>
       <div class="clear"></div>
     </li>
@@ -533,7 +534,6 @@ $("#container").tabs();
     </li>
     
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
-    <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     
     </ul>
 

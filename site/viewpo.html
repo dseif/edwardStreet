@@ -22,6 +22,8 @@
 
           helper.populateCart();
 
+    viewPO = function() {
+    
       $.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/viewpurchaseorders",
@@ -115,6 +117,10 @@
           $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
         }
       });
+      
+      }
+      
+      viewPO();
     
       document.getElementById("srchBtn").addEventListener("click", function (event) {
 
@@ -131,6 +137,121 @@
         }
 
       }, false);
+      
+      $("#specType").change(function ( ) {
+      
+      $("#results").tabs("destroy");
+      //$("#resultsUL").accordion("destroy");
+      $("#results").empty();
+      $("#resultsUL").empty();
+      
+      $("#results").remove();
+      $("#resultsUL").remove();
+      
+      $("#page").append("<div id='results'><ul id='resultsUL'></ul></div>");
+      
+      //$("#page").add("#results");
+      //$("#page").add("#resultsUL");
+      
+      viewPO();
+      /*
+        $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/viewpurchaseorders",
+        data: {
+          hash: getCookie( "EDST_H" ),
+          status: document.getElementById( "specType" ).value
+        },
+        success: function( response, code, xhr ) {
+
+          numItems = JSON.parse( response )[ 0 ][ "COUNT(*)" ];
+          numPages = Math.abs((numItems-1)/20)+1;
+
+          for ( var i = 1; i <= numPages; i++ ) {
+
+            fired.push( false ); 
+            $( "#resultsUL" ).append( "<li id='edstTabs-" + i + "'><a href='#tabs-" + i + "'>" + i + "</a></li>" );
+            $( "#results" ).append( "<div id='tabs-" + i + "'></div>" );
+            $( "#edstTabs-" + i ).children( 0 ).click(function() {
+
+              var page = $( this ).parent().attr( "id" ).split( "-" )[ 1 ];
+              if ( !fired[ page - 1 ] ) {
+                
+                $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
+                fired[ page - 1 ] = true;
+                $.ajax({
+                  cache: false,
+                  url: "http://96.126.109.151:8080/viewpurchaseorderspage",
+                  data: {
+                    hash: getCookie( "EDST_H" ),
+                    pagenum: page,
+                    status: document.getElementById( "specType" ).value
+                  },
+                  success: function( response, code, xhr ) {
+
+                    var data = JSON.parse( response );
+
+                    var count = 0;
+                    for ( var item in data ) {
+                      console.log( data[ item ]["PO Number"] );
+                      $( "#tabs-" + page ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "PO Number" ] + "' name='" + data[ item ][ "PO Number" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "PO Number" ] + "</a></h3>" + 
+                         "<div id='edstAccord-" + data[ item ][ "PO Number" ] + "'></div>" );
+                        count++;
+
+                      for ( var row in data[ item ] ) {
+
+                        $( "#edstAccord-" + data[ item ][ "PO Number" ] ).append( "<p>" +
+                           "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
+                      }
+                    }
+
+                    helper.setupAccordion( document.getElementById( "tabs-" + page ) );
+                    $.unblockUI();
+                  }
+                });
+              }
+            });
+          }
+
+          $( "#results" ).tabs();
+
+          $.ajax({
+            cache: false,
+            url: "http://96.126.109.151:8080/viewpurchaseorderspage",
+            data: {
+              hash: getCookie( "EDST_H" ),
+              pagenum: 1,
+              status: document.getElementById( "specType" ).value
+            },
+            success: function( response, code, xhr ) {
+
+              $.unblockUI();
+              var count = 0,
+              data = JSON.parse( response );
+                    for ( var item in data ) {
+
+                      $( "#tabs-1" ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "PO Number" ] + "' name='" + data[ item ][ "PO Number" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "PO Number" ] + "</a></h3>" + 
+                         "<div id='edstAccord-" + data[ item ][ "PO Number" ] + "'></div>" );
+                        count++;
+                        
+                      for ( var row in data[ item ] ) {
+
+                        $( "#edstAccord-" + data[ item ][ "PO Number" ] ).append( "<p>" +
+                           "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
+                      }
+                    }
+              
+              fired[ 0 ] = true;
+              helper.setupAccordion( document.getElementById( "tabs-1" ) );
+            }
+          });
+          $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
+        }
+      });
+      ////////////here for comments
+      $("#results").tabs();
+      */
+      });
 
       $('#nav li').hover(
 
@@ -146,12 +267,12 @@
 
     // While user is scrolling down, the shopping cart banner and the menu follows
     $(window).scroll(function () {
-      if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
+      if ($(window).scrollTop() > $(".scrollTrigger").offset().top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
       }
       // Revert back to normal
-      if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
+      if ($(window).scrollTop() <= $(".scrollTrigger").offset().top) {
         $("#header").css("position", "relative");
         $("#header").css("top", $(".scrollTrigger").offset);
       }
@@ -185,7 +306,7 @@
       <ul>
         <li class="blacklink"><a href="createuser.html">Create User</a></li>
         <li class="blacklink"><a href="edituser.html">Edit User</a></li>
-        <li class="blacklink"><a href="editaccount.html">Change Password</a></li>
+        <li class="blacklink"><a href="editaccount.html">Edit Account</a></li>
       </ul>
       <div class="clear"></div>
     </li>
@@ -211,7 +332,6 @@
     </li>
     
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
-    <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     
     </ul>
 
@@ -251,47 +371,10 @@
           <div id="results">
             <ul id="resultsUL"></ul>
           </div>
-          <hr/><br/><br/>
+          <br/><br/>
         
 				<div id="content">
-					<table border="1" id="poTable">
-  					<tr>
-    						<th>OrderNumber</th>
-    						<th>Status</th>
-    						<th>Create Date</th>
-    						<th>Submit Date</th>
-    						<th>Delivery Date</th>
-    						<th>Receive Date</th>
-    						<th>Reference Number</th>
-    						<th>Author</th>
-    						<th>Supplier</th>
-    						<th>Item</th>
-    						<th>QTY Ordered</th>
-    						<th>price</th>
-    						<th>price/unit comment</th>
-    						<th>Subtotal</th>
-    						<th>Ordered Grand Total</th>
-						<th>Received Grand Total</th>
-  					</tr>
-  					<tr>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-						<td></td>
-    						<td></td>
-  					</tr>
-					</table>	
+	
 				</div>
 			</div>
 	</div>

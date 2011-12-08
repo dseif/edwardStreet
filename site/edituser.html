@@ -365,6 +365,7 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
 
 
         }, false);
+        
     $(function() {
     $('#nav li').hover(
 		function () {
@@ -381,21 +382,14 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
 
 // While user is scrolling down, the shopping cart banner and the menu follows
 $(window).scroll(function () {
-    if ($(window).scrollTop() > $(".scrollTrigger").offset({ scroll: false }).top) {
+    if ($(window).scrollTop() > $(".scrollTrigger").offset().top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
-        $("#menu").css("position", "fixed");
-        $("#menu").css("left", "379px");
-        $("#menu").css("bottom", "470px");
     }
     // Revert back to normal
-    if ($(window).scrollTop() <= $(".scrollTrigger").offset({ scroll: false }).top) {
+    if ($(window).scrollTop() <= $(".scrollTrigger").offset().top) {
         $("#header").css("position", "relative");
         $("#header").css("top", $(".scrollTrigger").offset);
-        $("#menu").css("position", "relative");
-        $("#menu").css("top", $(".scrollTrigger").offset);
-        $("#menu").css("left", "0px");
-        $("#menu").css("bottom", "0px");
     }});
 });
 	</script>
@@ -428,7 +422,7 @@ $(window).scroll(function () {
       <ul>
         <li class="blacklink"><a href="createuser.html">Create User</a></li>
         <li class="blacklink"><a href="#">Edit User</a></li>
-        <li class="blacklink"><a href="changepassword.html">Change Password</a></li>
+        <li class="blacklink"><a href="editaccount.html">Edit Account</a></li>
       </ul>
       <div class="clear"></div>
     </li>
@@ -454,7 +448,6 @@ $(window).scroll(function () {
     </li>
     
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
-    <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     
     </ul>
 
@@ -480,29 +473,13 @@ $(window).scroll(function () {
             <input class="submitbutton" value="Search" type="submit" name="SubmitButton" id="submitBtn"/>OR
             <input value="View All" type="submit" name="ViewAllButton" id="viewAllBtn"/>
                 Results:
-				<br/><br/>
+				<br /><br />
           <div id="results">
             <ul id="resultsUL"></ul>
           </div>
-          <hr/><br/><br/>
-
-            
-          <br/><hr/><br/>
-          Results:
-          <br/><br/>
-          <table border="1" id="itemTable">
-            <tr>
-              <th >User Name</th>
-              <th >User Role</th>
-              <th >Email Address</th>
-              <th >Edit</th>
-            </tr>
-          </table>
-
-          <br/><br/><hr/><br/><br/>
           
           <div id="content">
-            
+            <br />
             <table id="editUserTable">
                         
                 <label for="userName">User Name:</label> <input type="text" value="" name="UserName" id="userName"/></td>

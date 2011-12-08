@@ -7,10 +7,14 @@
 <title>Edward Street - Home</title>
 <script src="login.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
 <script type="text/javascript" src="login.js"></script>
 <script type="text/javascript">
 $(document).ready(function () {
 
+  var helper = edstHelper();
+  helper.populateCart();
+  
   $('#nav li').hover(
 
   function () {
@@ -25,12 +29,12 @@ $(document).ready(function () {
 
 // While user is scrolling down, the shopping cart banner and the menu follows
 $(window).scroll(function () {
-  if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
+  if ($(window).scrollTop() > $(".scrollTrigger").offset().top) {
     $("#header").css("position", "fixed");
     $("#header").css("top", "0");
   }
   // Revert back to normal
-  if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
+  if ($(window).scrollTop() <= $(".scrollTrigger").offset().top) {
     $("#header").css("position", "relative");
     $("#header").css("top", $(".scrollTrigger").offset);
   }
@@ -66,7 +70,7 @@ $(window).scroll(function () {
 	<li id="userMenu" class="blacklink"><a href="#"> User > </a>
 		<ul>
 			<li class="blacklink"><a href="createuser.html">Create User</a></li>
-			<li class="blacklink"><a href="editaccount.html">Change Password</a></li>
+			<li class="blacklink"><a href="editaccount.html">Edit Account</a></li>
 			<li class="blacklink"><a href="edituser.html">Edit User</a></li>
 		</ul>
 		<div class="clear"></div>
@@ -92,7 +96,6 @@ $(window).scroll(function () {
 	</li>
 	
 	<li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
-	<li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
 	
 	</ul>
 
