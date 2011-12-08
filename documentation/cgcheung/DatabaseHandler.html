@@ -1,0 +1,241 @@
+<html>
+  <body>
+    <h1>Database Handler API</h1>
+
+    <h3>editAccount</h3>
+
+      <b>Function:</b> Update USER table with new password and email for the current user.<br/>
+      <b>Required values:</b> password(New password), email (New email), userName (current logged in user's ID).<br/>
+      <b>Output values:</b> Nothing<br/>
+
+createUserCheckDupe
+function: Select count(*) from USER table to check if a user ID already exists.
+Required values: user_id(The new user ID)
+Output values: COUNT(*) returns as 0 if current user_id does not exist, > 0 if it does.
+
+createUser 
+function: Insert a new user into USER table.
+Required values: user_id(new user ID), password(user's password), email(user's email address), employee_id(user's employee ID, if he has one), role(user's role), supplier_id(user's associated supplier ID, if he has one)
+Output values: None.
+
+viewUsers
+function: select count(*) from USER table for calculating number of page tabs required.
+Required values: none.
+Output values: COUNT(*)
+
+viewUsersPage
+Function: Select from USER table a list of users for the current page tab.
+Required values: pagenum(page tab number)
+Output values: User Login(USER_ID), Email Address(EMAIL), Employee ID(EMPLOYEE_ID), Role(ROLE), Associated Supplier(NAME)
+
+editUser
+function: Update USER table with new user information for row USER_ID.
+required values: user_id, email, employee_id, role, old_user_id (original user ID)
+Output values: None.
+
+deleteUser
+Function: Delete from USER table the selected user.
+Required values: user_id
+Output values: None.
+
+createItem
+function: Insert a new item into ITEM table.
+Required values: item_name, receipt_name, category, unit, item_type, comment, supplier_id
+Output values: None.
+
+viewItems
+function: select count(*) from ITEM table for calculating number of page tabs required.
+Required values: none.
+Output values: COUNT(*)
+
+viewItemsPage
+Function: Select from ITEM table a list of items for the current page tab.
+Required values: pagenum(page tab number)
+Output values: Item ID(ITEM_ID), Distribution Code(DIST_CODE), Item Name(ITEM_NAME), Receipt Name(RECEIPT_NAME), Item Category(CATEGORY), Sales Unit(UNIT), Department(ITEM_TYPE), Comments(COMMENT), Latest Price(PRICE), Supplier(NAME)
+
+editItem
+function: Update ITEM table with new item information for row ITEM_ID.
+required values: dist_code, item_name, receipt_name, category, unit, item_type, comment, supplier_id, item_id
+Output values: None.
+
+deleteItem
+Function: Delete from ITEM table the selected item.
+Required values: item_id
+Output values: None.
+
+createPrice
+function: Insert a new price into priceHistory table, and then update the associated item in ITEM table with new price ID.
+Required values: item_id, price(new price), userName(current logged in user ID)
+Output values: None.
+
+viewPrice
+Function: Select from PRICE_HISTORY table the latest 20 price entries for current item.
+Required values: item_id
+Output values: PRICE, LOG_DATE
+
+createSupplierCheckDupe
+function: Select count(*) from SUPPLIER table by name to check if supplier already exists.
+Required values: name(new supplier's name)
+Output values: COUNT(*) returns as 0 if current user_id does not exist, > 0 if it does.
+
+createSupplier
+function: Insert a new supplier into SUPPLIER table.
+Required values: name(new supplier's name), legal_name, lead_time, supplier_comment, special_comment
+Output values: None.
+
+viewSuppliers
+function: select count(*) from SUPPLIER table for calculating number of page tabs required.
+Required values: none.
+Output values: COUNT(*)
+
+viewSuppliersPage
+Function: Select from SUPPLIER table a list of suppliers for the current page tab.
+Required values: pagenum(page tab number)
+Output values: Supplier Name(NAME), Legal Name(LEGAL_NAME), Lead Time(LEAD_TIME), Supplier Comments(SUPPLIER_COMMENT), Special Comments(SPECIAL_COMMENT)
+
+editSupplier
+function: Update SUPPLIER table with new supplier information for row SUPPLIER_ID.
+required values: name(supplier's name), legal_name, lead_time, supplier_comment, special_comment, supplier_id
+Output values: None.
+
+deleteSupplier
+Function: Delete from SUPPLIER table the selected supplier.
+Required values: supplier_id
+Output values: None.
+
+createContactPerson
+function: Insert a new contact person into CONTACT_PERSON table.
+Required values: supplier_id, last_name, first_name, phone_number, email
+Output values: None.
+
+viewContactPerson
+Function: Select from CONTACT_PERSON table a list of contact persons for the current supplier.
+Required values: supplier_id
+Output values: Last Name(LAST_NAME), First Name(FIRST_NAME), Phone Number(PHONE_NUMBER), Email Address(EMAIL)
+
+editContactPerson
+function: Update CONTACT_PERSON table with new contact person information for row CONTACT_PERSON_ID.
+required values: last_name, first_name, phone_number, email, contact_person_id
+Output values: None.
+
+deleteContactPerson
+Function: Delete from CONTACT_PERSON table the selected contact person.
+Required values: contact_person_id
+Output values: None.
+
+createSupplierAddress
+function: Insert a new supplier address into SUPPLIER_ADDRESS table.
+Required values: supplier_id, address_line_1, address_line_2, city, prov_state, country, postal_zip, phone_number
+Output values: None.
+
+viewSupplierAddress
+Function: Select from SUPPLIER_ADDRESS table a list of addresses for the current supplier.
+Required values: supplier_id
+Output values: ADDRESS_ID, Address Line 1(ADDRESS_LINE_1), Address_Line_2(ADDRESS_LINE_2), City(CITY), Province/State(PROV_STATE), Country(COUNTRY), Postal/Zip Code(POSTAL_ZIP), Phone Number(PHONE_NUMBER)
+
+editSupplierAddress
+function: Update SUPPLIER_ADDRESS table with new address information for row ADDRESS_ID.
+required values: address_line_1, address_line_2, city, prov_state, country, postal_zip, phone_number, address_id
+Output values: None.
+
+deleteSupplierAddress
+Function: Delete from SUPPLIER_ADDRESS table the selected supplier.
+Required values: address_id
+Output values: None.
+
+createPurchaseOrder
+function: Insert a new purchase order into PURCHASE_ORDER table with 'Queued' status.
+Required values: delivery_date, deliver_time, ref_number, comment
+Output values: None.
+
+viewPurchaseOrders
+function: select count(*) from PURCHASE_ORDER table for calculating number of page tabs required.
+Required values: none.
+Output values: COUNT(*)
+
+viewPurchaseOrdersPage
+Function: Select from PURCHASE_ORDER table a list of purchase orders for the current page tab of a specific status.
+Required values: status, pagenum(current page tab number)
+Output values: PO Number(PO_ID), Current Status(STATUS), Date Created(CREATE_DATE), Date Submitted(SUBMIT_DATE), Delivery Date(DELIVERY_DATE), Delivery Time(DELIVER_TIME), Date Received(RECEIVE_DATE), Reference Number(REF_NUMBER), Comments(COMMENT), Supplier(NAME)
+
+editPurchaseOrder
+function: Update PURCHASE_ORDER table with new purchase order information for row PO_ID (Leaving status as is).
+required values: delivery_date, delivery_time, ref_number, comment, supplier_id, po_id
+Output values: None.
+
+submitPurchaseOrder
+function: Update PURCHASE_ORDER table with 'Submitted' status for selected PO ID.
+required values: po_id
+Output values: None.
+
+cancelPurchaseOrder
+function: Update PURCHASE_ORDER table with 'Cancelled' status for selected PO ID.
+required values: po_id
+Output values: None.
+
+returnPurchaseOrder
+function: Update PURCHASE_ORDER table with 'Returned' status for selected PO ID.
+required values: po_id
+Output values: None.
+
+receivePurchaseOrder
+function: Update PURCHASE_ORDER table with 'Received' status for selected PO ID.
+required values: po_id
+Output values: None.
+
+createOrderLine
+function: Insert a new order line into PO_LINE table.
+Required values: po_id, po_line_id, item_id, qty_ordered, comment, userName(current logged in user ID), price_id
+Output values: None.
+
+viewOrderLines
+Function: Select from ORDER_LINE table a list of order lines for the current po.
+Required values: po_id
+Output values: Line(PO_LINE_ID), Item Name(ITEM_NAME), Qty Ordered(QTY_ORDERED), qty Received(QTY_RECEIVED), Comments(COMMENT), Created By(AUTHOR), Latest Price(PRICE)
+
+editOrderLine
+function: Update PO_LINE table with new Order line information for row PO_LINE_ID.
+required values: item_id, qty_ordered, qty_received, comment, userName (current logged in user ID), price_id, po_id, po_line_id
+Output values: None.
+
+deleteOrderLine
+Function: Delete from PO_LINE table the selected order line.
+Required values: po_id, po_line_id
+Output values: None.
+
+createReturnLine
+function: Insert a new return line into RETURN_LINE table.
+Required values: po_id, return_line_id, po_line_id, return_date, qty_returned, credit_memo_num, comment, userName(current logged in user ID)
+Output values: None.
+
+getSupplierList
+Function: select from SUPPLIER table supplier's name and supplier ID.
+Required values: None.
+Output values: SUPPLIER_ID, NAME
+
+getCategoryList
+Function: select from CATEGORY table all the categories.
+Required values: None.
+Output values: CAT_NAME
+
+getItemList
+Function: select from ITEM table item name and item ID for a specific supplier.
+Required values: None.
+Output values: ITEM_NAME, ITEM_ID
+
+getUser
+Function: select from USER table all information of a single user.
+Required values: userName(current logged in user ID).
+Output values: USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE
+
+getItem
+Function: select from ITEM table all information of a single item.
+Required values: item_id
+Output values: ITEM_ID, DIST_CODE, ITEM_NAME, RECEIPT_NAME, CATEGORY, UNIT, ITEM_TYPE, COMMENT, LATEST_PRICE, SUPPLIER_ID, U_ACTIVE_INA, U_BIZERBA, U_BRAND, U_CASE_SIZE, U_MINOR_REPO, U_COOKING_IN, U_COUNTRY, U_DATE_CREAT, U_DATE_MOTIF, U_DESCRIPTO, U_EXPIRY_DAT, U_INGREDIENT, U_KEYWORDS, U_NOTES, U_ORDER, U_PLU, U_PRICE, U_SILVERWARE, U_SKU, U_STORAGE, U_STORAGE_TY, U_TYPE, U_UPC_CODE, U_USERNAME_C, U_USERNAME_M, U_PRICE_PER, U_TAX, U_SCALE
+
+getPurchaseOrder
+Function: select from PURCHASE_ORDER table all information of a single purchase order.
+Required values: po_id
+Output values: PO_ID, STATUS, CREATE_DATE, SUBMIT_DATE, DELIVERY_DATE, DELIVERY_TIME, RECEIVE_DATE, REF_NUMBER, COMMENT, SUPPLIER_ID
+</body>
+</html>
