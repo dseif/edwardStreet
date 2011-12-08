@@ -64,7 +64,8 @@
       helper.setupAccordion( $( "#tabs-" + $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ) );
     }
 
-    $("#deliveryDate").datepicker();
+    $( "#deliveryDate" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    //$( "#deliveryDate" ).datepicker();
     $('#page').hide();
     $('#threeButtons').hide();
     $('#suppDiv').show();
@@ -271,8 +272,10 @@
 
     $( "#addLineBtn" ).click( addAccordionItem );
       
-    var createPO = function() {
+    var createPO = function( cb ) {
     
+      var poid;
+      
       $.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/createpurchaseorder",
@@ -286,8 +289,9 @@
         },
         success: function( response, code, xhr ) {
           console.log( response );
+         poid = JSON.parse(response)[ "id" ];
+         cb && cb(poid);
           
-          var i = 1;
           /*
           $.ajax({
             cache: false,
@@ -310,6 +314,7 @@
           */
          }
       });
+      return poid;
     },
     
     validateOnPage = function() {
@@ -411,21 +416,23 @@
     // submit button
     document.getElementById("confBtn").addEventListener("click", function () {
       
-      if ( validateOnPage( ) ) {
+      //if ( validateOnPage( ) ) {
       
-        createPO();
-        
-        var poid;
+        createPO(function(poid) {
+
         $.ajax({
           cache: false,
           url: "http://96.126.109.151:8080/submitpurchaseorder",
           data: {
-            po_id: poid,
-            hash: getCookie("EDST_H")
+            hash: getCookie("EDST_H"),
+            po_id: poid
           },
-          success: function (response, code, xhr) {}
+          success: function (response, code, xhr) {
+            console.log( response );
+          }
         });
-      }
+      });
+      //}
     }, false);
   }, false);
 </script>
