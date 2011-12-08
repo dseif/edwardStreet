@@ -640,7 +640,6 @@ function createItem( response ) {
     } else {
       console.log("Created new item: " + vals.item_name );
       response.write( JSON.stringify( rows ) );
-      response.write( "New item successfully created." );
     
 	    // Get item_id of the item just created.
       helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
@@ -791,8 +790,8 @@ function createPrice ( response ) {
   var vals = response.values;
   
   // create a new price entry
-  helper.query( "INSERT INTO PRICE_HISTORY( ITME_ID, PRICE, AUTHOR) " +
-                "VALUES ( '" + vals.item_id + "', " + vals.price + ", '" + vals.userName + "' )" +
+  helper.query( "INSERT INTO PRICE_HISTORY( ITEM_ID, PRICE, AUTHOR) " +
+                "VALUES ( '" + vals.item_id + "', " + vals.price + ", '" + vals.userName + "' )", 
                 function( error, rows, cols ) {
 
     console.log( "debug:: createPrice - INSERT INTO PRICE_HISTORY " + rows );
@@ -808,30 +807,22 @@ function createPrice ( response ) {
       console.log( "Error on INSERT into PRICE_HISTORY: " + error );
       response.write( "Error occured while trying to change price." );
     } else {
-      console.log( "Created new price." );
+    console.log( "Created new price." );
     // get price_id of the price just created.
-      helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
       
-        console.log( "debug:: createPrice - SELECT LAST_INSERT_ID() " + rows );
-      
-        if ( error ) {
-          console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
-        } else {
-          vals.price_id = rows[ 0 ]["LAST_INSERT_ID()"];
+    vals.price_id = rows["id"];
           
-          // update item with new price_id
-          helper.query( "UPDATE ITEM SET LATEST_PRICE = " + vals.price_id + "WHERE ITEM_ID = " + vals.item_id,
-                        function( error, rows, cols ) {
+    // update item with new price_id
+      helper.query( "UPDATE ITEM SET LATEST_PRICE = '" + vals.price_id + "' WHERE ITEM_ID = '" + vals.item_id + "'",
+        function( error, rows, cols ) {
                         
-            console.log( "debug:: createPrice - UPDATE ITEM " + rows );
+        console.log( "debug:: createPrice - UPDATE ITEM " + rows );
             
-            if ( error ) {
-              console.log( "Error on UPDATE ITEM with new price: " + error );
-            } else {
-              console.log( "Price changed on item: " + vals.item_id );
-              historyLog( vals, "Change", "Changed price." );
-            }
-          });
+        if ( error ) {
+          console.log( "Error on UPDATE ITEM with new price: " + error );
+        } else {
+          console.log( "Price changed on item: " + vals.item_id );
+          //historyLog( vals, "Change", "Changed price." );
         }
       });
     }
