@@ -5,9 +5,10 @@
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street - Change Password</title>
-<script src="login.js" ></script>
+<script type="text/javascript" src="login.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
 <script>
     
@@ -22,6 +23,26 @@
           return; 
         }*/
       document.addEventListener("DOMContentLoaded", function (event) {
+      
+        var helper = edstHelper();
+        helper.populateCart();
+      
+        $.ajax({
+          cache: false,
+            url: "http://96.126.109.151:8080/getuser",
+              data: {
+                hash: getCookie("EDST_H"),
+                //user_id: userID // Needs to be filled
+              },
+              success: function (response, code, xhr) {
+                var emailField = document.getElementById("email");
+                emailField.value = JSON.parse(response)[ 0 ][ "EMAIL" ];
+                $("#user").html(JSON.parse(response)[ 0 ][ "USER_ID" ]);
+                $("#supplierID").html(JSON.parse(response)[ 0 ][ "SUPPLIER_ID" ]);
+                $("#employeeID").html(JSON.parse(response)[ 0 ][ "EMPLOYEE_ID" ]);
+                $("#role").html(JSON.parse(response)[ 0 ][ "ROLE" ]);
+              }
+            });
 
         document.getElementById("saveBtn").addEventListener("click", function () {
 
@@ -116,27 +137,23 @@
             $('#passValid2').html("passwords dont match, or incorrect length!");
             ok = false;
           }
-
+          alert(ok);
+          
           if (ok) {
 
             var pass = document.getElementById("newpass").value,
               message = document.getElementById("message");
 
             $.ajax({
-
               cache: false,
-
-              url: "http://96.126.109.151:8080/changePassword",
-
+              url: "http://96.126.109.151:8080/editaccount",
               data: {
                 hash: getCookie("EDST_H"),
-                pass: pass
+                password: pass,
+                email: document.getElementById("email").value
               },
-
               success: function (response, code, xhr) {
-
                 message.innerHTML = response;
-
               }
 
             });
@@ -160,12 +177,12 @@
 
       // While user is scrolling down, the shopping cart banner and the menu follows
       $(window).scroll(function () {
-        if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
+        if ($(window).scrollTop() > $(".scrollTrigger").offset().top) {
           $("#header").css("position", "fixed");
           $("#header").css("top", "0");
         }
         // Revert back to normal
-        if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
+        if ($(window).scrollTop() <= $(".scrollTrigger").offset().top) {
           $("#header").css("position", "relative");
           $("#header").css("top", $(".scrollTrigger").offset);
         }
@@ -203,7 +220,7 @@
       <ul>
         <li class="blacklink"><a href="createuser.html">Create User</a></li>
         <li class="blacklink"><a href="edituser.html">Edit User</a></li>
-        <li class="blacklink"><a href="#">Change Password</a></li>
+        <li class="blacklink"><a href="#">Edit Account</a></li>
       </ul>
       <div class="clear"></div>
     </li>
@@ -228,7 +245,6 @@
       <div class="clear"></div>
     </li>
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
-    <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     
     </ul>
 
@@ -236,30 +252,33 @@
   <div class="scrollTrigger"></div>
 <div id="wrapper">
 
-	<h2 class="bigfont">Maintain User Profile</h2><br />
+	<h2 class="bigfont">Edit Account</h2><br />
 
 		
 
 	<div id="wrapper-bgtop">
 
-		<h3>Change Password</h3><br/>
+		<h3>Edit Account</h3><br/>
 
 			
 
 			<div id="page">
 
-				
-
+				<label for="user">User Login</label><label id="user"></label><br />
+        <label for="employeeID">EmployeeID</label><label id="employeeID">Employee ID</label><br/>
+        <label for="supplierID">SupplierID</label><label id="supplierID">Supplier ID</label><br/>
+        <label for="role">Role</label><label id="role"></label><br/>
+        
 				<label for="curpass">Current Password</label> <input id="curpass" name="CurrentPass" type="password" value=""/><br/>
         <div id="passOriginalValid"></div>
         
 				<label for="newpass">New Password</label> <input id="newpass" name="NewPass" type="password" value=""/><br/>
         <div id="passValid"></div>
         
-				<label for="confpass">Confirm New Password</label> <input id="confpass" name="ConfPass" type="password" value=""/><br/>
+				<label for="confpass">Confirm Password</label> <input id="confpass" name="ConfPass" type="password" value=""/><br/>
         <div id="passValid2"></div>
-				
-
+        
+        <label for="email">Email</label><input id="email" /><br/>
 				
 
 				<br/>

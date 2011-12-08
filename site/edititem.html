@@ -33,7 +33,7 @@
               var opt = document.createElement("option");
               opt.text = obj[ "NAME" ]; 
               opt.value = obj[ "NAME" ];
-              opt[ "edst-suppId" ] = obj[ "SUPPLIER_ID" ];
+              opt.id = obj[ "SUPPLIER_ID" ];
               dropDown.options.add( opt );
             };
 
@@ -41,6 +41,32 @@
               addOption( data[ i ] );
             }
         }
+      });
+      
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/getcategorylist",
+        data: {
+          hash: getCookie( "EDST_H" )
+        },
+        success: function( response, code, xhr ) {
+
+        var data = JSON.parse( response );
+
+          var dropDown = document.getElementById( "iCategoryBox" );
+
+            var addOption = function ( obj ) {
+
+              var opt = document.createElement("option");
+              opt.text = obj[ "CAT_NAME" ]; 
+              opt.value = obj[ "CAT_NAME" ];
+              dropDown.options.add( opt );
+            };
+
+            for (var i = 0, len = data.length; i < len; i++) {
+              addOption( data[ i ] );
+            }
+          }
       });
 
 
@@ -194,13 +220,14 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
                           $( "#itemName" ).val( respObj[ "Item Name" ] );
                           $( "#itemName" ).attr( "name", $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) );
                           $( "#receiptName" ).val( respObj[ "Receipt Name" ] );
-                          $( "#iCategoryBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Item Category" ] ) );
+                          $( "#iCategoryBox" ).val( respObj[ "Item Category" ] );
                           $( "#iTypeBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Department" ] ) );
                           $( "#iSupplierBox" ).val( respObj[ "Supplier" ] );
                           $( "#price" ).val( "$" + respObj[ "Latest Price" ] );
-                          $( "#unitValue" ).val( respObj[ "Sale Unit" ] ); 
+                          $( "#unitValue" ).val( respObj[ "Sales Unit" ] ); 
                           $( "#distCode" ).val( respObj[ "Distribution Code" ] );
                           $( "#comments" ).val( respObj[ "Comments" ] );
+                          document.getElementById("saveBtn").addEventListener("click", updateItem, false);
                         });
 
                       for ( var row in data[ item ] ) {
@@ -212,6 +239,110 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
 
                     helper.setupAccordion( document.getElementById( "tabs-" + page ) );
                     $.unblockUI();
+                    function updateItem(event) {
+/*
+        // input elements
+        var $inputs = $('#page :input');
+        // div space for message
+        var $msgs = $('#page').children("div");
+        // array holding $inputs 
+        var values = [];
+        // array holding $msgs
+        var displays = [];
+        // initializing string for use in .each for $msgs and $inputs
+        var string1, string2;
+        // int variables used to iterate in .each for $msgs and $inputs 
+        var i = 0;
+        var j = 0;
+        var ok = false;
+
+        // gets each $msg element and pushes to array called displays
+        $msgs.each(function () {
+
+          string2 = $msgs.get(j).tagName;
+          j = j + 1;
+          var text2 = $(this).attr('id');
+          displays.push(text2);
+        });
+
+        //            $inputs.each(function () {
+        //                string1 = $inputs.get(i).tagName;
+        //                i = i + 1;
+        //                var text = $(this).attr('id');
+        //                values.push(text);
+        //            });
+        // each validation to validate certain rules
+        validation = window.edwardValidationRequired;
+        validation3 = window.edwardValidationNumber;
+
+        // used for individual validation
+        var numField = $("#price").val();
+
+        // array for storing fields that are empty
+        var getBadArray = [];
+
+        // Gets each $inputs element and pushes to array called values
+        // Aslo, it adds each input element that is empty
+        // to an array that stores inputs that are empty
+        $inputs.each(function () {
+          string1 = $inputs.get(i).tagName;
+          i = i + 1;
+          var text = $(this).attr('id');
+          values.push(text);
+          if ($(this).val().length == 0) {
+            txt = $(this).attr('id');
+            getBadArray.push(txt);
+
+          }
+        });
+
+        // For loop to determine each input box by calling validateGeneral
+        // and checking each input box whether it is part of the array that
+        // holds empty textboxes
+        for (var i = 0; i < displays.length; i++) {
+          if (validation.validateGeneral(values) || jQuery.inArray(values[i], getBadArray) == -1) {
+            $('#' + displays[i]).html("RIGHT");
+          } else {
+            $('#' + displays[i]).html("Missing required field");
+          }
+        }
+
+        // validate the number field
+        if (validation3.validateNumber(numField)) {
+          $('#numValid').html("Correct number");
+        } else {
+          $('#numValid').html("Not a number, also needs dollar sign!");
+        }
+
+        if ( ok ) {*/
+
+          alert($( "iCategoryBox" ).val());
+          console.log( "THIS SHOULD ONLY HAPPEN ONCE" );
+          $.ajax({
+            cache: false,
+            url: "http://96.126.109.151:8080/edititem",
+            data: {
+              hash: getCookie( "EDST_H" ),
+              dist_code: $( "#distCode" ).val(),
+              item_name: $( "#itemName" ).val(),
+              receiptname: $( "#receiptName" ).val(),
+              category: $( "iCategoryBox" ).val(),
+              unit: $( "#unitValue" ).val(),
+              comment: $( "#comments" ).val(),
+              item_type: $( "#iTypeBox" ).val(),
+              supplier_id: $( "#iSupplierBox option:selected" ).attr( "id" ),
+              item_id: data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ]
+            },
+            success: function( response, code, xhr ) {
+
+              document.getElementById( "saveBtn" ).removeEventListener( "click", updateItem, false );
+            }
+          });
+        //}
+      }
+      document.getElementById("saveBtn").addEventListener("click", updateItem, false);
+
+
                   }
                 });
               }
@@ -339,13 +470,14 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
                           $( "#itemName" ).val( respObj[ "Item Name" ] );
                           $( "#itemName" ).attr( "name", $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) );
                           $( "#receiptName" ).val( respObj[ "Receipt Name" ] );
-                          $( "#iCategoryBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Item Category" ] ) );
+                          $( "#iCategoryBox" ).val( respObj[ "Item Category" ] );
                           $( "#iTypeBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Department" ] ) );
                           $( "#iSupplierBox" ).val( respObj[ "Supplier" ] );
                           $( "#price" ).val( "$" + respObj[ "Latest Price" ] );
-                          $( "#unitValue" ).val( respObj[ "Sale Unit" ] ); 
+                          $( "#unitValue" ).val( respObj[ "Sales Unit" ] ); 
                           $( "#distCode" ).val( respObj[ "Distribution Code" ] );
                           $( "#comments" ).val( respObj[ "Comments" ] );
+                          document.getElementById("saveBtn").addEventListener("click", updateItem, false);
                         });
 
                       for ( var row in data[ item ] ) {
@@ -357,14 +489,8 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               
               fired[ 0 ] = true;
               helper.setupAccordion( document.getElementById( "tabs-1" ) );
-            }
-          });
-          $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
-        }
-      }); 
-
-      document.getElementById("saveBtn").addEventListener("click", function (event) {
-
+              function updateItem(event) {
+/*
         // input elements
         var $inputs = $('#page :input');
         // div space for message
@@ -438,28 +564,49 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
           $('#numValid').html("Not a number, also needs dollar sign!");
         }
 
-        if ( ok ) {
+        if ( ok ) {*/
 
+          console.log( "THIS SHOULD ONLY HAPPEN ONCE" );
           $.ajax({
             cache: false,
             url: "http://96.126.109.151:8080/edititem",
             data: {
-              hash: getCookie( "EDST_H" )
-              //dist_code:
-              //item_name:
-              //receiptname:
-              //category:
-              //unit:
-              //comment:
-              //supplier_id:
-              //item_id:
+              hash: getCookie( "EDST_H" ),
+              dist_code: $( "#distCode" ).val(),
+              item_name: $( "#itemName" ).val(),
+              receipt_name: $( "#receiptName" ).val(),
+              category: $( "iCategoryBox" ).val(),
+              unit: $( "#unitValue" ).val(),
+              comment: $( "#comments" ).val(),
+              item_type: $( "#iTypeBox" ).val(),
+              supplier_id: $( "#iSupplierBox option:selected" ).attr( "id" ),
+              item_id: data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ]
             },
             success: function( response, code, xhr ) {
 
+              $.ajax({
+                cache: false,
+                url: "http://96.126.109.151:8080/createprice",
+              data: {
+              hash: getCookie( "EDST_H" ),
+              item_id: data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ],
+              price: document.getElementById( "price" ).value
+
+            }
+            });
+              document.getElementById( "saveBtn" ).removeEventListener( "click", updateItem, false );
             }
           });
+        //}
+      }
+      document.getElementById("saveBtn").addEventListener("click", updateItem, false);
+
+
+            }
+          });
+          $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
         }
-      }, false);
+      }); 
 
       $('#nav li').hover(
 
@@ -515,7 +662,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
       <ul>
         <li class="blacklink"><a href="createuser.html">Create User</a></li>
         <li class="blacklink"><a href="edituser.html">Edit User</a></li>
-        <li class="blacklink"><a href="editaccount.html">Change Password</a></li>
+        <li class="blacklink"><a href="editaccount.html">Edit Account</a></li>
       </ul>
       <div class="clear"></div>
     </li>
@@ -541,7 +688,6 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
     </li>
     
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
-    <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     
     </ul>
 
@@ -599,9 +745,6 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               <tr>
                 <td>Item Category:</td> <!-- Auto populated -->
                 <td><select name="itemCategory" id="iCategoryBox">
-                  <option value="meat">Meat</option>
-                  <option value="cheese">Cheese</option>
-                  <option value="fish">Fish</option>
                   </select>
                 </td>
               </tr>
@@ -626,7 +769,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               </tr>
               <tr>
                 <td>Unit:</td>
-                <td><input type="text" value="" name="ItemName" id="unitValue"/></td>
+                <td><input type="text" value="" name="UnitValue" id="unitValue"/></td>
               </tr>
               <tr>
                 <td>Distribution Code:</td>

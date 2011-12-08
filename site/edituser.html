@@ -6,17 +6,17 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui-1.8.16.custom.css" />
 <title>Edward Street - Edit User</title>
-<script src="login.js" ></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
-<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
-<script type="text/javascript" src="../js/helper.js"></script>
+<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
+<script type="text/javascript" src="../js/block.js"></script>
 <script type="text/javascript" src="login.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
 <script type="text/javascript">
 
   var viewuser;
   document.addEventListener( "DOMContentLoaded", function( event ) {
-
+  
     viewuser = function() {
 
       $( "#userName" ).val( "" );
@@ -56,9 +56,145 @@
       }); 
     };
     viewuser();
+    
+              var numItems = 0,
+          numPages = 0,
+          fired = [],
+          helper = edstHelper();
+
+          helper.populateCart();
+
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/viewusers",
+        data: {
+          hash: getCookie( "EDST_H" )
+        },
+        success: function( response, code, xhr ) {
+
+          numItems = JSON.parse( response )[ 0 ][ "COUNT(*)" ];
+          numPages = Math.abs((numItems-1)/20)+1;
+
+          for ( var i = 1; i <= numPages; i++ ) {
+
+            fired.push( false ); 
+            $( "#resultsUL" ).append( "<li id='edstTabs-" + i + "'><a href='#tabs-" + i + "'>" + i + "</a></li>" );
+            $( "#results" ).append( "<div id='tabs-" + i + "'></div>" );
+            $( "#edstTabs-" + i ).children( 0 ).click(function() {
+
+              var page = $( this ).parent().attr( "id" ).split( "-" )[ 1 ];
+              if ( !fired[ page - 1 ] ) {
+                
+                $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
+                fired[ page - 1 ] = true;
+                $.ajax({
+                  cache: false,
+                  url: "http://96.126.109.151:8080/viewuserspage",
+                  data: {
+                    hash: getCookie( "EDST_H" ),
+                    pagenum: page
+                  },
+                  success: function( response, code, xhr ) {
+
+                    var data = JSON.parse( response );
+
+                    var count = 0;
+                    for ( var item in data ) {
+                      console.log( data[ item ]["PO Number"] );
+                      $( "#tabs-" + page ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "User Login" ] + "' name='" + data[ item ][ "User Login" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "User Login" ] + "</a></h3>" + 
+                         "<div id='edstAccord-" + data[ item ][ "User Login" ] + "'></div>" );
+                        count++;
+
+                        var editBtn = document.createElement( "button" );
+                        editBtn.innerHTML = "Edit";
+                        editBtn.name = data[ item ][ "User Login" ];
+                        editBtn.style.float = "right";
+                        editBtn.style.display = "inline-block";
+                        $( "#edstItem-" + data[ item ][ "User Login" ] ).append( editBtn );
+                        $( editBtn ).click(function( e ) {
+
+                          e.stopPropagation();
+
+                          var respObj = data[ $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) ];
+                          $( "#userName" ).val( respObj[ "User Login" ] );
+                          $( "#emailAddress" ).val( respObj[ "Email Address" ] );
+                          $( "#userRoleBox" ).val( String.prototype.toLowerCase.apply( dataObj[ $( this ).attr( "id" ) ][ "Role" ] ) );
+                        });
+                        
+                        
+                      for ( var row in data[ item ] ) {
+
+                        $( "#edstAccord-" + data[ item ][ "User Login" ] ).append( "<p>" +
+                           "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
+                      }
+                    }
+
+                    helper.setupAccordion( document.getElementById( "tabs-" + page ) );
+                    $.unblockUI();
+                  }
+                });
+              }
+            });
+          }
+
+          $( "#results" ).tabs();
+
+          $.ajax({
+            cache: false,
+            url: "http://96.126.109.151:8080/viewuserspage",
+            data: {
+              hash: getCookie( "EDST_H" ),
+              pagenum: 1
+            },
+            success: function( response, code, xhr ) {
+
+              $.unblockUI();
+              var count = 0,
+              data = JSON.parse( response );
+                    for ( var item in data ) {
+
+                      $( "#tabs-1" ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "User Login" ] + "' name='" + data[ item ][ "User Login" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "User Login" ] + "</a></h3>" + 
+                         "<div id='edstAccord-" + data[ item ][ "User Login" ] + "'></div>" );
+                        count++;
+                        
+                                                var editBtn = document.createElement( "button" );
+                        editBtn.innerHTML = "Edit";
+                        editBtn.name = data[ item ][ "User Login" ];
+                        editBtn.style.float = "right";
+                        editBtn.style.display = "inline-block";
+                        $( "#edstItem-" + data[ item ][ "User Login" ] ).append( editBtn );
+                        $( editBtn ).click(function( e ) {
+
+                          e.stopPropagation();
+
+                          var respObj = data[ $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) ];
+                          $( "#userName" ).val( respObj[ "User Login" ] );
+                          $( "#emailAddress" ).val( respObj[ "Email Address" ] );
+                          $( "#userRoleBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Role" ] ) );
+                        });
+                        
+                      for ( var row in data[ item ] ) {
+
+                        $( "#edstAccord-" + data[ item ][ "User Login" ] ).append( "<p>" +
+                           "<b>" + row + "</b>: " + data[ item ][ row ] + "</p>" );
+                      }
+                    }
+              
+              fired[ 0 ] = true;
+              helper.setupAccordion( document.getElementById( "tabs-1" ) );
+            }
+          });
+          $.blockUI({ message: '<h1><img src="http://www.sony.ie/discussions/themes/sonyqna/wep/menuimages/loading.gif" /> Loading...</h1>' });
+        }
+      });
+    
+    
+    
   }, false );
     document.addEventListener("DOMContentLoaded", function (event) {
 
+    
+    
 document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
 
     if( $( "#userName" ).val() !== "" ) {
@@ -229,7 +365,8 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
 
 
         }, false);
-  
+        
+    $(function() {
     $('#nav li').hover(
 		function () {
 		    //show its submenu
@@ -240,26 +377,20 @@ document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
 		    $('ul', this).hide();
 		}
 	);
+	
 
 
 // While user is scrolling down, the shopping cart banner and the menu follows
 $(window).scroll(function () {
-    if ($(window).scrollTop() > $(".scrollTrigger").offset({ scroll: false }).top) {
+    if ($(window).scrollTop() > $(".scrollTrigger").offset().top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
-        $("#menu").css("position", "fixed");
-        $("#menu").css("left", "379px");
-        $("#menu").css("bottom", "470px");
     }
     // Revert back to normal
-    if ($(window).scrollTop() <= $(".scrollTrigger").offset({ scroll: false }).top) {
+    if ($(window).scrollTop() <= $(".scrollTrigger").offset().top) {
         $("#header").css("position", "relative");
         $("#header").css("top", $(".scrollTrigger").offset);
-        $("#menu").css("position", "relative");
-        $("#menu").css("top", $(".scrollTrigger").offset);
-        $("#menu").css("left", "0px");
-        $("#menu").css("bottom", "0px");
-    }
+    }});
 });
 	</script>
 </head>
@@ -291,7 +422,7 @@ $(window).scroll(function () {
       <ul>
         <li class="blacklink"><a href="createuser.html">Create User</a></li>
         <li class="blacklink"><a href="#">Edit User</a></li>
-        <li class="blacklink"><a href="changepassword.html">Change Password</a></li>
+        <li class="blacklink"><a href="editaccount.html">Edit Account</a></li>
       </ul>
       <div class="clear"></div>
     </li>
@@ -317,7 +448,6 @@ $(window).scroll(function () {
     </li>
     
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
-    <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     
     </ul>
 
@@ -330,7 +460,7 @@ $(window).scroll(function () {
       <h3>Edit User</h3><br/>
         
         <div id="page">
-          
+
             <label for="searchText">Search:</label> <input value="" type="text" name="SearchText" id="searchText"/>
             
             By:
@@ -342,23 +472,14 @@ $(window).scroll(function () {
 
             <input class="submitbutton" value="Search" type="submit" name="SubmitButton" id="submitBtn"/>OR
             <input value="View All" type="submit" name="ViewAllButton" id="viewAllBtn"/>
-          
-          <br/><hr/><br/>
-          Results:
-          <br/><br/>
-          <table border="1" id="itemTable">
-            <tr>
-              <th >User Name</th>
-              <th >User Role</th>
-              <th >Email Address</th>
-              <th >Edit</th>
-            </tr>
-          </table>
-
-          <br/><br/><hr/><br/><br/>
+                Results:
+				<br /><br />
+          <div id="results">
+            <ul id="resultsUL"></ul>
+          </div>
           
           <div id="content">
-            
+            <br />
             <table id="editUserTable">
                         
                 <label for="userName">User Name:</label> <input type="text" value="" name="UserName" id="userName"/></td>

@@ -13,29 +13,17 @@ handle[ "/" ] = requestHandlers.index;
 handle[ "/login" ] = requestHandlers.login;
 handle[ "/logout" ] = requestHandlers.logout;
 handle[ "/editaccount" ] = requestHandlers.editAccount;
-
-//  Log pages
-handle [ "/viewuserhistory" ] = requestHandlers.viewUserHistory;
-handle [ "/viewuserhistorypage" ] = requestHandlers.viewUserHistoryPage;
-handle [ "/viewitemhistory" ] = requestHandlers.viewItemHistory;
-handle [ "/viewitemhistorypage" ] = requestHandlers.viewItemHistoryPage;
-handle [ "/viewsupplierhistory" ] = requestHandlers.viewSupplierHistory;
-handle [ "/viewsupplierhistorypage" ] = requestHandlers.viewSupplierHistoryPage;
-handle [ "/viewpohistory" ] = requestHandlers.viewPOHistory;
-handle [ "/viewpohistorypage" ] = requestHandlers.viewPOHistoryPage;
-
+handle[ "/getuser" ] = requestHandlers.getUser;
 
 //  User pages
 handle[ "/createusercheckdupe" ] = requestHandlers.createUserCheckDupe;
 handle[ "/createuser" ] = requestHandlers.createUser;
 handle[ "/viewusers" ] = requestHandlers.viewUsers;
 handle[ "/viewuserspage" ] = requestHandlers.viewUsersPage;
-handle[ "/getuser" ] = requestHandlers.getUser;
 handle[ "/edituser" ] = requestHandlers.editUser;
 handle[ "/deleteuser" ] = requestHandlers.deleteUser;
 
 //  Item pages
-handle[ "/createitemcheckdupe" ] = requestHandlers.createItemCheckDupe;
 handle[ "/createitem" ] = requestHandlers.createItem;
 handle[ "/viewitems" ] = requestHandlers.viewItems;
 handle[ "/viewitemspage" ] = requestHandlers.viewItemsPage;
@@ -52,17 +40,14 @@ handle[ "/createsuppliercheckdupe" ] = requestHandlers.createSupplierCheckDupe;
 handle[ "/createsupplier" ] = requestHandlers.createSupplier;
 handle[ "/viewsuppliers" ] = requestHandlers.viewSuppliers;
 handle[ "/viewsupplierspage" ] = requestHandlers.viewSuppliersPage;
-handle[ "/getsupplier" ] = requestHandlers.getSupplier;
 handle[ "/editsupplier" ] = requestHandlers.editSupplier;
 handle[ "/deletesupplier" ] = requestHandlers.deleteSupplier;
 handle[ "/createcontactperson" ] = requestHandlers.createContactPerson;
 handle[ "/viewcontactperson" ] = requestHandlers.viewContactPerson;
-handle[ "/getcontactperson" ] = requestHandlers.getContactPerson;
 handle[ "/editcontactperson" ] = requestHandlers.editContactPerson;
 handle[ "/deletecontactperson" ] = requestHandlers.deleteContactPerson;
 handle[ "/createsupplieraddress" ] = requestHandlers.createSupplierAddress;
 handle[ "/viewsupplieraddress" ] = requestHandlers.viewSupplierAddress;
-handle[ "/getsupplieraddress" ] = requestHandlers.getSupplierAddress;
 handle[ "/editsupplieraddress" ] = requestHandlers.editSupplierAddress;
 handle[ "/deletesupplieraddress" ] = requestHandlers.deleteSupplierAddress;
 
@@ -70,7 +55,6 @@ handle[ "/deletesupplieraddress" ] = requestHandlers.deleteSupplierAddress;
 handle[ "/createpurchaseorder" ] = requestHandlers.createPurchaseOrder;
 handle[ "/viewpurchaseorders" ] = requestHandlers.viewPurchaseOrders;
 handle[ "/viewpurchaseorderspage" ] = requestHandlers.viewPurchaseOrdersPage;
-handle[ "/getpurchaseorder" ] = requestHandlers.getPurchaseOrder;
 handle[ "/editpurchaseorder" ] = requestHandlers.editPurchaseOrder;
 handle[ "/submitpurchaseorder" ] = requestHandlers.submitPurchaseOrder;
 handle[ "/cancelpurchaseorder" ] = requestHandlers.cancelPurchaseOrder;
@@ -78,9 +62,10 @@ handle[ "/receivepurchaseorder" ] = requestHandlers.receivePurchaseOrder;
 handle[ "/returnpurchaseorder" ] = requestHandlers.returnPurchaseOrder;
 handle[ "/createorderline" ] = requestHandlers.createOrderLine;
 handle[ "/vieworderlines" ] = requestHandlers.viewOrderLines;
-handle[ "/getorderline" ] = requestHandlers.getOrderLine;
 handle[ "/editorderline" ] = requestHandlers.editOrderLine;
 handle[ "/deleteorderline" ] = requestHandlers.deleteOrderLine;
 handle[ "/createreturnline" ] = requestHandlers.createReturnLine;
+handle[ "/getitemlist" ] = requestHandlers.getItemList;
+handle[ "/getpurchaseorder" ] = requestHandlers.getPurchaseOrder;
 
 server.start( router.route, handle );

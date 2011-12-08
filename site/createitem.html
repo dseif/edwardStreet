@@ -5,13 +5,72 @@
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street - Create Item</title>
+<script type="text/javascript" src="login.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
-<script type="text/javascript" src="js/validation.js"></script>
+<!--<script type="text/javascript" src="js/validation.js"></script>-->
+<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
+<script type="text/javascript" src="login.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
 
-      document.getElementById("saveBtn").addEventListener("click", function (event) {
+  var helper = edstHelper();
+  helper.populateCart();
 
+    $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/getsupplierlist",
+        data: {
+          hash: getCookie( "EDST_H" )
+        },
+        success: function( response, code, xhr ) {
+
+          var data = JSON.parse( response );
+
+           var dropDown = document.getElementById( "iSupplierBox" );
+
+            var addOption = function ( obj ) {
+
+              var opt = document.createElement("option");
+              opt.text = obj[ "NAME" ]; 
+              opt.value = obj[ "SUPPLIER_ID" ];
+              dropDown.options.add( opt );
+            };
+
+            for (var i = 0, len = data.length; i < len; i++) {
+              addOption( data[ i ] );
+            }
+        }
+    });
+    
+    $.ajax({
+      cache: false,
+      url: "http://96.126.109.151:8080/getcategorylist",
+      data: {
+        hash: getCookie( "EDST_H" )
+      },
+      success: function( response, code, xhr ) {
+
+      var data = JSON.parse( response );
+
+        var dropDown = document.getElementById( "iCategoryBox" );
+
+          var addOption = function ( obj ) {
+
+            var opt = document.createElement("option");
+            opt.text = obj[ "CAT_NAME" ]; 
+            opt.value = obj[ "CAT_NAME" ];
+            dropDown.options.add( opt );
+          };
+
+          for (var i = 0, len = data.length; i < len; i++) {
+            addOption( data[ i ] );
+          }
+        }
+    });
+    
+      document.getElementById("saveBtn").addEventListener("click", function (event) {
+/*
         // input elements
         var $inputs = $('#page :input');
         // div space for message
@@ -83,6 +142,37 @@
         } else {
           $('#numValid').html("Not a number, also needs dollar sign!");
         }
+*/
+
+        $.ajax({
+            cache: false,
+            url: "http://96.126.109.151:8080/createitem",
+          data: {
+            hash: getCookie( "EDST_H" ),
+            item_name: document.getElementById( "itemName" ).value,
+            receipt_name: document.getElementById( "receiptName" ).value,
+            category: document.getElementById( "iCategoryBox" ).value,
+            unit: document.getElementById( "unitValue" ).value,
+            item_type: document.getElementById( "iTypeBox" ).value,
+            dist_code: document.getElementById( "distCode" ).value,
+            comment: document.getElementById( "comments" ).value,
+            supplier_id: document.getElementById( "iSupplierBox" ).value
+          },
+          success: function( response, code, xhr ) {
+            
+            $.ajax({
+              cache: false,
+              url: "http://96.126.109.151:8080/createprice",
+            data: {
+              hash: getCookie( "EDST_H" ),
+              item_id: JSON.parse( response )[ "id" ],
+              price: document.getElementById( "price" ).value
+            },
+            success: function( response, code, xhr ) {
+            }
+          });
+          }
+        });
 
       }, false);
 
@@ -100,12 +190,12 @@
 
     // While user is scrolling down, the shopping cart banner and the menu follows
     $(window).scroll(function () {
-      if ($(window).scrollTop() > $(".scrollTrigger").offset( /**/ ).top) {
+      if ($(window).scrollTop() > $(".scrollTrigger").offset().top) {
         $("#header").css("position", "fixed");
         $("#header").css("top", "0");
       }
       // Revert back to normal
-      if ($(window).scrollTop() <= $(".scrollTrigger").offset( /**/ ).top) {
+      if ($(window).scrollTop() <= $(".scrollTrigger").offset().top) {
         $("#header").css("position", "relative");
         $("#header").css("top", $(".scrollTrigger").offset);
       }
@@ -139,7 +229,7 @@
       <ul>
         <li class="blacklink"><a href="createuser.html">Create User</a></li>
         <li class="blacklink"><a href="edituser.html">Edit User</a></li>
-        <li class="blacklink"><a href="editaccount.html">Change Password</a></li>
+        <li class="blacklink"><a href="editaccount.html">Edit Account</a></li>
       </ul>
       <div class="clear"></div>
     </li>
@@ -165,7 +255,6 @@
     </li>
     
     <li id="shoppingCartMenu" class="blacklink"><a href="shoppingcart.html">Shopping Cart</a></li>
-    <li id="viewLogMenu" class="blacklink"><a href="viewlog.html">View Log</a></li>
     
     </ul>
 
@@ -180,61 +269,40 @@
         <div id="page">
 
 				  <div id="content">
-            <form id="createItemForm">
-            <table id="createItemTable">
-              <tr>
-                <td>Item Name:</td>
-                <td><input type="text" value="" name="ItemName" id="itemName"/></td>
-              </tr>
-              <tr>
-                <td>Receipt Name:</td>
-                <td><input type="text" value="" name="ReceiptName" id="receiptName"/></td>
-              </tr>
-              <tr>
-                <td>Item Category:</td> <!-- Auto populated -->
-                <td><select name="itemCategory" id="iCategoryBox">
-                  <option value="meat">Meat</option>
-                  <option value="cheese">Cheese</option>
-                  <option value="fish">Fish</option>
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Item Type:</td> <!-- Auto populated -->
-                <td><select name="itemType" id="iTypeBox">
-                    <option value="market">Market</option>
-                    <option value="bistro">Bistro</option>
-                    <option value="catering">Catering</option>
-                    </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Supplier:</td> <!-- Auto populated -->
-                <td><select name="itemSupplier" id="iSupplierBox">
-                    <option value="supp1">SupplierA</option>
-                    <option value="supp2">SupplierB</option>
-                    <option value="supp3">SupplierC</option>
-                    </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Comments:</td>
-                <td><textarea rows="4" cols="20" name="ItemComments" id="itemComments"></textarea></td>
-              </tr>
-              <tr>
-                <td>Item Price:</td>
-                <td><input type="text" value="$" name="ItemPrice" id="itemPrice"/></td>
-              </tr>
-              <tr>
-                <td>Unit:</td>
-                <td><input type="text" value="" name="ItemName" id="itemName"/></td>
-              </tr>
-              <tr>
-                <td><input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/></td>
-                <td><input value="Save" type="submit" name="SaveButton" id="saveBtn"/></td>
-              </tr>
-            </table>
-            </form>
+            
+          <label for="itemName">Item Name:</label>
+          <input type="text" name="ItemName" id="itemName"/><br/>
+          
+          <label for="receiptName">Receipt Name:</label>
+          <input type="text" ame="ReceiptName" id="receiptName"/><br/>
+          
+          <label for="iCategoryBox">Item Category:</label>
+          <select name="itemCategory" id="iCategoryBox"></select><br/>
+                
+          <label for="iTypeBox">Item Type:</label>
+          <select name="itemType" id="iTypeBox">
+            <option value="Market">Market</option>
+            <option value="Bistro">Bistro</option>
+            <option value="Catering">Catering</option>
+          </select><br/>
+
+          <label for="iSupplierBox">Supplier:</label>
+          <select name="itemSupplier" id="iSupplierBox"></select><br/>
+
+          <label for="price">Item Price($):</label>
+          <input type="text" name="Price" id="price"/><br/>
+              
+          <label for="unitValue">Unit:</label>
+          <input type="text" name="UnitValue" id="unitValue"/><br/>
+
+          <label for="distCode">Distribution Code:</label>
+          <input type="text" name="DistCode" id="distCode"/><br/>
+          
+          <label for="comments">Comments:</label>
+          <textarea type="text" name="comments" id="comments"></textarea><br/>
+          
+          <input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/>
+          <button id="saveBtn">Save</button>
           </div> <!-- Content -->
         </div><!-- Page -->
     </div><!-- Wrapper-BgTop -->

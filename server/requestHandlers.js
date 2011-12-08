@@ -37,73 +37,6 @@ var helper = {
   }
 }
 
-// create an entry in respective history log tables
-var historyLog = {
-  user: function ( vals, category, comment ) {
-  
-    helper.query( "INSERT INTO USER_HISTORY( USER_ID, CATEGORY, COMMENT, AUTHOR ) " +
-                  "VALUES( '" + vals.user_id + "', '" + category + "', '" + comment + 
-                  "', '" + vals.curUserID + "' )",
-                  function( error, rows, cols ) {
-                  
-      console.log( "debug:: historyLog - INSERT INTO USER_HISTORY " + rows );
-
-      if ( error ) {
-        console.log( "Error on INSERT into USER_HISTORY: " + error );
-      }
-        
-    });
-  },
-  
-  supplier: function ( vals, category, comment ) {
-  
-    helper.query( "INSERT INTO SUPPLIER_HISTORY( SUPPLIER_ID, CATEGORY, COMMENT, AUTHOR ) " +
-                  "VALUES( '" + vals.supplier_id + "', '" + category + "', '" + comment +
-                  "', '" + vals.curUserID + "' )",
-                  function( error, rows, cols ) {
-
-      console.log( "debug:: historyLog - INSERT INTO SUPPLIER_HISTORY " + rows );
-                  
-      if ( error ) {
-        console.log( "Error on INSERT into SUPPLIER_HISTORY: " + error );
-      }
-
-    });
-  },
-  
-  item: function ( vals, category, comment ) {
-  
-    helper.query( "INSERT INTO ITEM_HISTORY( ITEM_ID, CATEGORY, COMMENT, AUTHOR ) " +
-                  "VALUES( '" + vals.item_id + "', '" + category + "', '" + comment + 
-                  "', '" + vals.curUserID + "' )",
-                  function( error, rows, cols ) {
-
-      console.log( "debug:: historyLog - INSERT INTO ITEM_HISTORY " + rows );
-                  
-      if ( error ) {
-        console.log( "Error on INSERT into ITEM_HISTORY: " + error );
-      }
-
-    });
-  },
-  
-  po: function ( vals, category, comment ) {
-  
-    helper.query( "INSERT INTO PO_HISTORY( PO_ID, CATEGORY, COMMENT, AUTHOR ) " +
-                  "VALUES( '" + vals.po_id + "', '" + category + "', '" + comment + 
-                  "', '" + vals.curUserID + "' )",
-                  function( error, rows, cols ) {
-
-      console.log( "debug:: historyLog - INSERT INTO PO_HISTORY " + rows );
-                  
-      if ( error ) {
-        console.log( "Error on INSERT into PO_HISTORY: " + error );
-      }
-
-    });
-  }  
-}
-
 function index( response, cb ) {
 
   var vals = response.values;
@@ -112,15 +45,15 @@ function index( response, cb ) {
 				"WHERE USER_ID = '" + vals.user + "' AND PASSWORD = '" + vals.pass + "'",
 				function( error, rows, cols ) {
 
-    console.log( "debug:: index - SELECT FROM USER " + rows );
+    console.log( "function: index - SELECT FROM USER " + rows );
         
     if ( error ) {
       console.log( "Error on SELECT FROM USER: " + error );
       return;
     }
 
-    vals.curEmployeeID = rows[ 0 ] && rows[ 0 ].EMPLOYEE_ID;
-    vals.curUserID = rows[ 0 ] && rows[ 0 ].USER_ID;
+    vals.userID = rows[ 0 ] && rows[ 0 ].EMPLOYEE_ID;
+    vals.userName = rows[ 0 ] && rows[ 0 ].USER_ID;
     vals.curRole = rows[ 0 ] && rows[ 0 ].ROLE;
 
     console.log( !!rows.length );
@@ -147,245 +80,20 @@ function logout( response ) {
   response.end();
 }
 
-// View User History - Step 1: Returns number of entries in USER_HISTORY table for page calculation.
-function viewUserHistory( response ) {
-  
-  var vals = response.values;
-  
-  helper.query( "SELECT COUNT(*) FROM USER_HISTORY",
-                function( error, rows, cols ) {
-
-    console.log( "debug:: viewUserHistory - SELECT FROM USER_HISTORY " + rows );
-                
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    
-    if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
-      console.log( "Error on SELECT from USER_HISTORY: " + error );
-      response.write( "Error occured while trying to load the page." );
-    } else {
-      response.write( JSON.stringify( rows ) ); 
-    }
-    
-    response.end();   
-  });
-}
-
-// View User History Step 2: Returns a list of entries for current page, starting with latest action.
-function viewUserHistoryPage( response ) {
-
-  var vals = response.values;
-  
-  helper.query( "SELECT USER_ID 'User Account', CATEGORY 'Action Type', COMMENT 'Comment', " +
-                "AUTHOR 'Action By', LOG_DATE 'Date' FROM USER_HISTORY" +
-                "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
-                function( error, rows, cols ) {
-  
-    console.log( "debug:: viewUserHistoryPage - SELECT FROM USER_HISTORY " + rows );
-  
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-                
-    if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
-      console.log( "Error on SELECT from USER_HISTORY: " + error );
-      response.write( "Error occured while trying to load the page." );
-    } else {
-      response.write( JSON.stringify( rows ) ); 
-    }
-  
-    response.end();
-  });
-}
-
-// View Item History - Step 1: Returns number of entries in ITEM_HISTORY table for page calculation.
-function viewItemHistory( response ) {
-  
-  var vals = response.values;
-  
-  helper.query( "SELECT COUNT(*) FROM ITEM_HISTORY",
-                function( error, rows, cols ) {
-
-    console.log( "debug:: viewItemHistory - SELECT FROM ITEM_HISTORY " + rows );
-                
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    
-    if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
-      console.log( "Error on SELECT from ITEM_HISTORY: " + error );
-      response.write( "Error occured while trying to load the page." );
-    } else {
-      response.write( JSON.stringify( rows ) ); 
-    }
-    
-    response.end();   
-  });
-}
-
-// View Item History Step 2: Returns a list of entries for current page, starting with latest action.
-function viewItemHistoryPage( response ) {
-
-  var vals = response.values;
-  
-  helper.query( "SELECT h.ITEM_ID 'Item ID', i.ITEM_NAME 'Item Name', h.CATEGORY 'Action Type', h.COMMENT 'Comment', " +
-                "AUTHOR 'Action By', LOG_DATE 'Date' FROM ITEM_HISTORY h" +
-                "LEFT OUTER JOIN ITEM i ON h.ITEM_ID = i.ITEM_ID " +
-                "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
-                function( error, rows, cols ) {
-  
-    console.log( "debug:: viewItemHistoryPage - SELECT FROM ITEM_HISTORY " + rows );
-  
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-                
-    if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
-      console.log( "Error on SELECT from USER_HISTORY: " + error );
-      response.write( "Error occured while trying to load the page." );
-    } else {
-      response.write( JSON.stringify( rows ) ); 
-    }
-  
-    response.end();
-  });
-}
-
-// View Supplier History - Step 1: Returns number of entries in SUPPLIER_HISTORY table for page calculation.
-function viewSupplierHistory( response ) {
-  
-  var vals = response.values;
-  
-  helper.query( "SELECT COUNT(*) FROM SUPPLIER_HISTORY",
-                function( error, rows, cols ) {
-
-    console.log( "debug:: viewSupplierHistory - SELECT FROM SUPPLIEr_HISTORY " + rows );
-                
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    
-    if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
-      console.log( "Error on SELECT from SUPPLIER_HISTORY: " + error );
-      response.write( "Error occured while trying to load the page." );
-    } else {
-      response.write( JSON.stringify( rows ) ); 
-    }
-    
-    response.end();   
-  });
-}
-
-// View Supplier History Step 2: Returns a list of entries for current page, starting with latest action.
-function viewSupplierHistoryPage( response ) {
-
-  var vals = response.values;
-  
-  helper.query( "SELECT h.SUPPLIER_ID 'Supplier ID', s.NAME 'Supplier Name', h.CATEGORY 'Action Type', h.COMMENT 'Comment', " +
-                "h.AUTHOR 'Action By', h.LOG_DATE 'Date' FROM SUPPLIER_HISTORY h " +
-                "LEFT OUTER JOIN SUPPLIER s ON h.SUPPLIER_ID = s.SUPPLIER_ID " +
-                "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
-                function( error, rows, cols ) {
-
-    console.log( "debug:: viewSupplierHistoryPage - SELECT FROM SUPPLIER_HISTORY " + rows );
-                
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-                
-    if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
-      console.log( "Error on SELECT from SUPPLIER_HISTORY: " + error );
-      response.write( "Error occured while trying to load the page." );
-    } else {
-      response.write( JSON.stringify( rows ) ); 
-    }
-  
-    response.end();
-  });
-}
-
-// View PO History - Step 1: Returns number of entries in PO_HISTORY table for page calculation.
-function viewPOHistory( response ) {
-  
-  var vals = response.values;
-  
-  helper.query( "SELECT COUNT(*) FROM PO_HISTORY",
-                function( error, rows, cols ) {
-
-    console.log( "debug:: viewPOHistory - SELECT FROM PO_HISTORY " + rows );
-                
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    
-    if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
-      console.log( "Error on SELECT from PO_HISTORY: " + error );
-      response.write( "Error occured while trying to load the page." );
-    } else {
-      response.write( JSON.stringify( rows ) ); 
-    }
-    
-    response.end();   
-  });
-}
-
-// View Supplier History Step 2: Returns a list of entries for current page, starting with latest action.
-function viewPOHistoryPage( response ) {
-
-  var vals = response.values;
-  
-  helper.query( "SELECT PO_ID 'PO ID', CATEGORY 'Action Type', COMMENT 'comment', " +
-                "AUTHOR 'Action By', LOG_DATE 'Date' FROM PO_HISTORY " +
-                "ORDER BY LOG_DATE DESC LIMIT " + (vals.pagenum-1)*20 + ", 20",
-                function( error, rows, cols ) {
-  
-    console.log( "debug:: viewPOHistoryPage - SELECT FROM PO_HISTORY " + rows );
-  
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-                
-    if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
-      console.log( "Error on SELECT FROM PO_HISTORY: " + error );
-      response.write( "Error occured while trying to load the page." );
-    } else {
-      response.write( JSON.stringify( rows ) ); 
-    }
-  
-    response.end();
-  });
-}
-
-// Edit Account - allow current user to change his password/email.
+// editAccount
+// Function: Update USER table with new password and email for the current user.
+// Required values: password(New password), email (New email), userName (current logged in user's ID).
+// Output: Nothing
 function editAccount( response ) {
 
   var vals = response.values;
-  vals.user_id = vals.curUserID;
   
   helper.query( "UPDATE USER SET PASSWORD = '" + vals.password + "', EMAIL = '" + vals.email + "' " +
-                "WHERE USER_ID = '" + vals.use_id + "'", 
+                "WHERE USER_ID = '" + vals.userName + "'", 
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editAccount - UPDATE USER " + rows );
-                
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( "function: editAccount - UPDATE USER " + rows );
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -398,14 +106,16 @@ function editAccount( response ) {
     } else {
       console.log( "Changed password/email." );
       response.write( "Password/email Successfully Changed" );
-      historyLog.user( vals, "Change", "Changed password/email.");
     }
 
     response.end();
   });
 }
 
-// Create User - Step 1: Checks if current user_id already exists. Returns COUNT of 1 if it exists, Count of 0 if not.
+// createUserCheckDupe
+// function: Select count(*) from USER table to check if a user ID already exists.
+// Required values: user_id(The new user ID)
+// Output: COUNT(*) returns as 0 if current user_id does not exist, > 0 if it does.
 function createUserCheckDupe( response ) {
 
   var vals = response.values;
@@ -413,7 +123,7 @@ function createUserCheckDupe( response ) {
   helper.query( "SELECT COUNT(*) FROM USER WHERE USER_ID = '" + vals.user_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createUserCheckDupe - SELECT FROM USER " + rows );
+    console.log( "function: createUserCheckDupe - SELECT FROM USER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -421,7 +131,7 @@ function createUserCheckDupe( response ) {
     });
         
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT FROM USER: " + error );
       response.write( "Error occured while trying to create user." );
     } else {
@@ -432,7 +142,10 @@ function createUserCheckDupe( response ) {
   });
 }
 
-// Create User - Step 2: Insert new user into USER table. Inserts log into USER_HISTORY table.
+// createUser 
+// function: Insert a new user into USER table.
+// Required values: user_id(new user ID), password(user's password), email(user's email address), employee_id(user's employee ID, if he has one), role(user's role), supplier_id(user's associated supplier ID, if he has one)
+// Output: None.
 function createUser( response ) {
 
   var vals = response.values;
@@ -442,9 +155,9 @@ function createUser( response ) {
                 "', '" + vals.employee_id + "', '" + vals.role + "', '" + vals.supplier_id + "' )",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createUser - INSERT INTO USER " + rows );
+    console.log( "function: createUser - INSERT INTO USER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -457,15 +170,16 @@ function createUser( response ) {
     } else {
       console.log( "Created new user: " + vals.user_id );
       response.write( JSON.stringify( rows ) );
-      response.write( "New user successfully created." );
-      historyLog.user( vals, "Create", "Created new user." );
     }
     
     response.end();
   });  
 }
 
-// View User - Step 1: Returns number of users in USER table for page calculation.
+// viewUsers
+// function: select count(*) from USER table for calculating number of page tabs required.
+// Required values: none.
+// Output: COUNT(*)
 function viewUsers( response ) {
 
   var vals = response.values;
@@ -473,7 +187,7 @@ function viewUsers( response ) {
   helper.query( "SELECT COUNT(*) FROM USER",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewUsers - SELECT FROM USER " + rows );
+    console.log( "function: viewUsers - SELECT FROM USER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -481,7 +195,7 @@ function viewUsers( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
       console.log( "Error on SELECT from USER: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -492,7 +206,10 @@ function viewUsers( response ) {
   });
 }
 
-// View User - Step 2: Returns a list of users for current page, ordered by USER_ID.
+// viewUsersPage
+// Function: Select from USER table a list of users for the current page tab.
+// Required values: pagenum(page tab number)
+// Output: User Login(USER_ID), Email Address(EMAIL), Employee ID(EMPLOYEE_ID), Role(ROLE), Associated Supplier(NAME)
 function viewUsersPage( response ) {
 
   var vals = response.values;
@@ -503,7 +220,7 @@ function viewUsersPage( response ) {
                 "LIMIT " + (vals.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewUsersPage - SELECT FROM USER " + rows );
+    console.log( "function: viewUsersPage - SELECT FROM USER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -511,7 +228,7 @@ function viewUsersPage( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from USER, SUPPLIER: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -522,8 +239,10 @@ function viewUsersPage( response ) {
   });
 }
 
-// Edit User - Update USER table with new user information for row USER_ID.
-// Question: console.log may print password?
+// editUser
+// function: Update USER table with new user information for row USER_ID.
+// required values: user_id, email, employee_id, role, old_user_id (original user ID)
+// Output: None.
 function editUser( response ) {
 
   var vals = response.values;
@@ -533,9 +252,9 @@ function editUser( response ) {
                 "WHERE USER_ID = '" + vals.old_user_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editUser - UPDATE USER " + rows );
+    console.log( "function: editUser - UPDATE USER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -547,16 +266,17 @@ function editUser( response ) {
       response.write( "Error occured while trying to change user information." );
     } else {
       console.log( "Changed user information: ", rows );
-      response.write( JSON.stringify( rows ) );
-      response.write( "User information succussfully changed." );
-      historyLog.user( vals, "Change", "Changed user information." );      
+      response.write( JSON.stringify( rows ) );      
     }
     
     response.end();
   });
 }
 
-// Delete User - Delete selected user from USER table.
+// deleteUser
+// Function: Delete from USER table the selected user.
+// Required values: user_id
+// Output: None.
 function deleteUser( response ) {
 
   var vals = response.values;
@@ -564,9 +284,9 @@ function deleteUser( response ) {
   helper.query( "DELETE FROM USER WHERE USER_ID = '" + vals.user_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: deleteUser - DELETE FROM USER " + rows );
+    console.log( "function: deleteUser - DELETE FROM USER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -579,43 +299,16 @@ function deleteUser( response ) {
     } else {
       console.log( "Deleted user: ", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "User successfully deleted." ); 
-      historyLog.user( vals, "Delete", "Deleted user." );
     }
 
     response.end();
   });
 }
 
-// Create Item - Step 1: Checks if current itemname+supplier already exists. Returns COUNT of 1 if it exists, Count of 0 if not.
-function createItemCheckDupe( response ) {
-
-  var vals = response.values;
-
-  helper.query( "SELECT COUNT(*) FROM ITEM " +
-                "WHERE LOWER(ITEM_NAME) = LOWER('" + vals.item_name + "') AND SUPPLIER_ID = '" + vals.supplier_id + "'",
-                function( error, rows, cols ) {
-
-    console.log( "debug:: createItemCheckDupe - SELECT FROM ITEM " + rows );
-                
-    response.writeHead( 200, {
-      "Content-Type": "text/plain",
-      "Access-Control-Allow-Origin": "*"
-    });
-    
-    if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
-      console.log( "Error on SELECT ITEM: " + error );
-      response.write( "Error occured while trying to create item." );
-    } else {
-      response.write( JSON.stringify( rows ) ); 
-    }
-
-    response.end();
-  });
-}
-
-// Create Item - Step 2: Insert new item into ITEM table. Inserts log into ITEM_HISTORY table.
+// createItem
+// function: Insert a new item into ITEM table.
+// Required values: item_name, receipt_name, category, unit, item_type, comment, supplier_id
+// Output: None.
 function createItem( response ) {
 
   var vals = response.values;
@@ -626,9 +319,9 @@ function createItem( response ) {
                 "', '" + vals.supplier_id + "' )",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createItem - INSERT INTO ITEM " + rows );
+    console.log( "function: createItem - INSERT INTO ITEM " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -641,27 +334,16 @@ function createItem( response ) {
     } else {
       console.log("Created new item: " + vals.item_name );
       response.write( JSON.stringify( rows ) );
-      response.write( "New item successfully created." );
-    
-	    // Get item_id of the item just created.
-      helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
-      
-        console.log( "debug:: createItem - SELECT LAST_INSERT_ID() " + rows );
-        
-        if ( error ) {
-          console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
-        } else {
-          vals.item_id = rows[ 0 ]["LAST_INSERT_ID()"];
-          historyLog.item( vals, "Create", "Created new item." );
-        }
-      });
     }
     
     response.end();
   });  
 }
 
-// View Items - Step 1: Returns number of items in ITEM table for page calculation.
+// viewItems
+// function: select count(*) from ITEM table for calculating number of page tabs required.
+// Required values: none.
+// Output: COUNT(*)
 function viewItems( response ) {
 
   var vals = response.values;
@@ -669,7 +351,7 @@ function viewItems( response ) {
   helper.query( "SELECT COUNT(*) FROM ITEM",
                 function ( error, rows, cols ) {
 
-    console.log( "debug:: viewItems - SELECT FROM ITEM " + rows );
+    console.log( "function: viewItems - SELECT FROM ITEM " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -677,7 +359,7 @@ function viewItems( response ) {
     });
 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from ITEM: " + error );
       response.write( "Error occured while trying to load page." );
     } else {
@@ -688,7 +370,10 @@ function viewItems( response ) {
   });
 }
 
-// View Items - Step 2: Returns a list of users for current page, ordered by Item_Name.
+// viewItemsPage
+// Function: Select from ITEM table a list of items for the current page tab.
+// Required values: pagenum(page tab number)
+// Output: Item ID(ITEM_ID), Distribution Code(DIST_CODE), Item Name(ITEM_NAME), Receipt Name(RECEIPT_NAME), Item Category(CATEGORY), Sales Unit(UNIT), Department(ITEM_TYPE), Comments(COMMENT), Latest Price(PRICE), Supplier(NAME)
 function viewItemsPage( response) {
 
   var vals = response.values;
@@ -702,7 +387,7 @@ function viewItemsPage( response) {
                 "ORDER BY i.ITEM_NAME LIMIT " + (vals.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewItemsPage - SELECT FROM ITEM " + rows );
+    console.log( "function: viewItemsPage - SELECT FROM ITEM " + rows );
                     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -710,7 +395,7 @@ function viewItemsPage( response) {
     });
 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from ITEM, SUPPLIER, PRICE_HISTORY: " + error );
       response.write( "Error occured while trying to load page." );
     } else {
@@ -721,20 +406,23 @@ function viewItemsPage( response) {
   });
 }
 
-// Edit Item - Update ITEM table with new item information for row ITEM_ID.
+// editItem
+// function: Update ITEM table with new item information for row ITEM_ID.
+// required values: dist_code, item_name, receipt_name, category, unit, item_type, comment, supplier_id, item_id
+// Output: None.
 function editItem( response ) {
 
   var vals = response.values;
 
   helper.query( "UPDATE ITEM SET DIST_CODE = '" + vals.dist_code + "', ITEM_NAME = '" + vals.item_name +
                 "', RECEIPT_NAME = '" + vals.receipt_name + "', CATEGORY = '" + vals.category +"', UNIT = '" + vals.unit +
-                "', ITEM_TYPE = '" + vals.item_type + "', COMMENT = '" + vals.comment + ", SUPPLIER_ID = '" + vals.supplier_id +
-                "WHERE ITEM_ID = '" + vals.item_id + "'",
+                "', ITEM_TYPE = '" + vals.item_type + "', COMMENT = '" + vals.comment + "', SUPPLIER_ID = '" + vals.supplier_id +
+                "' WHERE ITEM_ID = '" + vals.item_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editItem - UPDATE ITEM " + rows );
+    console.log( "function: editItem - UPDATE ITEM " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -747,15 +435,16 @@ function editItem( response ) {
     } else {
       console.log( "Changed item information: ", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "Item information succussfully changed." );
-      historyLog.item( vals, "Change", "Changed item information.");
     }
 
     response.end();
   });
 }
 
-// Delete Item - Delete selected item from ITEM table.
+// deleteItem
+// Function: Delete from ITEM table the selected item.
+// Required values: item_id
+// Output: None.
 function deleteItem( response ) {
 
   var vals = response.values;
@@ -763,9 +452,9 @@ function deleteItem( response ) {
   helper.query( "DELETE FROM ITEM WHERE ITEM_ID = '" + vals.item_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: deleteItem - DELETE FROM ITEM " + rows );
+    console.log( "function: deleteItem - DELETE FROM ITEM " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -778,27 +467,28 @@ function deleteItem( response ) {
     } else {
       console.log( "Deleted item: ", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "Item successfully deleted." ); 
-      historyLog.item( vals, "Delete", "Deleted item." );
     }
 
     response.end();
   });
 }
   
-// Create Price - creates a new entry in price_history and update the item with the new price_id.
+// createPrice
+// function: Insert a new price into priceHistory table, and then update the associated item in ITEM table with new price ID.
+// Required values: item_id, price(new price), userName(current logged in user ID)
+// Output: None.
 function createPrice ( response ) {
 
   var vals = response.values;
   
   // create a new price entry
-  helper.query( "INSERT INTO PRICE_HISTORY( ITME_ID, PRICE, AUTHOR) " +
-                "VALUES ( '" + vals.item_id + "', " + vals.price + ", '" + vals.curUserID + "' )" +
+  helper.query( "INSERT INTO PRICE_HISTORY( ITEM_ID, PRICE, AUTHOR) " +
+                "VALUES ( '" + vals.item_id + "', " + vals.price + ", '" + vals.userName + "' )", 
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createPrice - INSERT INTO PRICE_HISTORY " + rows );
+    console.log( "function: createPrice - INSERT INTO PRICE_HISTORY " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -809,30 +499,22 @@ function createPrice ( response ) {
       console.log( "Error on INSERT into PRICE_HISTORY: " + error );
       response.write( "Error occured while trying to change price." );
     } else {
-      console.log( "Created new price." );
+    console.log( "Created new price." );
     // get price_id of the price just created.
-      helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
       
-        console.log( "debug:: createPrice - SELECT LAST_INSERT_ID() " + rows );
-      
-        if ( error ) {
-          console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
-        } else {
-          vals.price_id = rows[ 0 ]["LAST_INSERT_ID()"];
+    vals.price_id = rows["id"];
           
-          // update item with new price_id
-          helper.query( "UPDATE ITEM SET LATEST_PRICE = " + vals.price_id + "WHERE ITEM_ID = " + vals.item_id,
-                        function( error, rows, cols ) {
+    // update item with new price_id
+      helper.query( "UPDATE ITEM SET LATEST_PRICE = '" + vals.price_id + "' WHERE ITEM_ID = '" + vals.item_id + "'",
+        function( error, rows, cols ) {
                         
-            console.log( "debug:: createPrice - UPDATE ITEM " + rows );
+        console.log( "function: createPrice - UPDATE ITEM " + rows );
             
-            if ( error ) {
-              console.log( "Error on UPDATE ITEM with new price: " + error );
-            } else {
-              console.log( "Price changed on item: " + vals.item_id );
-              historyLog( vals, "Change", "Changed price." );
-            }
-          });
+        if ( error ) {
+          console.log( "Error on UPDATE ITEM with new price: " + error );
+        } else {
+          console.log( "Price changed on item: " + vals.item_id );
+          response.write( JSON.stringify( rows ));
         }
       });
     }
@@ -841,7 +523,10 @@ function createPrice ( response ) {
   });
 }
 
-// View Price - Display list of 20 latest prices for the current item_id
+// viewPrice
+// Function: Select from PRICE_HISTORY table the latest 20 price entries for current item.
+// Required values: item_id
+// Output: PRICE, LOG_DATE
 function viewPrice ( response ) {
 
   var vals = response.values;
@@ -850,7 +535,7 @@ function viewPrice ( response ) {
                 "ORDERED BY LOG_DATE DESC LIMIT 20",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewPrice - SELECT FROM PRICE_HISTORY() " + rows );
+    console.log( "function: viewPrice - SELECT FROM PRICE_HISTORY() " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -858,7 +543,7 @@ function viewPrice ( response ) {
     });
 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from PRICE_HISTORY: " + error );
       response.write( "Error occured while trying to load page." );
     } else {
@@ -869,7 +554,10 @@ function viewPrice ( response ) {
   });
 }
 
-// Create Supplier - Step 1: Checks if current supplier_name already exists. Returns COUNT of 1 if it exists, Count of 0 if not.
+// createSupplierCheckDupe
+// function: Select count(*) from SUPPLIER table by name to check if supplier already exists.
+// Required values: name(new supplier's name)
+// Output: COUNT(*) returns as 0 if current user_id does not exist, > 0 if it does.
 function createSupplierCheckDupe( response ) {
 
   var vals = response.values;
@@ -877,7 +565,7 @@ function createSupplierCheckDupe( response ) {
   helper.query( "SELECT COUNT(*) FROM SUPPLIER WHERE LOWER(NAME) = LOWER('" + vals["name"] + "')",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createSupplierCheckDupe - SELECT FROM SUPPLIER " + rows );
+    console.log( "function: createSupplierCheckDupe - SELECT FROM SUPPLIER " + rows );
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -885,7 +573,7 @@ function createSupplierCheckDupe( response ) {
     });
         
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on select from SUPPLIER: " + error );
       response.write( "Error occured while trying to create supplier." );
     } else {
@@ -896,7 +584,10 @@ function createSupplierCheckDupe( response ) {
   });
 }
 
-// Create Supplier - Step 2: Insert new supplier into SUPPLIER table. Inserts log into SUPPLIER_HISTORY table.
+// createSupplier
+// function: Insert a new supplier into SUPPLIER table.
+// Required values: name(new supplier's name), legal_name, lead_time, supplier_comment, special_comment
+// Output: None.
 function createSupplier( response ) {
 
   var vals = response.values;
@@ -906,9 +597,9 @@ function createSupplier( response ) {
                 "', '" + vals.supplier_comment + "', '" + vals.special_comment + "')",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createSupplier - SELECT FROM SUPPLIER " + rows );
+    console.log( "function: createSupplier - SELECT FROM SUPPLIER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")" );
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")" );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -921,33 +612,23 @@ function createSupplier( response ) {
     } else {
       console.log( "Created new supplier: " + vals.user_id );
       response.write( JSON.stringify( rows ) );
-      response.write( "New supplier successfully created." );
-
-      helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
       
-        console.log( "debug:: viewSupplier - SELECT LAST_INSERT_ID() " + rows );
-
-        if ( error ) {
-          console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
-        } else {
-          console.log( "STUPD SHIT FUCL", vals );
-          vals.supplier_id = rows[ 0 ]["LAST_INSERT_ID()"];
-          historyLog.supplier( vals, "Create", "Created new supplier." );
-        }
-      });
     }
 
     response.end();
   });
 }
 
-// View Supplier - Step 1: Return number of suppliers in SUPPLIER table for page calculation.
+// viewSuppliers
+// function: select count(*) from SUPPLIER table for calculating number of page tabs required.
+// Required values: none.
+// Output: COUNT(*)
 function viewSuppliers( response ) {
   
   helper.query( "SELECT COUNT(*) FROM SUPPLIER",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewSuppliers - SELECT FROM SUPPLIER " + rows );
+    console.log( "function: viewSuppliers - SELECT FROM SUPPLIER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -955,7 +636,7 @@ function viewSuppliers( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from SUPPLIER: " + error );
       response.write( "Error occured while trying to load page." );
     } else {
@@ -966,7 +647,10 @@ function viewSuppliers( response ) {
   });
 }
 
-// View Supplier - Step 2: Returns a list of suppliers for current page, ordered by name
+// viewSuppliersPage
+// Function: Select from SUPPLIER table a list of suppliers for the current page tab.
+// Required values: pagenum(page tab number)
+// Output: Supplier Name(NAME), Legal Name(LEGAL_NAME), Lead Time(LEAD_TIME), Supplier Comments(SUPPLIER_COMMENT), Special Comments(SPECIAL_COMMENT)
 function viewSuppliersPage( response ) {
   
   var vals = response.values;
@@ -976,7 +660,7 @@ function viewSuppliersPage( response ) {
                 "FROM SUPPLIER ORDER BY NAME LIMIT " + (vals.pagenum-1)*20 + ", 20", 
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewSuppliersPage - SELECT FROM SUPPLIER " + rows );
+    console.log( "function: viewSuppliersPage - SELECT FROM SUPPLIER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -984,7 +668,7 @@ function viewSuppliersPage( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from SUPPLIER: " + error );
       response.write( "Error occured while trying to load page." );
     } else {
@@ -995,7 +679,10 @@ function viewSuppliersPage( response ) {
   });
 }
 
-// Edit Supplier - Update SUPPLIER table with new item information for row SUPPLIER_ID.
+// editSupplier
+// function: Update SUPPLIER table with new supplier information for row SUPPLIER_ID.
+// required values: name(supplier's name), legal_name, lead_time, supplier_comment, special_comment, supplier_id
+// Output: None.
 function editSupplier( response ) {
 
   var vals = response.values;
@@ -1006,9 +693,9 @@ function editSupplier( response ) {
                 "WHERE SUPPLIER_ID = '" + vals.supplier_id + "'",
                 function( error, rows, cols ) {
   
-    console.log( "debug:: editSupplier - UPDATE SUPPLIER " + rows );
+    console.log( "function: editSupplier - UPDATE SUPPLIER " + rows );
   
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1021,15 +708,16 @@ function editSupplier( response ) {
     } else {
       console.log( "Changed supplier information: ", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "Supplier information succussfully changed." );
-      historyLog.supplier( vals, "Change", "Changed supplier information." );
     }
 
     response.end();
   });
 }
 
-// Delete Supplier - Delete selected supplier from SUPPLIER Table.
+// deleteSupplier
+// Function: Delete from SUPPLIER table the selected supplier.
+// Required values: supplier_id
+// Output: None.
 function deleteSupplier( response ) {
 
   var vals = response.values;
@@ -1037,9 +725,9 @@ function deleteSupplier( response ) {
   helper.query( "DELETE FROM SUPPLIER WHERE SUPPLIER_ID = '" + vals.supplier_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: deleteSupplier - DELETE FROM SUPPLIER " + rows );
+    console.log( "function: deleteSupplier - DELETE FROM SUPPLIER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1052,15 +740,16 @@ function deleteSupplier( response ) {
     } else {
       console.log( "Deleted supplier: ", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "Supplier successfully deleted." ); 
-      historyLog.supplier( vals, "Delete", "Deleted supplier." );
     }
 
     response.end();
   });
 }
 
-// Create Contact Person - create a new contact person
+// createContactPerson
+// function: Insert a new contact person into CONTACT_PERSON table.
+// Required values: supplier_id, last_name, first_name, phone_number, email
+// Output: None.
 function createContactPerson ( response ) {
 
   var vals = response.values;
@@ -1070,9 +759,9 @@ function createContactPerson ( response ) {
                 "', '" + vals.phone_number + "', '" + vals.email + "' )",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createContactPerson - INSERT INTO CONTACT_PERSON " + rows );
+    console.log( "function: createContactPerson - INSERT INTO CONTACT_PERSON " + rows );
     
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1085,15 +774,16 @@ function createContactPerson ( response ) {
     } else {
       console.log("Created new contact person: " + rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "New contact person successfully created." );
-      historyLog.supplier( vals, "Change", "Created new contact person." );
     }
     
     response.end();
   });  
 }
 
-// View Contact Person - return info of contact person(s) for supplier_id
+// viewContactPerson
+// Function: Select from CONTACT_PERSON table a list of contact persons for the current supplier.
+// Required values: supplier_id
+// Output: Last Name(LAST_NAME), First Name(FIRST_NAME), Phone Number(PHONE_NUMBER), Email Address(EMAIL)
 function viewContactPerson ( response ) {
 
   var vals = response.values;
@@ -1103,7 +793,7 @@ function viewContactPerson ( response ) {
                 "WHERE SUPPLIER_ID = '" + vals.supplier_id + "' ORDER BY LAST_NAME",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewContactPerson- SELECT FROM CONTACT_PERSON " + rows );
+    console.log( "function: viewContactPerson- SELECT FROM CONTACT_PERSON " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1111,7 +801,7 @@ function viewContactPerson ( response ) {
     });
     
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from CONTACT_PERSON: " + error );
       response.write( "Error occured while trying to load contact person(s)." );
     } else {
@@ -1122,7 +812,10 @@ function viewContactPerson ( response ) {
   });
 }
 
-// Edit Contact Person - change a contact person's information.
+// editContactPerson
+// function: Update CONTACT_PERSON table with new contact person information for row CONTACT_PERSON_ID.
+// required values: last_name, first_name, phone_number, email, contact_person_id
+// Output: None.
 function editContactPerson ( response ) {
 
   var vals = response.values;
@@ -1132,9 +825,9 @@ function editContactPerson ( response ) {
                 "WHERE CONTACT_PERSON_ID = '" + vals.contact_person_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editContactPerson - UPDATE CONTACT_PERSON " + rows );
+    console.log( "function: editContactPerson - UPDATE CONTACT_PERSON " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1147,15 +840,16 @@ function editContactPerson ( response ) {
     } else {
       console.log( "Changed contact person information: ", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "Contact person information succussfully changed." );
-      historyLog.supplier( vals, "Change", "Changed contact person information.");
     }
 
     response.end();
   });
 }
 
-// Delete Contact Person - delete a person from contact_person
+// deleteContactPerson
+// Function: Delete from CONTACT_PERSON table the selected contact person.
+// Required values: contact_person_id
+// Output: None.
 function deleteContactPerson ( response ) {
 
   var vals = response.values;
@@ -1163,9 +857,9 @@ function deleteContactPerson ( response ) {
   helper.query( "DELETE FROM CONTACT_PERSON WHERE CONTACT_PERSON_ID = '" + vals.contact_person_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: deleteContactPerson - DELETE FROM CONTACT_PERSON " + rows );
+    console.log( "function: deleteContactPerson - DELETE FROM CONTACT_PERSON " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1178,15 +872,16 @@ function deleteContactPerson ( response ) {
     } else {
       console.log( "Deleted contact person: ", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "Contact person successfully deleted." ); 
-      historyLog.supplier( vals, "Change", "Deleted contact person." );
     }
 
     response.end();
   });
 }
 
-// Create Supplier Address - Create a new supplier address in SUPPLIER_ADDRESS table.
+// createSupplierAddress
+// function: Insert a new supplier address into SUPPLIER_ADDRESS table.
+// Required values: supplier_id, address_line_1, address_line_2, city, prov_state, country, postal_zip, phone_number
+// Output: None.
 function createSupplierAddress ( response ) {
   var vals = response.values;
 
@@ -1196,9 +891,9 @@ function createSupplierAddress ( response ) {
                 "', '" + vals.phone_number + "' )",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createSupplierAddress - INSERT INTO SUPPLIER_ADDRESS " + rows );
+    console.log( "function: createSupplierAddress - INSERT INTO SUPPLIER_ADDRESS " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1211,15 +906,16 @@ function createSupplierAddress ( response ) {
     } else {
       console.log("Created new supplier address: " + rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "New supplier address successfully created." );
-      historyLog.supplier( vals, "Change", "Created new supplier address." );
     }
     
     response.end();
   });  
 }
 
-// View Supplier Address - return a list of supplier addresses.
+// viewSupplierAddress
+// Function: Select from SUPPLIER_ADDRESS table a list of addresses for the current supplier.
+// Required values: supplier_id
+// Output: ADDRESS_ID, Address Line 1(ADDRESS_LINE_1), Address_Line_2(ADDRESS_LINE_2), City(CITY), Province/State(PROV_STATE), Country(COUNTRY), Postal/Zip Code(POSTAL_ZIP), Phone Number(PHONE_NUMBER)
 function viewSupplierAddress ( response ) {
 
   var vals = response.values;
@@ -1230,7 +926,7 @@ function viewSupplierAddress ( response ) {
                 "FROM SUPPLIER_ADDRESS WHERE SUPPLIER_ID = '" + vals.supplier_id + "' ORDER BY ADDRESS_ID",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewSupplierAddress - SELECT FROM SUPPLIER_ADDRESS " + rows );
+    console.log( "function: viewSupplierAddress - SELECT FROM SUPPLIER_ADDRESS " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1238,7 +934,7 @@ function viewSupplierAddress ( response ) {
     });
     
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from SUPPLIER_ADDRESS: " + error );
       response.write( "Error occured while trying to load supplier address(es)." );
     } else {
@@ -1249,7 +945,10 @@ function viewSupplierAddress ( response ) {
   });
 }
 
-// Edit Supplier Address - Change a supplier address' information.
+// editSupplierAddress
+// function: Update SUPPLIER_ADDRESS table with new address information for row ADDRESS_ID.
+// required values: address_line_1, address_line_2, city, prov_state, country, postal_zip, phone_number, address_id
+// Output: None.
 function editSupplierAddress ( response ) {
 
   var vals = response.values;
@@ -1260,9 +959,9 @@ function editSupplierAddress ( response ) {
                 "WHERE ADDRESS_ID = '" + vals.address_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editSupplierAddress - UPDATE SUPPLIER_ADDRESS " + rows );
+    console.log( "function: editSupplierAddress - UPDATE SUPPLIER_ADDRESS " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1275,15 +974,16 @@ function editSupplierAddress ( response ) {
     } else {
       console.log( "Changed supplier address information: ", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "Supplier address information succussfully changed." );
-      historyLog.supplier( vals, "Change", "Changed supplier address information.");
     }
 
     response.end();
   });
 }
 
-// Delete Supplier Address - Delete a supplier address entry in the SUPPLIER_ADDRESS table.
+// deleteSupplierAddress
+// Function: Delete from SUPPLIER_ADDRESS table the selected supplier.
+// Required values: address_id
+// Output: None.
 function deleteSupplierAddress ( response ) {
 
   var vals = response.values;
@@ -1291,9 +991,9 @@ function deleteSupplierAddress ( response ) {
   helper.query( "DELETE FROM SUPPLIER_ADDRESS WHERE ADDRESS_ID = '" + vals.address_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: deleteSupplierAddress - DELETE FROM SUPPLIER_ADDRESS " + rows );
+    console.log( "function: deleteSupplierAddress - DELETE FROM SUPPLIER_ADDRESS " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1306,15 +1006,16 @@ function deleteSupplierAddress ( response ) {
     } else {
       console.log( "Deleted supplier address: ", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "Supplier address successfully deleted." ); 
-      historyLog.supplier( vals, "Change", "Deleted supplier address." );
     }
 
     response.end();
   });
 }
 
-// Create PO - Creates a new purchase order in queue status in PURCHASE_ORDER table.
+// createPurchaseOrder
+// function: Insert a new purchase order into PURCHASE_ORDER table with 'Queued' status.
+// Required values: delivery_date, deliver_time, ref_number, comment
+// Output: None.
 function createPurchaseOrder( response ) {
 
   var vals = response.values;
@@ -1324,9 +1025,9 @@ function createPurchaseOrder( response ) {
                 "', '" + vals.ref_number + "', '" + vals.comment + "', '" + vals.supplier_id + "' )",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createPurchaseOrer - INSERT INTO PURCHASE_ORDER " + rows );
+    console.log( "function: createPurchaseOrer - INSERT INTO PURCHASE_ORDER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1339,15 +1040,16 @@ function createPurchaseOrder( response ) {
     } else {
       console.log("Created new purchase order: " + rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "New purchase successfully created." );
-      historyLog.po( vals, "Create", "Created new purchase order." );
     }
     
     response.end();
   });
 }
 
-// View PO - Step 1: Returns number of POs in Purchase_order table for page calculation.
+// viewPurchaseOrders
+// function: select count(*) from PURCHASE_ORDER table for calculating number of page tabs required.
+// Required values: none.
+// Output: COUNT(*)
 function viewPurchaseOrders( response ) {
 
   var vals = response.values;
@@ -1355,7 +1057,7 @@ function viewPurchaseOrders( response ) {
   helper.query( "SELECT COUNT(*) FROM PURCHASE_ORDER WHERE STATUS LIKE '" + vals.status + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewPurchaseOrders - SELECT FROM PURCHASE_ORDER " + rows );
+    console.log( "function: viewPurchaseOrders - SELECT FROM PURCHASE_ORDER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1363,7 +1065,7 @@ function viewPurchaseOrders( response ) {
     });  
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
       console.log( "Error on SELECT from PURCHASE_ORDER: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -1374,7 +1076,10 @@ function viewPurchaseOrders( response ) {
   });
 }
 
-// View PO - Step 2: Returns a list of POs for current page, ordered by PO_ID.
+// viewPurchaseOrdersPage
+// Function: Select from PURCHASE_ORDER table a list of purchase orders for the current page tab of a specific status.
+// Required values: status, pagenum(current page tab number)
+// Output: PO Number(PO_ID), Current Status(STATUS), Date Created(CREATE_DATE), Date Submitted(SUBMIT_DATE), Delivery Date(DELIVERY_DATE), Delivery Time(DELIVER_TIME), Date Received(RECEIVE_DATE), Reference Number(REF_NUMBER), Comments(COMMENT), Supplier(NAME)
 function viewPurchaseOrdersPage ( response ) {
 
   var vals = response.values;
@@ -1388,7 +1093,7 @@ function viewPurchaseOrdersPage ( response ) {
                 "ORDER BY po.PO_ID DESC LIMIT " + (response.values.pagenum-1)*20 + ", 20",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewPurchaseOrdersPage - SELECT FROM PURCHASE_ORDER " + rows );
+    console.log( "function: viewPurchaseOrdersPage - SELECT FROM PURCHASE_ORDER " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1396,7 +1101,7 @@ function viewPurchaseOrdersPage ( response ) {
     });
                 
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from PURCHASE_ORDER, SUPPLIER: " + error );
       response.write( "Error occured while trying to load the page." );
     } else {
@@ -1407,7 +1112,10 @@ function viewPurchaseOrdersPage ( response ) {
   });
 }
 
-// Edit PO - Change information in purchase order.
+// editPurchaseOrder
+// function: Update PURCHASE_ORDER table with new purchase order information for row PO_ID (Leaving status as is).
+// required values: delivery_date, delivery_time, ref_number, comment, supplier_id, po_id
+// Output: None.
 function editPurchaseOrder( response ) {
 
   var vals = response.values;
@@ -1417,9 +1125,9 @@ function editPurchaseOrder( response ) {
                 "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
+    console.log( "function: editPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1432,15 +1140,16 @@ function editPurchaseOrder( response ) {
     } else {
       console.log( "changed purchase order information.", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "Changed purchase order." );
-      historyLog.po( vals, "Change", "Changed purchase order information.");
     }
 
     response.end();
   });
 }
 
-// Submit PO - submit a purchase order.
+// submitPurchaseOrder
+// function: Update PURCHASE_ORDER table with 'Submitted' status for selected PO ID.
+// required values: po_id
+// Output: None.
 function submitPurchaseOrder( response ) {
 
   var vals = response.values;
@@ -1449,9 +1158,9 @@ function submitPurchaseOrder( response ) {
                 "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: submitPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
+    console.log( "function: submitPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1464,15 +1173,16 @@ function submitPurchaseOrder( response ) {
     } else {
       console.log( "Submitted purchase order.", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "Submitted purchase order." );
-      historyLog.po( vals, "Submit", "Submitted purchase order.");
     }
 
     response.end();
   });
 }
 
-// Cancel PO - cancel a purchase order.
+// cancelPurchaseOrder
+// function: Update PURCHASE_ORDER table with 'Cancelled' status for selected PO ID.
+// required values: po_id
+// Output: None.
 function cancelPurchaseOrder( response ) {
 
   var vals = response.values;
@@ -1480,9 +1190,9 @@ function cancelPurchaseOrder( response ) {
   helper.query( "UPDATE PURCHASE_ORDER SET STATUS = 'Cancelled' WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: cancelPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
+    console.log( "function: cancelPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1495,15 +1205,16 @@ function cancelPurchaseOrder( response ) {
     } else {
       console.log( "Cancelled purchase order.", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "Cancelled purchase order." );
-      historyLog.po( vals, "Cancel", "Cancelled purchase order.");
     }
 
     response.end();
   });
 }
 
-// Return PO - return a purchase order.
+// returnPurchaseOrder
+// function: Update PURCHASE_ORDER table with 'Returned' status for selected PO ID.
+// required values: po_id
+// Output: None.
 function returnPurchaseOrder( response ) {
 
   var vals = response.values;
@@ -1512,9 +1223,9 @@ function returnPurchaseOrder( response ) {
                 "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: returnPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
+    console.log( "function: returnPurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1527,15 +1238,16 @@ function returnPurchaseOrder( response ) {
     } else {
       console.log( "Returned purchase order.", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "Returned purchase order." );
-      historyLog.po( vals, "Return", "Returned purchase order.");
     }
 
     response.end();
   });
 }
 
-// Receive PO - receive a purchase order.
+// receivePurchaseOrder
+// function: Update PURCHASE_ORDER table with 'Received' status for selected PO ID.
+// required values: po_id
+// Output: None.
 function receivePurchaseOrder( response ) {
 
   var vals = response.values;
@@ -1544,9 +1256,9 @@ function receivePurchaseOrder( response ) {
                 "WHERE PO_ID = '" + vals.po_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: receivePurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
+    console.log( "function: receivePurchaseOrder - UPDATE PURCHASE_ORDER " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1559,27 +1271,28 @@ function receivePurchaseOrder( response ) {
     } else {
       console.log( "Received purchase order.", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "Received purchase order." );
-      historyLog.po( vals, "Receive", "Received purchase order.");
     }
 
     response.end();
   });
 }
 
-// Create PO Line - Create a new pO line.
+// createOrderLine
+// function: Insert a new order line into PO_LINE table.
+// Required values: po_id, po_line_id, item_id, qty_ordered, comment, userName(current logged in user ID), price_id
+// Output: None.
 function createOrderLine( response ) {
 
   var vals = response.values;
   
   helper.query( "INSERT INTO PO_LINE( PO_ID, PO_LINE_ID, ITEM_ID, QTY_ORDERED, COMMENT, AUTHOR, PRICE_ID) " +
-                "VALUES( '" + vals.po_id + "', " + vals.po_line + "', '" + vals.item_id + "', '" + vals.qty_ordered +
-                "', '" + vals.comment + "', '" + vals.curUserID + "', '" + vals.price_id + "' ) " +
+                "VALUES( '" + vals.po_id + "', " + vals.po_line_id + "', '" + vals.item_id + "', '" + vals.qty_ordered +
+                "', '" + vals.comment + "', '" + vals.userName + "', '" + vals.price_id + "' ) " +
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createOrderLine - INSERT INTO PO_LINE " + rows );
+    console.log( "function: createOrderLine - INSERT INTO PO_LINE " + rows );
     
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1592,15 +1305,16 @@ function createOrderLine( response ) {
     } else {
       console.log("Created new PO line: " + rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "New PO line successfully created." );
-      historyLog.po( vals, "Change", "Created new PO line." );
     }
     
     response.end();
   });
 }
 
-// View PO Line - view all PO Lines of a particular PO.
+// viewOrderLines
+// Function: Select from ORDER_LINE table a list of order lines for the current po.
+// Required values: po_id
+// Output: Line(PO_LINE_ID), Item Name(ITEM_NAME), Qty Ordered(QTY_ORDERED), qty Received(QTY_RECEIVED), Comments(COMMENT), Created By(AUTHOR), Latest Price(PRICE)
 function viewOrderLines( response ) {
 
   var vals = response.values;
@@ -1612,7 +1326,7 @@ function viewOrderLines( response ) {
                 "ORDER BY PO_LINE_ID",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: viewOrderLines - SELECT FROM PO_LINE " + rows );
+    console.log( "function: viewOrderLines - SELECT FROM PO_LINE " + rows );
                 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1620,7 +1334,7 @@ function viewOrderLines( response ) {
     });
     
     if ( error ) {
-      console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+      console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
       console.log( "Error on SELECT from PO_LINE: " + error );
       response.write( "Error occured while trying to load PO lines." );
     } else {
@@ -1631,19 +1345,22 @@ function viewOrderLines( response ) {
   });
 }
 
-// Edit PO Line - change PO line information.
+// editOrderLine
+// function: Update PO_LINE table with new Order line information for row PO_LINE_ID.
+// required values: item_id, qty_ordered, qty_received, comment, userName (current logged in user ID), price_id, po_id, po_line_id
+// Output: None.
 function editOrderLine( response ) {
   var vals = response.values;
 
   helper.query( "UPDATE PO_LINE SET ITEM_ID = '" + vals.item_id + "', QTY_ORDERED ='" + vals.qty_ordered +
-                "', QTY_RECEIVED = '" + vals.qty_received + "', COMMENT = '" + vals.comment + "', AUTHOR = '" + vals.curUserID +
+                "', QTY_RECEIVED = '" + vals.qty_received + "', COMMENT = '" + vals.comment + "', AUTHOR = '" + vals.userName +
                 "', PRICE_ID = '" + vals.price_id + "' " + 
                 "WHERE PO_ID = '" + vals.po_id + "' AND PO_LINE_ID = '" + vals.po_line_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: editOrderLines - UPDATE PO_LINE " + rows );
+    console.log( "function: editOrderLines - UPDATE PO_LINE " + rows );
 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");  
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");  
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1656,15 +1373,16 @@ function editOrderLine( response ) {
     } else {
       console.log( "Changed PO line information: ", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "PO line information succussfully changed." );
-      historyLog.supplier( vals, "Change", "Changed PO line information.");
     }
 
     response.end();
   });
 }
 
-// Delete PO Line - Delete a PO Line entry in the PO_LINE table.
+// deleteOrderLine
+// Function: Delete from PO_LINE table the selected order line.
+// Required values: po_id, po_line_id
+// Output: None.
 function deleteOrderLine ( response ) {
 
   var vals = response.values;
@@ -1672,9 +1390,9 @@ function deleteOrderLine ( response ) {
   helper.query( "DELETE FROM PO_LINE WHERE PO_ID = '" + vals.po_id + "' AND PO_LINE_ID = '" + vals.po_line_id + "'",
                 function( error, rows, cols ) {
 
-    console.log( "debug:: deleteOrderLines - DELETE FROM PO_LINE " + rows );
+    console.log( "function: deleteOrderLines - DELETE FROM PO_LINE " + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
     
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1687,27 +1405,28 @@ function deleteOrderLine ( response ) {
     } else {
       console.log( "Deleted PO Line: ", rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "PO Line successfully deleted." ); 
-      historyLog.supplier( vals, "Change", "Deleted PO Line." );
     }
 
     response.end();
   });
 }
 
-// Create Return line - create a new return line.
+// createReturnLine
+// function: Insert a new return line into RETURN_LINE table.
+// Required values: po_id, return_line_id, po_line_id, return_date, qty_returned, credit_memo_num, comment, userName(current logged in user ID)
+// Output: None.
 function createReturnLine( response ) {
 
   var vals = response.values;
   
   helper.query( "INSERT INTO RETURN_LINE( PO_ID, RETURN_LINE_ID, PO_LINE_ID, RETURN_DATE, QTY_RETURNED, CREDIT_MEMO_NUM, COMMENT, AUTHOR) " +
                 "VALUES( '" + vals.po_id + "', '" + vals.return_line_id + "', '" + vals.po_line_id + "', '" + vals.return_date +
-                "', '" + vals.qty_returned + "', '" + vals.credit_memo_num + "', '" + vals.comment + "', '" + vals.curUserID + "' ) " +
+                "', '" + vals.qty_returned + "', '" + vals.credit_memo_num + "', '" + vals.comment + "', '" + vals.userName + "' ) " +
                 function( error, rows, cols ) {
 
-    console.log( "debug:: createReturnLine - INSERT INTO RETURN_LINE" + rows );
+    console.log( "function: createReturnLine - INSERT INTO RETURN_LINE" + rows );
                 
-    console.log( helper.date() + " - " + vals.curUserID + " (" + vals.curRole + ")");
+    console.log( helper.date() + " - " + vals.userName + " (" + vals.curRole + ")");
 
     response.writeHead( 200, {
       "Content-Type": "text/plain",
@@ -1720,15 +1439,16 @@ function createReturnLine( response ) {
     } else {
       console.log("Created new return line: " + rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "New return line successfully created." );
-      historyLog.po( vals, "Change", "Created new return line." );
     }
     
     response.end();
   });
 }
 
-// Get Supplier List - get full list of supplier with names and ID.
+// getSupplierList
+// Function: select from SUPPLIER table supplier's name and supplier ID.
+// Required values: None.
+// Output: SUPPLIER_ID, NAME
 function getSupplierList( response ) {
 
   var vals = response.values;
@@ -1750,7 +1470,10 @@ function getSupplierList( response ) {
   });
 }
 
-// Get Category List - get full list of category with names.
+// getCategoryList
+// Function: select from CATEGORY table all the categories.
+// Required values: None.
+// Output: CAT_NAME
 function getCategoryList( response ) {
 
   var vals = response.values;
@@ -1772,7 +1495,10 @@ function getCategoryList( response ) {
   });
 }
 
-// Get Item List - get a list of item for a specific supplier.
+// getItemList
+// Function: select from ITEM table item name and item ID for a specific supplier.
+// Required values: None.
+// Output: ITEM_NAME, ITEM_ID
 function getItemList( response ) {
 
   var vals = response.values;
@@ -1794,18 +1520,84 @@ function getItemList( response ) {
   });
 }
 
+// getUser
+// Function: select from USER table all information of a single user.
+// Required values: userName(current logged in user ID).
+// Output: USER_ID, PASSWORD, EMAIL, EMPLOYEE_ID, ROLE
+function getUser( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT * FROM USER WHERE USER_ID = '" + vals.userName + "'",
+                function( error, rows, cols ) {
+    
+    if ( error ) {
+      console.log( "Error on SELECT from USER: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+    
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }
+  });
+}
+
+// getItem
+// Function: select from ITEM table all information of a single item.
+// Required values: item_id
+// Output: ITEM_ID, DIST_CODE, ITEM_NAME, RECEIPT_NAME, CATEGORY, UNIT, ITEM_TYPE, COMMENT, LATEST_PRICE, SUPPLIER_ID, U_ACTIVE_INA, U_BIZERBA, U_BRAND, U_CASE_SIZE, U_MINOR_REPO, U_COOKING_IN, U_COUNTRY, U_DATE_CREAT, U_DATE_MOTIF, U_DESCRIPTO, U_EXPIRY_DAT, U_INGREDIENT, U_KEYWORDS, U_NOTES, U_ORDER, U_PLU, U_PRICE, U_SILVERWARE, U_SKU, U_STORAGE, U_STORAGE_TY, U_TYPE, U_UPC_CODE, U_USERNAME_C, U_USERNAME_M, U_PRICE_PER, U_TAX, U_SCALE
+function getItem( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT * FROM ITEM WHERE ITEM_ID = '" + vals.item_id + "'",
+                function( error, rows, cols ) {
+    
+    if ( error ) {
+      console.log( "Error on SELECT from ITEM: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+    
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }
+  });
+}
+
+// getPurchaseOrder
+// Function: select from PURCHASE_ORDER table all information of a single purchase order.
+// Required values: po_id
+// Output: PO_ID, STATUS, CREATE_DATE, SUBMIT_DATE, DELIVERY_DATE, DELIVERY_TIME, RECEIVE_DATE, REF_NUMBER, COMMENT, SUPPLIER_ID
+function getPurchaseOrder( response ) {
+
+  var vals = response.values;
+  
+  helper.query( "SELECT * FROM PURCHASE_ORDER WHERE PO_ID = '" + vals.po_id + "'",
+                function( error, rows, cols ) {
+    
+    if ( error ) {
+      console.log( "Error on SELECT from ITEM: " + error );
+    } else {
+      response.writeHead( 200, {
+        "Content-Type": "text/plain",
+        "Access-Control-Allow-Origin": "*"
+      });
+    
+      response.write( JSON.stringify( rows ) );
+      response.end();
+    }
+  });
+}
+
 exports.index = index;
 exports.login = login;
 exports.logout = logout;
-exports.viewUserHistory = viewUserHistory;
-exports.viewUserHistoryPage = viewUserHistoryPage;
-exports.viewItemHistory = viewItemHistory;
-exports.viewItemHistoryPage = viewItemHistoryPage;
-exports.viewSupplierHistory = viewSupplierHistory;
-exports.viewSupplierHistoryPage = viewSupplierHistoryPage;
-exports.viewPOHistory = viewPOHistory;
-exports.viewPOHistoryPage = viewPOHistoryPage;
-
 exports.editAccount = editAccount;
 
 exports.createUserCheckDupe = createUserCheckDupe;
@@ -1815,7 +1607,6 @@ exports.viewUsersPage = viewUsersPage;
 exports.editUser = editUser;
 exports.deleteUser = deleteUser;
 
-exports.createItemCheckDupe = createItemCheckDupe;
 exports.createItem = createItem;
 exports.viewItems = viewItems;
 exports.viewItemsPage = viewItemsPage;
@@ -1861,3 +1652,5 @@ exports.createReturnLine = createReturnLine;
 exports.getSupplierList = getSupplierList;
 exports.getCategoryList = getCategoryList;
 exports.getItemList = getItemList;
+exports.getUser = getUser;
+exports.getPurchaseOrder = getPurchaseOrder;
