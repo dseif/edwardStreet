@@ -15,17 +15,6 @@ handle[ "/logout" ] = requestHandlers.logout;
 handle[ "/editaccount" ] = requestHandlers.editAccount;
 handle[ "/getuser" ] = requestHandlers.getUser;
 
-//  Log pages
-handle [ "/viewuserhistory" ] = requestHandlers.viewUserHistory;
-handle [ "/viewuserhistorypage" ] = requestHandlers.viewUserHistoryPage;
-handle [ "/viewitemhistory" ] = requestHandlers.viewItemHistory;
-handle [ "/viewitemhistorypage" ] = requestHandlers.viewItemHistoryPage;
-handle [ "/viewsupplierhistory" ] = requestHandlers.viewSupplierHistory;
-handle [ "/viewsupplierhistorypage" ] = requestHandlers.viewSupplierHistoryPage;
-handle [ "/viewpohistory" ] = requestHandlers.viewPOHistory;
-handle [ "/viewpohistorypage" ] = requestHandlers.viewPOHistoryPage;
-
-
 //  User pages
 handle[ "/createusercheckdupe" ] = requestHandlers.createUserCheckDupe;
 handle[ "/createuser" ] = requestHandlers.createUser;
@@ -35,7 +24,6 @@ handle[ "/edituser" ] = requestHandlers.editUser;
 handle[ "/deleteuser" ] = requestHandlers.deleteUser;
 
 //  Item pages
-handle[ "/createitemcheckdupe" ] = requestHandlers.createItemCheckDupe;
 handle[ "/createitem" ] = requestHandlers.createItem;
 handle[ "/viewitems" ] = requestHandlers.viewItems;
 handle[ "/viewitemspage" ] = requestHandlers.viewItemsPage;

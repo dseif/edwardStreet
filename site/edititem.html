@@ -42,6 +42,32 @@
             }
         }
       });
+      
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/getcategorylist",
+        data: {
+          hash: getCookie( "EDST_H" )
+        },
+        success: function( response, code, xhr ) {
+
+        var data = JSON.parse( response );
+
+          var dropDown = document.getElementById( "iCategoryBox" );
+
+            var addOption = function ( obj ) {
+
+              var opt = document.createElement("option");
+              opt.text = obj[ "CAT_NAME" ]; 
+              opt.value = obj[ "CAT_NAME" ];
+              dropDown.options.add( opt );
+            };
+
+            for (var i = 0, len = data.length; i < len; i++) {
+              addOption( data[ i ] );
+            }
+          }
+      });
 
 
       var numItems = 0,
@@ -194,11 +220,11 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
                           $( "#itemName" ).val( respObj[ "Item Name" ] );
                           $( "#itemName" ).attr( "name", $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) );
                           $( "#receiptName" ).val( respObj[ "Receipt Name" ] );
-                          $( "#iCategoryBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Item Category" ] ) );
+                          $( "#iCategoryBox" ).val( respObj[ "Item Category" ] );
                           $( "#iTypeBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Department" ] ) );
                           $( "#iSupplierBox" ).val( respObj[ "Supplier" ] );
                           $( "#price" ).val( "$" + respObj[ "Latest Price" ] );
-                          $( "#unitValue" ).val( respObj[ "Sale Unit" ] ); 
+                          $( "#unitValue" ).val( respObj[ "Sales Unit" ] ); 
                           $( "#distCode" ).val( respObj[ "Distribution Code" ] );
                           $( "#comments" ).val( respObj[ "Comments" ] );
                           document.getElementById("saveBtn").addEventListener("click", updateItem, false);
@@ -290,6 +316,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
 
         if ( ok ) {*/
 
+          alert($( "iCategoryBox" ).val());
           console.log( "THIS SHOULD ONLY HAPPEN ONCE" );
           $.ajax({
             cache: false,
@@ -443,11 +470,11 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
                           $( "#itemName" ).val( respObj[ "Item Name" ] );
                           $( "#itemName" ).attr( "name", $( "#edstItem-" + $( this ).attr( "name" ) ).attr( "edst-count" ) );
                           $( "#receiptName" ).val( respObj[ "Receipt Name" ] );
-                          $( "#iCategoryBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Item Category" ] ) );
+                          $( "#iCategoryBox" ).val( respObj[ "Item Category" ] );
                           $( "#iTypeBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Department" ] ) );
                           $( "#iSupplierBox" ).val( respObj[ "Supplier" ] );
                           $( "#price" ).val( "$" + respObj[ "Latest Price" ] );
-                          $( "#unitValue" ).val( respObj[ "Sale Unit" ] ); 
+                          $( "#unitValue" ).val( respObj[ "Sales Unit" ] ); 
                           $( "#distCode" ).val( respObj[ "Distribution Code" ] );
                           $( "#comments" ).val( respObj[ "Comments" ] );
                           document.getElementById("saveBtn").addEventListener("click", updateItem, false);
@@ -547,7 +574,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               hash: getCookie( "EDST_H" ),
               dist_code: $( "#distCode" ).val(),
               item_name: $( "#itemName" ).val(),
-              receiptname: $( "#receiptName" ).val(),
+              receipt_name: $( "#receiptName" ).val(),
               category: $( "iCategoryBox" ).val(),
               unit: $( "#unitValue" ).val(),
               comment: $( "#comments" ).val(),
@@ -557,6 +584,16 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
             },
             success: function( response, code, xhr ) {
 
+              $.ajax({
+                cache: false,
+                url: "http://96.126.109.151:8080/createprice",
+              data: {
+              hash: getCookie( "EDST_H" ),
+              item_id: data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ],
+              price: document.getElementById( "price" ).value
+
+            }
+            });
               document.getElementById( "saveBtn" ).removeEventListener( "click", updateItem, false );
             }
           });
@@ -709,9 +746,6 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               <tr>
                 <td>Item Category:</td> <!-- Auto populated -->
                 <td><select name="itemCategory" id="iCategoryBox">
-                  <option value="meat">Meat</option>
-                  <option value="cheese">Cheese</option>
-                  <option value="fish">Fish</option>
                   </select>
                 </td>
               </tr>
@@ -736,7 +770,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               </tr>
               <tr>
                 <td>Unit:</td>
-                <td><input type="text" value="" name="ItemName" id="unitValue"/></td>
+                <td><input type="text" value="" name="UnitValue" id="unitValue"/></td>
               </tr>
               <tr>
                 <td>Distribution Code:</td>
