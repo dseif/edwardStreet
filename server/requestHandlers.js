@@ -397,7 +397,6 @@ function editAccount( response ) {
     } else {
       console.log( "Changed password/email." );
       response.write( "Password/email Successfully Changed" );
-      historyLog.user( vals, "Change", "Changed password/email.");
     }
 
     response.end();
@@ -457,7 +456,6 @@ function createUser( response ) {
       console.log( "Created new user: " + vals.user_id );
       response.write( JSON.stringify( rows ) );
       response.write( "New user successfully created." );
-      historyLog.user( vals, "Create", "Created new user." );
     }
     
     response.end();
@@ -548,7 +546,7 @@ function editUser( response ) {
       console.log( "Changed user information: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "User information succussfully changed." );
-      historyLog.user( vals, "Change", "Changed user information." );      
+      //historyLog.user( vals, "Change", "Changed user information." );      
     }
     
     response.end();
@@ -579,7 +577,7 @@ function deleteUser( response ) {
       console.log( "Deleted user: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "User successfully deleted." ); 
-      historyLog.user( vals, "Delete", "Deleted user." );
+      //historyLog.user( vals, "Delete", "Deleted user." );
     }
 
     response.end();
@@ -640,19 +638,6 @@ function createItem( response ) {
     } else {
       console.log("Created new item: " + vals.item_name );
       response.write( JSON.stringify( rows ) );
-    
-	    // Get item_id of the item just created.
-      helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
-      
-        console.log( "debug:: createItem - SELECT LAST_INSERT_ID() " + rows );
-        
-        if ( error ) {
-          console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
-        } else {
-          vals.item_id = rows[ 0 ]["LAST_INSERT_ID()"];
-          historyLog.item( vals, "Create", "Created new item." );
-        }
-      });
     }
     
     response.end();
@@ -746,7 +731,7 @@ function editItem( response ) {
       console.log( "Changed item information: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Item information succussfully changed." );
-      historyLog.item( vals, "Change", "Changed item information.");
+      //historyLog.item( vals, "Change", "Changed item information.");
     }
 
     response.end();
@@ -777,7 +762,7 @@ function deleteItem( response ) {
       console.log( "Deleted item: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Item successfully deleted." ); 
-      historyLog.item( vals, "Delete", "Deleted item." );
+      //historyLog.item( vals, "Delete", "Deleted item." );
     }
 
     response.end();
@@ -912,19 +897,6 @@ function createSupplier( response ) {
       console.log( "Created new supplier: " + vals.user_id );
       response.write( JSON.stringify( rows ) );
       response.write( "New supplier successfully created." );
-
-      helper.query( "SELECT LAST_INSERT_ID()", function( error, rows, cols ) {
-      
-        console.log( "debug:: viewSupplier - SELECT LAST_INSERT_ID() " + rows );
-
-        if ( error ) {
-          console.log( "Error in SELECT LAST_INSERT_ID(): " + error );
-        } else {
-          console.log( "STUPD SHIT FUCL", vals );
-          vals.supplier_id = rows[ 0 ]["LAST_INSERT_ID()"];
-          historyLog.supplier( vals, "Create", "Created new supplier." );
-        }
-      });
     }
 
     response.end();
@@ -1012,7 +984,7 @@ function editSupplier( response ) {
       console.log( "Changed supplier information: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Supplier information succussfully changed." );
-      historyLog.supplier( vals, "Change", "Changed supplier information." );
+      //historyLog.supplier( vals, "Change", "Changed supplier information." );
     }
 
     response.end();
@@ -1043,7 +1015,7 @@ function deleteSupplier( response ) {
       console.log( "Deleted supplier: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Supplier successfully deleted." ); 
-      historyLog.supplier( vals, "Delete", "Deleted supplier." );
+      //historyLog.supplier( vals, "Delete", "Deleted supplier." );
     }
 
     response.end();
@@ -1076,7 +1048,7 @@ function createContactPerson ( response ) {
       console.log("Created new contact person: " + rows );
       response.write( JSON.stringify( rows ) );
       response.write( "New contact person successfully created." );
-      historyLog.supplier( vals, "Change", "Created new contact person." );
+      //historyLog.supplier( vals, "Change", "Created new contact person." );
     }
     
     response.end();
@@ -1138,7 +1110,7 @@ function editContactPerson ( response ) {
       console.log( "Changed contact person information: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Contact person information succussfully changed." );
-      historyLog.supplier( vals, "Change", "Changed contact person information.");
+      //historyLog.supplier( vals, "Change", "Changed contact person information.");
     }
 
     response.end();
@@ -1169,7 +1141,7 @@ function deleteContactPerson ( response ) {
       console.log( "Deleted contact person: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Contact person successfully deleted." ); 
-      historyLog.supplier( vals, "Change", "Deleted contact person." );
+      //historyLog.supplier( vals, "Change", "Deleted contact person." );
     }
 
     response.end();
@@ -1202,7 +1174,7 @@ function createSupplierAddress ( response ) {
       console.log("Created new supplier address: " + rows );
       response.write( JSON.stringify( rows ) );
       response.write( "New supplier address successfully created." );
-      historyLog.supplier( vals, "Change", "Created new supplier address." );
+      //historyLog.supplier( vals, "Change", "Created new supplier address." );
     }
     
     response.end();
@@ -1266,7 +1238,7 @@ function editSupplierAddress ( response ) {
       console.log( "Changed supplier address information: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Supplier address information succussfully changed." );
-      historyLog.supplier( vals, "Change", "Changed supplier address information.");
+      //historyLog.supplier( vals, "Change", "Changed supplier address information.");
     }
 
     response.end();
@@ -1297,7 +1269,7 @@ function deleteSupplierAddress ( response ) {
       console.log( "Deleted supplier address: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Supplier address successfully deleted." ); 
-      historyLog.supplier( vals, "Change", "Deleted supplier address." );
+      //historyLog.supplier( vals, "Change", "Deleted supplier address." );
     }
 
     response.end();
@@ -1329,8 +1301,7 @@ function createPurchaseOrder( response ) {
     } else {
       console.log("Created new purchase order: " + rows );
       response.write( JSON.stringify( rows ) );
-      response.write( "New purchase successfully created." );
-      historyLog.po( vals, "Create", "Created new purchase order." );
+      //historyLog.po( vals, "Create", "Created new purchase order." );
     }
     
     response.end();
@@ -1423,7 +1394,7 @@ function editPurchaseOrder( response ) {
       console.log( "changed purchase order information.", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Changed purchase order." );
-      historyLog.po( vals, "Change", "Changed purchase order information.");
+      //historyLog.po( vals, "Change", "Changed purchase order information.");
     }
 
     response.end();
@@ -1455,7 +1426,7 @@ function submitPurchaseOrder( response ) {
       console.log( "Submitted purchase order.", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Submitted purchase order." );
-      historyLog.po( vals, "Submit", "Submitted purchase order.");
+      //historyLog.po( vals, "Submit", "Submitted purchase order.");
     }
 
     response.end();
@@ -1486,7 +1457,7 @@ function cancelPurchaseOrder( response ) {
       console.log( "Cancelled purchase order.", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Cancelled purchase order." );
-      historyLog.po( vals, "Cancel", "Cancelled purchase order.");
+      //historyLog.po( vals, "Cancel", "Cancelled purchase order.");
     }
 
     response.end();
@@ -1518,7 +1489,7 @@ function returnPurchaseOrder( response ) {
       console.log( "Returned purchase order.", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Returned purchase order." );
-      historyLog.po( vals, "Return", "Returned purchase order.");
+      //historyLog.po( vals, "Return", "Returned purchase order.");
     }
 
     response.end();
@@ -1550,7 +1521,7 @@ function receivePurchaseOrder( response ) {
       console.log( "Received purchase order.", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "Received purchase order." );
-      historyLog.po( vals, "Receive", "Received purchase order.");
+      //historyLog.po( vals, "Receive", "Received purchase order.");
     }
 
     response.end();
@@ -1583,7 +1554,7 @@ function createOrderLine( response ) {
       console.log("Created new PO line: " + rows );
       response.write( JSON.stringify( rows ) );
       response.write( "New PO line successfully created." );
-      historyLog.po( vals, "Change", "Created new PO line." );
+      //historyLog.po( vals, "Change", "Created new PO line." );
     }
     
     response.end();
@@ -1647,7 +1618,7 @@ function editOrderLine( response ) {
       console.log( "Changed PO line information: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "PO line information succussfully changed." );
-      historyLog.supplier( vals, "Change", "Changed PO line information.");
+      //historyLog.supplier( vals, "Change", "Changed PO line information.");
     }
 
     response.end();
@@ -1678,7 +1649,7 @@ function deleteOrderLine ( response ) {
       console.log( "Deleted PO Line: ", rows );
       response.write( JSON.stringify( rows ) );
       response.write( "PO Line successfully deleted." ); 
-      historyLog.supplier( vals, "Change", "Deleted PO Line." );
+      //historyLog.supplier( vals, "Change", "Deleted PO Line." );
     }
 
     response.end();
@@ -1711,7 +1682,7 @@ function createReturnLine( response ) {
       console.log("Created new return line: " + rows );
       response.write( JSON.stringify( rows ) );
       response.write( "New return line successfully created." );
-      historyLog.po( vals, "Change", "Created new return line." );
+      //historyLog.po( vals, "Change", "Created new return line." );
     }
     
     response.end();
