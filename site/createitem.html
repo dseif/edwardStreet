@@ -5,11 +5,42 @@
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
 <title>Edward Street - Create Item</title>
+<script type="text/javascript" src="login.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
+<script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
+<script type="text/javascript" src="login.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
 
+    $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/getsupplierlist",
+        data: {
+          hash: getCookie( "EDST_H" )
+        },
+        success: function( response, code, xhr ) {
+
+          var data = JSON.parse( response );
+
+           var dropDown = document.getElementById( "iSupplierBox" );
+
+            var addOption = function ( obj ) {
+
+              var opt = document.createElement("option");
+              opt.text = obj[ "NAME" ]; 
+              opt.value = obj[ "NAME" ];
+              opt.id = obj[ "SUPPLIER_ID" ];
+              dropDown.options.add( opt );
+            };
+
+            for (var i = 0, len = data.length; i < len; i++) {
+              addOption( data[ i ] );
+            }
+        }
+    });
+    
       document.getElementById("saveBtn").addEventListener("click", function (event) {
 
         // input elements
@@ -181,59 +212,40 @@
 
 				  <div id="content">
             <form id="createItemForm">
-            <table id="createItemTable">
-              <tr>
-                <td>Item Name:</td>
-                <td><input type="text" value="" name="ItemName" id="itemName"/></td>
-              </tr>
-              <tr>
-                <td>Receipt Name:</td>
-                <td><input type="text" value="" name="ReceiptName" id="receiptName"/></td>
-              </tr>
-              <tr>
-                <td>Item Category:</td> <!-- Auto populated -->
-                <td><select name="itemCategory" id="iCategoryBox">
-                  <option value="meat">Meat</option>
-                  <option value="cheese">Cheese</option>
-                  <option value="fish">Fish</option>
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Item Type:</td> <!-- Auto populated -->
-                <td><select name="itemType" id="iTypeBox">
-                    <option value="market">Market</option>
-                    <option value="bistro">Bistro</option>
-                    <option value="catering">Catering</option>
-                    </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Supplier:</td> <!-- Auto populated -->
-                <td><select name="itemSupplier" id="iSupplierBox">
-                    <option value="supp1">SupplierA</option>
-                    <option value="supp2">SupplierB</option>
-                    <option value="supp3">SupplierC</option>
-                    </select>
-                </td>
-              </tr>
-              <tr>
-                <td>Comments:</td>
-                <td><textarea rows="4" cols="20" name="ItemComments" id="itemComments"></textarea></td>
-              </tr>
-              <tr>
-                <td>Item Price:</td>
-                <td><input type="text" value="$" name="ItemPrice" id="itemPrice"/></td>
-              </tr>
-              <tr>
-                <td>Unit:</td>
-                <td><input type="text" value="" name="ItemName" id="itemName"/></td>
-              </tr>
-              <tr>
-                <td><input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/></td>
-                <td><input value="Save" type="submit" name="SaveButton" id="saveBtn"/></td>
-              </tr>
-            </table>
+          <label for="itemName">Item Name:</label>
+          <input type="text" value="" name="ItemName" id="itemName"/><br/>
+          
+          <label for="receiptName">Receipt Name:</label>
+          <input type="text" value="" name="ReceiptName" id="receiptName"/><br/>
+          
+          <label for="iCategoryBox">Item Category:</label>
+          <select name="itemCategory" id="iCategoryBox"></select><br/>
+                
+          <label for="iTypeBox">Item Type:</label>
+          <select name="itemType" id="iTypeBox">
+            <option value="Market">Market</option>
+            <option value="Bistro">Bistro</option>
+            <option value="Catering">Catering</option>
+          </select><br/>
+
+          <label for="iSupplierBox">Supplier:</label>
+          <select name="itemSupplier" id="iSupplierBox"></select><br/>
+
+          <label for="price">Item Price:</label>
+          <input type="text" value="$" name="Price" id="price"/><br/>
+              
+          <label for="unitValue">Unit:</label>
+          <input type="text" value="" name="UnitValue" id="unitValue"/><br/>
+
+          <label for="distCode">Distribution Code:</label>
+          <input type="text" value="" name="distCode" id="distCode"/><br/>
+          
+          <label for="comments">Comments:</label>
+          <textarea type="text" value="" name="comments" id="comments"></textarea><br/>
+          
+          <input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/>
+          <input value="Save" type="submit" name="SaveButton" id="saveBtn"/>
+          <input value="Delete" type="submit" name="DeleteButton" id="deleteBtn"/>
             </form>
           </div> <!-- Content -->
         </div><!-- Page -->

@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui.css" />
 <link rel="stylesheet" type="text/css" href="../jqueryui/css/jquery-ui-1.8.16.custom.css" />
 <title>Edward Street - Create Purchase Order</title>
-<script src="login.js"></script>
+<script type="text/javascript" src="login.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript" src="../jqueryui/js/jquery-ui.js"></script>
@@ -57,6 +57,8 @@
     helper.setupSortable();
 
 //$('#poContent').append('<h3><a href="#">OLNumber# 9000</a></h3><div><p>item id</p><p>item name</p><p>qty</p><p>price</p><p>comments</p><p>orderlinenumber</p></div>');
+
+jQuery('#poTabs').tabs();
 
 jQuery('#poContent').accordion({
     //header: 'div.title',
@@ -383,9 +385,10 @@ $("#container").tabs();
     
       $('#page').show();
       $('#threeButtons').show();
-      $('#suppDiv').hide();
+      //$('#suppDiv').hide();
       
       $('#curSupplier').html($("#suppBox option:selected").select().text());
+            
       $('#itemBox').empty();
       $.ajax({
         cache: false,
@@ -530,7 +533,7 @@ $("#container").tabs();
     <li id="poMenu" class="blacklink"><a href="#"> Purchase Order > </a>
       <ul>
         <li class="blacklink"><a href="#">Create Purchase Order</a></li>
-        <li class="blacklink"><a href="modifypo.html">Edit Purchase Order</a></li>
+        <li class="blacklink"><a href="editpo.html">Edit Purchase Order</a></li>
         <li class="blacklink"><a href="viewpo.html">View Purchase Order</a></li>
         <li class="blacklink"><a href="receivepo.html">Receive Purchase Order</a></li>
         <li class="blacklink"><a href="returnpo.html">Return Purchase Order</a></li>
@@ -557,7 +560,7 @@ $("#container").tabs();
         <select id="suppBox"/>
         </select><br />
         
-        <input class="submitbutton" value="Select Supplier" type="submit" id="selSupp"/><br /><hr>
+        <input class="submitbutton" value="Create a Purchase Order" type="submit" id="selSupp"/><br /><hr>
 </div>
 <div id="page">
 
@@ -575,9 +578,12 @@ $("#container").tabs();
         <label for="curSupplier">Current Supplier: </label><label id="curSupplier">static</label><br />
         
         <!--<div id="cartcontent">-->
-        <ul id="poContent"></ul>
-        <!--</div>-->
+        <ul id="poTabs">
+          <ul id="poContent"></ul>
+        </ul>
         
+        <!--</div>-->
+        <br />
         <hr>
         
         <div id="POLine">
