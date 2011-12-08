@@ -1287,7 +1287,7 @@ function createOrderLine( response ) {
   
   helper.query( "INSERT INTO PO_LINE( PO_ID, PO_LINE_ID, ITEM_ID, QTY_ORDERED, COMMENT, AUTHOR, PRICE_ID) " +
                 "VALUES( '" + vals.po_id + "', " + vals.po_line_id + "', '" + vals.item_id + "', '" + vals.qty_ordered +
-                "', '" + vals.comment + "', '" + vals.userName + "', '" + vals.price_id + "' ) " +
+                "', '" + vals.comment + "', '" + vals.userName + "', '" + vals.price_id + "' ) ", 
                 function( error, rows, cols ) {
 
     console.log( "function: createOrderLine - INSERT INTO PO_LINE " + rows );
