@@ -15,7 +15,13 @@
 <script>
   document.addEventListener("DOMContentLoaded", function (event) {
 
-    var helper = edstHelper();
+    var helper = edstHelper(),
+        cart = helper.cart();
+
+        helper.populateCart();
+
+
+        console.log( "THIS IS THE CART", cart );
 
     window.edstPOobj = {};
 
@@ -47,7 +53,8 @@
         currentItem[ "obj" ][ curItem ].price = $( "#price" ).val();
       }
 
-      var orderLine = currentItem[ "obj" ][ currentItem[ "item_id" ] ];
+      var orderLine = currentItem[ "obj" ][ curItem ];
+
       for( var item in orderLine ) { 
 
         $( "#edstItem-" + curItem ).append( "<p><b>" + item + "</b>: " + orderLine[ item ] + "</p>" );
@@ -106,6 +113,53 @@
         };
       }
 
+      // SLEEPY DAVE, DO THE FOLLOWING IN THE MORNING
+      // GET LIST OF SUPPLIERS
+      // STORE SUPP IDS THAT EQUAL CART SUPP NAMES
+      // GENERATE ORDERLINES BASED ON THIS AND ADD ITEMS ACCORDINGLY
+      // GO TO BED
+      if ( cart ) {
+
+        for ( var prop in cart ) {
+
+          for( var item in obj ) {
+            if( obj[ item ][ "name" ] === cart[ prop ][ "Supplier" ] ) {
+
+              for( var propy in obj[ item ][ "obj" ] ) {
+
+                if( !obj[ item ][ "obj" ][ propy ] ) {
+                  obj[ item ][ "obj" ][ propy ] = {
+                    Line: ++obj[ item ].count,
+                    item_id: curItem,
+                    item_name: cart[ prop ][ "Item Name" ], 
+                    qty: cart[ prop ][ "qty" ],
+                    comment: cart[ prop ][ "Comments" ], 
+                    price: cart[ prop ][ "Latest Price" ] 
+                  };
+                }
+              }
+            } else {
+
+              obj[ item ].count = 0;
+              obj[ item ][ "name" ] = cart[ prop ][ "Supplier" ];
+              obj[ item ].obj = {};
+
+              if( !obj[ item ][ "obj" ][ cart[ prop ][ "Item ID" ] ] ) {
+                obj[ item ][ "obj" ][ prop ] = {
+                  Line: ++obj[ item ].count,
+                  item_id: cart[ prop ][ "Item ID" ],
+                  item_name: cart[ prop ][ "Item Name" ], 
+                  qty: cart[ prop ][ "qty" ],
+                  comment: cart[ prop ][ "Comments" ], 
+                  price: cart[ prop ][ "Latest Price" ] 
+                };
+              }
+            }
+          }
+        }
+      }
+
+      console.log( obj );
       for( var item in obj ) {
 
         $( "#poContent" ).append( "<li id='supp-" + item + "'><a href='#tabs-" + item + "'>" + obj[ item ][ "name" ] + "</a></li>" );
@@ -121,11 +175,15 @@
             $( "#tabs-" + item ).append( "<div id='edstItems-" + obj[ item ][ "obj" ][ prop ][ "item_id" ] + "'></div>" );
 
             for( var propy in obj[ item ][ "obj" ][ prop ] ) {
-                            $( "#edstItems-" + obj[ item ][ "obj" ][ prop ][ "item_id" ] ).append( "<p><b>" + propy + ": </b>" + obj[ item ][ "obj" ][ prop ][ propy ] + "</p>" );
+              console.log( "HAH" );
+              $( "#edstItems-" + obj[ item ][ "obj" ][ prop ][ "item_id" ] ).append( "<p><b>" + propy + ": </b>" + obj[ item ][ "obj" ][ prop ][ propy ] + "</p>" );
             }
           }
         }
-        $( "#tabs-" + item ).accordion( "destroy" );$( "#tabs-" + item )
+
+        
+
+        $( "#tabs-" + item ).accordion( "destroy" );
         helper.setupAccordion( $( "#tabs-" + item ) );
       }
 

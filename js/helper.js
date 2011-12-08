@@ -23,12 +23,23 @@ $( function() {
 
           var cart = this.cart();
 
+          $( "#scBox" ).html( " " );
+
           for ( var prop in cart ) {
-            $( "#scBox" ).append( "<div edst-data='" + cart[ prop ][ "Item Name" ] +
+            $( "#scBox" ).append( "<div id='innerScBox'></div>" );
+            $( "#innerScBox" ).append( "<h3 edst-data='" + cart[ prop ][ "Item Name" ] +
               "' id='shoppingCart-" + cart[ prop ][ "Item ID" ] + "'>" +
-              "<div style='display:inline-block'>" + cart[ prop ][ "Item Name" ] + "</div>" +
-              "<div style='display:inline-block'>Qty: " + cart[ prop ].qty +
-            "</div></div>" );
+              "<a href='#' style='display:inline-block'>" + cart[ prop ][ "Item Name" ] + "</a>" +
+            "</h3><div id='scBoxQty-" + cart[ prop ][ "Item ID" ] + "'>Quantity: " + cart[ prop ].qty + "</br></div>" );
+          }
+
+          if( $( "#innerScBox" ).length ) {
+            $( "#innerScBox" ).accordion( "destroy" );
+            $( "#innerScBox" ).accordion({
+              fillSpace: true,
+              collapsible: true,
+              active: false
+            });
           }
         },
         // add item to the shopping cart
@@ -36,21 +47,15 @@ $( function() {
 
           var id = obj[ "Item ID" ];
 
+          console.log( id, cart[ id ] );
           if ( cart[ id ] ) {
             cart[ id ].qty = +cart[ id ].qty + +obj.qty;
           } else {
             cart[ id ] = obj;
           }
 
-          var children = $( "#scBox" ).children();
-
-          console.log( "CHILDS PLAY", children );
-          for ( var i = 0, l = children.length; i < l; i++ ) {
-            console.log( $( children[ i ] ).attr( "edst-data" ) );
-            if ( $( children[ i ] ).attr( "edst-data" ) === obj[ "Item Name" ] ) {
-              children[ i ].children[ 1 ].innerHTML = "Qty: " + cart[ id ].qty;
-            }
-          }
+          $( "#scBoxQty-" + id ).html( "Quantity: " + obj.qty );
+          this.populateCart();
         },
         // change quantity of the item in the shopping cart
         changeItemQty: function( obj ) {
@@ -59,19 +64,8 @@ $( function() {
 
           if ( cart[ id ] ) {
             cart[ id ].qty = obj.qty;
-          /*} else {
-            cart[ id ] = obj;
-          }*/
 
-          var children = $( "#scBox" ).children();
-
-          console.log( "CHILDS PLAY 2.0", children );
-          for ( var i = 0, l = children.length; i < l; i++ ) {
-            console.log( $( children[ i ] ).attr( "edst-data" ) );
-            if ( $( children[ i ] ).attr( "edst-data" ) === obj[ "Item Name" ] ) {
-              children[ i ].children[ 1 ].innerHTML = "Qty: " + cart[ id ].qty;
-            }
-          }
+            $( "#scBoxQty-" + id ).html( "Quantity: " + obj.qty );
           }
         },
         // return the users shopping cart object

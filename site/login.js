@@ -29,7 +29,7 @@ document.addEventListener( "DOMContentLoaded", function( event ) {
 
   window.cookie = getCookie( "EDST_H" ); 
   var pathname = window.location.pathname.split( "/" )
-  if ( pathname[ pathname.length ] === "login.html" ) {
+  if ( pathname[ pathname.length - 1] !== "login.html" ) {
     if ( !cookie ) { 
       window.location = "login.html";
     } else {

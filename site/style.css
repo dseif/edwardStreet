@@ -90,7 +90,7 @@ margin-left: 4.5em;
 	position:relative;
  	top:-55px;
  	left:500px;
-	overflow: auto;
+	overflow-y: auto;
 	border: solid 2px #000000;
 }
 
