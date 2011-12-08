@@ -198,7 +198,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
                           $( "#iTypeBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Department" ] ) );
                           $( "#iSupplierBox" ).val( respObj[ "Supplier" ] );
                           $( "#price" ).val( "$" + respObj[ "Latest Price" ] );
-                          $( "#unitValue" ).val( respObj[ "Sale Unit" ] ); 
+                          $( "#unitValue" ).val( respObj[ "Sales Unit" ] ); 
                           $( "#distCode" ).val( respObj[ "Distribution Code" ] );
                           $( "#comments" ).val( respObj[ "Comments" ] );
                           document.getElementById("saveBtn").addEventListener("click", updateItem, false);
@@ -447,7 +447,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
                           $( "#iTypeBox" ).val( String.prototype.toLowerCase.apply( respObj[ "Department" ] ) );
                           $( "#iSupplierBox" ).val( respObj[ "Supplier" ] );
                           $( "#price" ).val( "$" + respObj[ "Latest Price" ] );
-                          $( "#unitValue" ).val( respObj[ "Sale Unit" ] ); 
+                          $( "#unitValue" ).val( respObj[ "Sales Unit" ] ); 
                           $( "#distCode" ).val( respObj[ "Distribution Code" ] );
                           $( "#comments" ).val( respObj[ "Comments" ] );
                           document.getElementById("saveBtn").addEventListener("click", updateItem, false);
@@ -547,7 +547,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               hash: getCookie( "EDST_H" ),
               dist_code: $( "#distCode" ).val(),
               item_name: $( "#itemName" ).val(),
-              receiptname: $( "#receiptName" ).val(),
+              receipt_name: $( "#receiptName" ).val(),
               category: $( "iCategoryBox" ).val(),
               unit: $( "#unitValue" ).val(),
               comment: $( "#comments" ).val(),
@@ -557,6 +557,16 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
             },
             success: function( response, code, xhr ) {
 
+              $.ajax({
+                cache: false,
+                url: "http://96.126.109.151:8080/createprice",
+              data: {
+              hash: getCookie( "EDST_H" ),
+              item_id: data[ $( "#itemName" ).attr( "name" ) ][ "Item ID" ],
+              price: document.getElementById( "price" ).value
+
+            }
+            });
               document.getElementById( "saveBtn" ).removeEventListener( "click", updateItem, false );
             }
           });
@@ -736,7 +746,7 @@ document.getElementById("deleteBtn").addEventListener("click", function () {
               </tr>
               <tr>
                 <td>Unit:</td>
-                <td><input type="text" value="" name="ItemName" id="unitValue"/></td>
+                <td><input type="text" value="" name="UnitValue" id="unitValue"/></td>
               </tr>
               <tr>
                 <td>Distribution Code:</td>
