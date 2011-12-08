@@ -14,7 +14,11 @@
 <script type="text/javascript" src="../js/helper.js"></script>
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function (event) {
-      
+      var cookie = window.cookie;
+    if (cookie.substring(0, 2).toLowerCase() !== "ad") {
+
+      window.location = "login.html";
+    } // Cookie business
       /*$.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/getsupplierlist",
@@ -73,13 +77,16 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     var count = 0;
                     for ( var item in data ) {
                       console.log( data[ item ]["Supplier Name"] );
-                      $( "#tabs-" + page ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "SUPPLIER_ID" ] + "' name='" + data[ item ][ "Supplier Name" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "Supplier Name" ] + "</a></h3>" + 
-                         "<div id='edstAccord-" + data[ item ][ "SUPPLIER_ID" ] + "'></div>" );
+                      $( "#tabs-" + page ).append( "<h3 edst-count='" + count + "' id='edstItem-" 
+                      + data[ item ][ "SUPPLIER_ID" ] + "' name='" 
+                      + data[ item ][ "SUPPLIER_ID" ] + "'><a href='#' style='display:inline-block;'>" 
+                      + data[ item ][ "Supplier Name" ] + "</a></h3>" + "<div id='edstAccord-" 
+                      + data[ item ][ "SUPPLIER_ID" ] + "'></div>" );
                         count++;
                       
                       var editBtn = document.createElement( "button" );
                       editBtn.innerHTML = "Edit";
-                        editBtn.name = data[ item ][ "Supplier Name" ];
+                        editBtn.name = data[ item ][ "SUPPLIER_ID" ];
                         editBtn.style.float = "right";
                         editBtn.style.display = "inline-block";
                         $( "#edstItem-" + data[ item ][ "SUPPLIER_ID" ] ).append( editBtn );
@@ -128,13 +135,16 @@ document.addEventListener("DOMContentLoaded", function (event) {
               data = JSON.parse( response );
                     for ( var item in data ) {
 
-                      $( "#tabs-1" ).append( "<h3 edst-count='" + count + "' id='edstItem-" + data[ item ][ "SUPPLIER_ID" ] + "' name='" + data[ item ][ "Supplier Name" ] + "'><a href='#' style='display:inline-block;'>" + data[ item ][ "Supplier Name" ] + "</a></h3>" + 
-                         "<div id='edstAccord-" + data[ item ][ "SUPPLIER_ID" ] + "'></div>" );
+                      $( "#tabs-1" ).append( "<h3 edst-count='" + count + "' id='edstItem-" 
+                      + data[ item ][ "SUPPLIER_ID" ] + "' name='" 
+                      + data[ item ][ "SUPPLIER_ID" ] + "'><a href='#' style='display:inline-block;'>" 
+                      + data[ item ][ "Supplier Name" ] + "</a></h3>" + "<div id='edstAccord-"
+                      + data[ item ][ "SUPPLIER_ID" ] + "'></div>" );
                         count++;
                         
                       var editBtn = document.createElement( "button" );
                         editBtn.innerHTML = "Edit";
-                        editBtn.name = data[ item ][ "Supplier Name" ];
+                        editBtn.name = data[ item ][ "SUPPLIER_ID" ];
                         editBtn.style.float = "right";
                         editBtn.style.display = "inline-block";
                         $( "#edstItem-" + data[ item ][ "SUPPLIER_ID" ] ).append( editBtn );
@@ -167,6 +177,47 @@ document.addEventListener("DOMContentLoaded", function (event) {
         }
       });  
 
+      document.getElementById( "deleteBtn" ).addEventListener( "click", function() {
+
+    if( $( "#suppName" ).val() !== "" ) {
+
+    $( "#dialog-confirm" ).dialog({
+        resizable: false,
+        height:160,
+        modal: true,
+        buttons: {
+          "Delete": function() {
+
+            $.ajax({
+              cache: false,
+              url: "http://96.126.109.151:8080/deletesupplier",
+              data: {
+                hash: getCookie( "EDST_H" ),
+                "SUPPLIER_ID": document.getElementById( "suppName" ).value // How to get supplierID
+              },
+              success: function( response, code, xhr ) {
+                
+                $( "#suppName" ).val( " " );
+                $( "#legName" ).val( " " );
+                $( "#leadTime" ).val( " " );
+                $( "#supplierComm" ).val( " " );
+                $( "#otherComm" ).val( " " );
+                
+              }
+            });
+            $( this ).dialog( "close" );
+          },
+          Cancel: function() {
+            
+            $( this ).dialog( "close" );
+          }
+        }
+      });
+      
+    }
+  }, false);
+      
+      
       document.getElementById("savBtn").addEventListener("click", function (event) {
 
         // input elements

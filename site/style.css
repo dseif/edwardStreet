@@ -1,7 +1,5 @@
 /*
-Design by Free CSS Templates
-http://www.freecsstemplates.org
-Released for free under a Creative Commons Attribution 2.5 License
+Edward Street Market 2011
 */
 
 body {
@@ -132,6 +130,14 @@ margin-left: 4.5em;
 
 .list1 li.alt img {
 	margin-right: 0;
+}
+
+#results {
+  width: 95%;
+}
+
+#tabs-1 {
+  width: 95%;
 }
 
 #wrapper {

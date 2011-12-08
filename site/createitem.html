@@ -14,6 +14,12 @@
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
 
+    var cookie = window.cookie;
+    if (cookie.substring(0, 2).toLowerCase() !== "ad") {
+
+      window.location = "login.html";
+    } // Cookie business
+    
     $.ajax({
         cache: false,
         url: "http://96.126.109.151:8080/getsupplierlist",
@@ -245,7 +251,6 @@
           
           <input value="Clear" type="reset" name="CancelButton" id="cancelBtn"/>
           <input value="Save" type="submit" name="SaveButton" id="saveBtn"/>
-          <input value="Delete" type="submit" name="DeleteButton" id="deleteBtn"/>
             </form>
           </div> <!-- Content -->
         </div><!-- Page -->

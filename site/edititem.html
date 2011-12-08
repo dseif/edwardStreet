@@ -14,7 +14,11 @@
 <script type="text/javascript" src="../js/helper.js"></script>
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
-      
+      var cookie = window.cookie;
+    if (cookie.substring(0, 2).toLowerCase() !== "ad") {
+
+      window.location = "login.html";
+    } // Cookie business
     
       $.ajax({
         cache: false,
