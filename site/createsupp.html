@@ -8,9 +8,14 @@
 <script type="text/javascript" src="login.js"></script>
 <script type="text/javascript" src="js/validation.js"></script>
 <script type="text/javascript" src="js/jquery-1.7.js"></script>
+<script type="text/javascript" src="../js/helper.js"></script>
 <script type="text/javascript" src="login.js"></script>
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function (event) {
+  
+    var helper = edstHelper();
+    helper.populateCart();
+  
     var cookie = window.cookie;
     if (cookie.substring(0, 2).toLowerCase() !== "ad") {
 

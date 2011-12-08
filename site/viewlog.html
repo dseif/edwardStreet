@@ -13,6 +13,8 @@
 
   document.addEventListener("DOMContentLoaded", function (event) {
 
+    var helper = edstHelper();
+    helper.populateCart();
   
     $.ajax({
       cache: false,

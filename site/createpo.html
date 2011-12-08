@@ -15,6 +15,7 @@
 <script>
   document.addEventListener("DOMContentLoaded", function (event) {
 
+
       $(function() {
         $("#deliveryDate").datepicker();
       });
@@ -54,7 +55,7 @@
 
     // get our helper object
     var helper = edstHelper();
-    
+    helper.populateCart();
 
 //$('#poContent').append('<h3><a href="#">OLNumber# 9000</a></h3><div><p>item id</p><p>item name</p><p>qty</p><p>price</p><p>comments</p><p>orderlinenumber</p></div>');
 
@@ -372,9 +373,49 @@ $("#container").tabs();
     }
     
     // supplier combo box select
-    //document.getElementById("selSupp").addEventListener("click", function () {
-    //$('#itemBox').empty();
-    //});
+    //document.getElementById("selSupp").addEventListener("change", function () {
+    $("#suppBox").change(function() {
+    
+      $('#itemBox').empty();
+      $('#page').show();
+      $('#threeButtons').show();
+      //$('#suppDiv').hide();
+      //$('#poContent').append("<li><a href='#tabs-'" + tabcount + ">" + $("#suppBox option:selected").select().text() + "</a></li>");
+      $('#poTabs').tabs();
+      $('#curSupplier').html($("#suppBox option:selected").select().text());
+      helper.setupSortable( $( "#tabs-" + tabcount ) );
+            
+      
+      $.ajax({
+        cache: false,
+        url: "http://96.126.109.151:8080/getitemlist",
+        data: {
+          hash: getCookie( "EDST_H" ),
+          supplier_id: document.getElementById( "suppBox" ).value
+        },
+        success: function( response, code, xhr ) {
+
+          var data = JSON.parse( response );
+
+           var dropDown = document.getElementById( "itemBox" );
+
+            var addOption = function ( obj ) {
+
+              var opt = document.createElement("option");
+              opt.text = obj[ "ITEM_NAME" ];
+              opt.value = obj[ "ITEM_ID" ];
+              opt[ "edst-itemId" ] = obj[ "ITEM_ID" ];
+              dropDown.options.add( opt );
+            };
+
+            for (var j = 0, len = data.length; j < len; j++) {
+              addOption( data[ j ] );
+            }
+        }
+      });
+      
+    
+    });
     
     // create po 'formerly add supplier' button
     var tabcount = 1;
