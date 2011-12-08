@@ -16,12 +16,10 @@
   document.addEventListener("DOMContentLoaded", function (event) {
 
     var helper = edstHelper(),
-        cart = helper.cart();
+        cart = helper.cart(),
+        suppliers = {};
 
         helper.populateCart();
-
-
-        console.log( "THIS IS THE CART", cart );
 
     window.edstPOobj = {};
 
@@ -61,7 +59,6 @@
       }
 
       helper.setupAccordion( $( "#tabs-" + $( ".ui-state-active" ).attr( "id" ).split( "-" )[ 1 ] ) );
-      console.log( obj );
     }
 
     $("#deliveryDate").datepicker();
@@ -87,8 +84,10 @@
           dropDown.options.add( opt );
         };
 
+        supplier = {};
         for (var i = 0, len = data.length; i < len; i++) {
           addOption( data[ i ] );
+          supplier[ data[ i ][ "NAME" ] ] = data[ i ][ "SUPPLIER_ID" ]; 
         }
       }
     });
@@ -123,11 +122,17 @@
         for ( var prop in cart ) {
 
           for( var item in obj ) {
-            if( obj[ item ][ "name" ] === cart[ prop ][ "Supplier" ] ) {
+
+            if( item === suppliers[ cart[ prop ] ] ) {
 
               for( var propy in obj[ item ][ "obj" ] ) {
 
                 if( !obj[ item ][ "obj" ][ propy ] ) {
+
+                  obj[ item ].count = 0;
+                  obj[ item ][ "name" ] = cart[ prop ][ "Supplier" ];
+                  obj[ item ].obj = {};
+
                   obj[ item ][ "obj" ][ propy ] = {
                     Line: ++obj[ item ].count,
                     item_id: curItem,
@@ -140,26 +145,25 @@
               }
             } else {
 
+              obj [ suppliers[ cart[ prop ] ] ] = {};
+
               obj[ item ].count = 0;
               obj[ item ][ "name" ] = cart[ prop ][ "Supplier" ];
               obj[ item ].obj = {};
 
-              if( !obj[ item ][ "obj" ][ cart[ prop ][ "Item ID" ] ] ) {
-                obj[ item ][ "obj" ][ prop ] = {
-                  Line: ++obj[ item ].count,
-                  item_id: cart[ prop ][ "Item ID" ],
-                  item_name: cart[ prop ][ "Item Name" ], 
-                  qty: cart[ prop ][ "qty" ],
-                  comment: cart[ prop ][ "Comments" ], 
-                  price: cart[ prop ][ "Latest Price" ] 
-                };
-              }
+              obj[ item ][ "obj" ][ propy ] = {
+                Line: ++obj[ item ].count,
+                item_id: curItem,
+                item_name: cart[ prop ][ "Item Name" ], 
+                qty: cart[ prop ][ "qty" ],
+                comment: cart[ prop ][ "Comments" ], 
+                price: cart[ prop ][ "Latest Price" ] 
+              };
             }
           }
         }
       }
 
-      console.log( obj );
       for( var item in obj ) {
 
         $( "#poContent" ).append( "<li id='supp-" + item + "'><a href='#tabs-" + item + "'>" + obj[ item ][ "name" ] + "</a></li>" );
@@ -175,7 +179,7 @@
             $( "#tabs-" + item ).append( "<div id='edstItems-" + obj[ item ][ "obj" ][ prop ][ "item_id" ] + "'></div>" );
 
             for( var propy in obj[ item ][ "obj" ][ prop ] ) {
-              console.log( "HAH" );
+
               $( "#edstItems-" + obj[ item ][ "obj" ][ prop ][ "item_id" ] ).append( "<p><b>" + propy + ": </b>" + obj[ item ][ "obj" ][ prop ][ propy ] + "</p>" );
             }
           }
